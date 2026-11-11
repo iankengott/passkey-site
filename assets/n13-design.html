@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>N13 shared approval prompt</title>
+<style>
+:root {
+  --page-ink: #14202b;
+  --prompt-bg: #17202b;
+  --prompt-panel: #22303d;
+  --prompt-text: #ffffff;
+  --prompt-muted: #d3dce6;
+  --prompt-border: #617487;
+  --approve-bg: #246b42;
+  --cancel-bg: #34495e;
+  --reason-bg: #44391f;
+  --reason-text: #ffe4a3;
+  --focus: #80d7ff;
+  --witness: #7557d5;
+  color-scheme: light dark;
+}
+* { box-sizing: border-box; }
+html { font-family: system-ui, sans-serif; }
+body { margin: 0; color: var(--foreground, #f3f4f6); font: 14px/1.45 system-ui, sans-serif; }
+main { width: 100%; }
+h1 { margin: 0; font-size: 25px; line-height: 1.2; }
+h2 { margin: 0; font-size: 16px; line-height: 1.3; }
+p { margin: 0; }
+.lede { color: var(--muted-foreground, #9ca3af); margin: 8px 0 16px; max-width: 76ch; }
+.group-title { margin: 24px 0 10px; font-size: 18px; }
+.surface-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(278px, 1fr)); gap: 12px; align-items: start; }
+.surface-card { min-width: 0; border: 1px solid var(--border, #374151); border-radius: 12px; overflow: hidden; background: var(--card, #111827); }
+.surface-head { padding: 11px 13px 9px; border-bottom: 1px solid var(--border, #374151); }
+.surface-host { color: var(--muted-foreground, #9ca3af); font-size: 12px; margin-top: 3px; }
+.host-stage { padding: 12px; background: linear-gradient(145deg, #0f1c27, #172634); }
+.host-stage.browser-stage { background: linear-gradient(145deg, #e9edf3, #d7dee9); }
+.host-stage.light-stage { background: linear-gradient(145deg, #f0f2f5, #cdd4de); }
+.browser-page-label { color: #1a2632; font-size: 12px; margin: 0 0 7px; }
+.prompt { position: relative; padding: 13px; background: var(--prompt-bg); color: var(--prompt-text); border: 1px solid var(--prompt-border); border-radius: 9px; box-shadow: 0 6px 18px #0004; font-size: 12px; }
+.prompt.witness::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 8px 0 0 8px; background: var(--witness); }
+.prompt.witness { padding-left: 17px; }
+.reason { margin: -3px 0 8px; padding: 4px 6px; border-radius: 4px; background: var(--reason-bg); color: var(--reason-text); font-size: 11px; }
+.brand { font-weight: 700; font-size: 11px; margin-bottom: 4px; }
+.prompt-title { color: var(--prompt-muted); font-size: 10px; margin-bottom: 3px; }
+.prompt-heading { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.facts { display: grid; grid-template-columns: 67px minmax(0,1fr); column-gap: 8px; row-gap: 4px; margin: 0; }
+.facts dt { color: var(--prompt-muted); font-weight: 600; }
+.facts dd { margin: 0; overflow-wrap: anywhere; }
+.account-choice { max-width: 100%; padding: 2px 4px; color: #ffffff; background: #22303d; border: 1px solid #617487; border-radius: 3px; font: inherit; }
+.after { margin-top: 8px; padding-top: 7px; border-top: 1px solid #526273; }
+.after strong, .fallback strong, .safety strong { display: block; color: var(--prompt-muted); font-size: 10px; margin-bottom: 2px; }
+.safety { margin-top: 6px; color: #ffe4a3; }
+.expiry { color: var(--prompt-muted); font-size: 10px; margin-top: 7px; }
+.actions { display: flex; gap: 7px; margin-top: 9px; }
+button.mock-button { flex: 1 1 0; min-height: 32px; display: flex; justify-content: space-between; align-items: center; gap: 5px; border: 1px solid var(--prompt-border); border-radius: 5px; padding: 5px 8px; color: white; font: inherit; font-weight: 650; background: var(--approve-bg); }
+button.mock-button.cancel { background: var(--cancel-bg); }
+button.mock-button:disabled { background: #46515d; color: #e1e5e9; border-color: #73808c; }
+kbd { font: 10px/1.3 ui-monospace, monospace; padding: 1px 4px; border: 1px solid #ffffff80; border-radius: 3px; }
+.fallback { margin-top: 8px; padding-top: 7px; border-top: 1px solid #526273; color: var(--prompt-muted); font-size: 10px; }
+.surface-note { padding: 9px 13px 11px; color: var(--muted-foreground, #9ca3af); font-size: 11px; }
+.native-step { margin: 0 0 7px; padding: 6px; border-left: 3px solid #8ba4b8; background: #ffffffd9; color: #253342; font-size: 10px; }
+.text-stage { background: #101820; padding: 12px; }
+.terminal { border: 1px solid #718295; background: #121a22; color: #f3f6fa; padding: 12px; border-radius: 7px; box-shadow: 0 6px 18px #0004; font: 11px/1.5 ui-monospace, monospace; overflow-wrap: anywhere; }
+.terminal-title { font: 700 12px/1.4 system-ui, sans-serif; margin-bottom: 7px; }
+.terminal-heading { font: 700 13px/1.4 system-ui, sans-serif; margin-bottom: 8px; }
+.terminal-line { margin: 2px 0; }
+.terminal-label { color: #d3dce6; }
+.terminal-effect { border-top: 1px solid #526273; padding-top: 6px; margin-top: 7px; }
+.terminal-expiry { color: #c1ccd8; margin-top: 7px; }
+.terminal-choice { color: #e9f1fa; border: 1px solid #617487; padding: 5px 7px; margin-top: 8px; }
+.terminal-fallback { color: #d3dce6; margin-top: 8px; }
+.reason-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 8px; margin-top: 10px; }
+.reason-item { padding: 9px 10px; border: 1px solid var(--border,#374151); border-radius: 8px; background: var(--card,#111827); }
+.reason-code { color: var(--muted-foreground,#9ca3af); font: 11px ui-monospace, monospace; margin-bottom: 3px; }
+.legend { margin: 20px 0 4px; border-left: 3px solid var(--accent,#7557d5); padding-left: 10px; color: var(--muted-foreground,#9ca3af); font-size: 12px; max-width: 90ch; }
+@media (max-width: 620px) {
+  .surface-grid { grid-template-columns: 1fr; }
+  .prompt { padding: 11px; }
+}
+</style>
+<style>html,body{background:#000;color:#f4f1ea;color-scheme:dark}body{padding:28px}main{max-width:1600px;margin:auto}.archive-banner{max-width:1600px;margin:0 auto 25px;padding:20px;border:1px solid #e0aa3e;border-radius:12px;background:#111113;color:#f4f1ea;font-size:16px}.archive-banner a{color:#f0c060}</style></head>
+<body><aside class="archive-banner"><strong>Design study, October 2026.</strong> These are static mock ups, not captured test screens. Some notes predate later changes. <a href="../security.html#archive">Back to the Security page.</a></aside>
+<main>
+  <h1>N13 shared approval prompt</h1>
+  <p class="lede">Proposed wording and layout across 16 prompt examples for 15 host surfaces. These are static mocks. The Debian GNOME surfaces are proposed for the next T8 run and have not been tested.</p>
+  <section id="surfaces" class="surface-grid" aria-label="Prompt mockups"></section>
+  <h2 class="group-title">Disabled reason wording</h2>
+  <div id="reasons" class="reason-grid"></div>
+  <p class="legend">All prompts use the same dark slate panel, white text, amber reason line, green Approve button and neutral Cancel button. The browser mock keeps a narrow violet witness edge as a proposal for N14's per-request color. The existing extension uses the random shade as a witness signal across the panel. Any change to its area or color needs the browser guard rerun before implementation.</p>
+</main>
+<script id="prompt-copy" type="application/json">{
+  "title": "Passkey approval",
+  "heading": "Approve this request?",
+  "factOrder": [
+    "reason when blocked",
+    "title",
+    "heading",
+    "Action",
+    "For",
+    "Account",
+    "Scope when needed",
+    "After approval",
+    "Safety note when needed",
+    "Expiry",
+    "Approve and Cancel",
+    "Other sign in options"
+  ],
+  "labels": {
+    "action": "Action",
+    "for": "For",
+    "account": "Account",
+    "scope": "Scope",
+    "afterApproval": "After approval",
+    "safetyNote": "Safety note",
+    "fallback": "Other sign in options"
+  },
+  "buttons": [
+    {
+      "label": "Approve",
+      "key": "A",
+      "meaning": "Send this one request for approval when all checks pass."
+    },
+    {
+      "label": "Cancel",
+      "key": "C",
+      "meaning": "End this request without releasing a credential or passkey response."
+    }
+  ],
+  "keyboard": {
+    "approve": "A activates Approve only while the prompt is focused and the button is enabled.",
+    "cancel": "C activates Cancel. Escape also cancels where the host supports it.",
+    "enter": "Enter alone never approves. It activates a button only when that button already has focus.",
+    "textSurface": "Text prompts accept A or C on a line. Enter ends the line. Empty or other input cancels and releases nothing."
+  },
+  "timeout": {
+    "seconds": 30,
+    "line": "This request expires in 30 seconds.",
+    "expired": "Request expired. No approval was sent."
+  },
+  "outcomes": {
+    "cancelled": "Cancelled. Nothing was released.",
+    "refused": "Request refused. Nothing was released."
+  },
+  "disabledReasons": [
+    {
+      "code": "loading",
+      "text": "Loading the login details",
+      "appliesTo": "All surfaces while trusted request details are still arriving."
+    },
+    {
+      "code": "busy",
+      "text": "Sending your approval",
+      "appliesTo": "All surfaces after an approval choice while its result is pending."
+    },
+    {
+      "code": "overflow",
+      "text": "The prompt does not fit here",
+      "appliesTo": "Any drawn prompt that cannot show every required fact without clipping."
+    },
+    {
+      "code": "account",
+      "text": "Choose an account",
+      "appliesTo": "Surfaces with multiple enrolled accounts and no selected account. Hide this line when the account selector already says Choose an account."
+    },
+    {
+      "code": "frame",
+      "text": "Waiting for the login page to check in",
+      "appliesTo": "Browser only. The adapter has not received a valid state from the page side."
+    },
+    {
+      "code": "moving",
+      "text": "Waiting for the login box to stop moving",
+      "appliesTo": "Browser only. The detected login box has moved during the stability wait."
+    },
+    {
+      "code": "changed",
+      "text": "The login box changed",
+      "appliesTo": "Browser only. The detected fields no longer match the checked request."
+    },
+    {
+      "code": "hidden",
+      "text": "The prompt is not fully visible",
+      "appliesTo": "Graphical surfaces when clipped, covered, off screen, hidden or altered."
+    },
+    {
+      "code": "settle",
+      "text": "One moment, checking the prompt",
+      "appliesTo": "Browser only. Safety checks are clear but the 650 millisecond stability wait has not ended."
+    }
+  ],
+  "fallbackRules": {
+    "placement": "Place the fallback row below the Approve and Cancel controls. On text surfaces place it after the choice line.",
+    "sharedLabel": "Other sign in options",
+    "browser": "Close this prompt and use the website's sign in controls.",
+    "linux": "Cancel this request, then use the Linux password prompt.",
+    "windowsCredentialProvider": "Choose the Windows password tile on this screen.",
+    "uac": "Cancel to return to the app.",
+    "passkeyPlugin": "Cancel to return to the app's sign in options."
+  },
+  "surfaces": [
+    {
+      "id": "browser-fill",
+      "group": "Browser",
+      "name": "Inline browser fill prompt",
+      "mode": "graphical",
+      "host": "Browser page",
+      "action": "Fill username and password",
+      "for": "https://signin.example.test",
+      "account": "alex@example.test",
+      "accountChoices": ["alex@example.test", "alex.work@example.test"],
+      "scope": "Frame inside portal.example.test",
+      "afterApproval": "Fills the selected fields. The site still controls when sign in completes.",
+      "safetyNote": "This form uses GET. Its password may appear in the address after submit.",
+      "fallback": "Close this prompt and use the website's sign in controls.",
+      "disabledReason": "Waiting for the login box to stop moving",
+      "witness": true,
+      "note": "With several matches, the Account selector shows Choose an account. N15 hides the duplicate reason line."
+    },
+    {
+      "id": "browser-passkey",
+      "group": "Browser",
+      "name": "Inline browser passkey request",
+      "mode": "graphical",
+      "host": "Browser page",
+      "action": "Use passkey",
+      "for": "https://signin.example.test",
+      "account": "alex@example.test",
+      "scope": "Top page portal.example.test",
+      "afterApproval": "Returns one passkey response to the site. The site still controls when sign in completes.",
+      "fallback": "Close this prompt and use the website's sign in controls."
+    },
+    {
+      "id": "linux-console",
+      "group": "Linux",
+      "name": "Console login",
+      "mode": "text",
+      "host": "Linux console",
+      "action": "Sign in to Linux",
+      "for": "This Linux computer",
+      "account": "pk-test",
+      "scope": "Console login",
+      "afterApproval": "Returns one authentication result to this request. Linux still applies its account checks.",
+      "fallback": "Cancel this request, then use the Linux password prompt."
+    },
+    {
+      "id": "linux-sudo",
+      "group": "Linux",
+      "name": "sudo",
+      "mode": "text",
+      "host": "Linux terminal",
+      "action": "Authenticate for sudo",
+      "for": "This Linux computer",
+      "account": "pk-test",
+      "scope": "sudo",
+      "afterApproval": "Returns one authentication result. Sudo still applies its command rules.",
+      "fallback": "Cancel this request, then use the Linux password prompt."
+    },
+    {
+      "id": "linux-polkit-text",
+      "group": "Linux",
+      "name": "Polkit text agent",
+      "mode": "text",
+      "host": "Linux terminal",
+      "action": "Authenticate for administrator access",
+      "for": "This Linux computer",
+      "account": "pk-admin",
+      "scope": "polkit service",
+      "afterApproval": "Returns one authentication result to polkit. Polkit still applies its action rules.",
+      "fallback": "Cancel this request, then enter the administrator password."
+    },
+    {
+      "id": "sddm",
+      "group": "Linux",
+      "name": "SDDM login screen",
+      "mode": "graphical",
+      "host": "NixOS with KDE",
+      "action": "Sign in to Linux",
+      "for": "This Linux computer",
+      "account": "pk-test",
+      "scope": "SDDM login screen",
+      "afterApproval": "Returns one authentication result to this login request. Linux still applies its account checks.",
+      "fallback": "Use the password field on this login screen."
+    },
+    {
+      "id": "kde-lock",
+      "group": "Linux",
+      "name": "KDE lock screen",
+      "mode": "graphical",
+      "host": "NixOS with KDE",
+      "action": "Unlock this session",
+      "for": "This Linux computer",
+      "account": "pk-test",
+      "scope": "KDE lock screen",
+      "afterApproval": "Returns one authentication result to this unlock request. The lock screen decides whether to unlock.",
+      "fallback": "Use the password field on this lock screen."
+    },
+    {
+      "id": "kde-polkit",
+      "group": "Linux",
+      "name": "KDE polkit agent",
+      "mode": "graphical",
+      "host": "NixOS with KDE",
+      "action": "Authenticate for administrator access",
+      "for": "This Linux computer",
+      "account": "pk-admin",
+      "scope": "polkit service",
+      "afterApproval": "Returns one authentication result to polkit. Polkit still applies its action rules.",
+      "fallback": "Cancel this request, then enter the administrator password."
+    },
+    {
+      "id": "gdm",
+      "group": "Linux",
+      "name": "GDM login screen",
+      "mode": "graphical",
+      "host": "Debian with GNOME",
+      "action": "Sign in to Linux",
+      "for": "This Linux computer",
+      "account": "pk-test",
+      "scope": "GDM login screen",
+      "afterApproval": "Returns one authentication result to this login request. Linux still applies its account checks.",
+      "fallback": "Use the password field on this login screen.",
+      "proposed": true
+    },
+    {
+      "id": "gnome-lock",
+      "group": "Linux",
+      "name": "GNOME lock screen",
+      "mode": "graphical",
+      "host": "Debian with GNOME",
+      "action": "Unlock this session",
+      "for": "This Linux computer",
+      "account": "pk-test",
+      "scope": "GNOME lock screen",
+      "afterApproval": "Returns one authentication result to this unlock request. The lock screen decides whether to unlock.",
+      "fallback": "Use the password field on this lock screen.",
+      "proposed": true
+    },
+    {
+      "id": "gnome-polkit",
+      "group": "Linux",
+      "name": "GNOME polkit agent",
+      "mode": "graphical",
+      "host": "Debian with GNOME",
+      "action": "Authenticate for administrator access",
+      "for": "This Linux computer",
+      "account": "pk-admin",
+      "scope": "polkit service",
+      "afterApproval": "Returns one authentication result to polkit. Polkit still applies its action rules.",
+      "fallback": "Cancel this request, then enter the administrator password.",
+      "proposed": true
+    },
+    {
+      "id": "windows-startup",
+      "group": "Windows",
+      "name": "Credential provider at startup",
+      "mode": "graphical",
+      "host": "Windows sign in screen",
+      "action": "Sign in to Windows",
+      "for": "This Windows computer",
+      "account": "passkeytest",
+      "scope": "Startup",
+      "afterApproval": "Fills the selected password field. Press Enter to finish sign in.",
+      "fallback": "Choose the Windows password tile on this screen."
+    },
+    {
+      "id": "windows-unlock",
+      "group": "Windows",
+      "name": "Credential provider at unlock",
+      "mode": "graphical",
+      "host": "Windows lock screen",
+      "action": "Unlock this Windows session",
+      "for": "This Windows computer",
+      "account": "passkeytest",
+      "scope": "Lock screen",
+      "afterApproval": "Fills the selected password field. Press Enter to unlock the session.",
+      "fallback": "Choose the Windows password tile on this screen."
+    },
+    {
+      "id": "windows-switch-user",
+      "group": "Windows",
+      "name": "Credential provider at switch user",
+      "mode": "graphical",
+      "host": "Windows sign in screen",
+      "action": "Sign in to Windows",
+      "for": "This Windows computer",
+      "account": "passkeytest",
+      "scope": "Switch user",
+      "afterApproval": "Fills the selected password field. Press Enter to sign in as this account.",
+      "fallback": "Choose the Windows password tile on this screen."
+    },
+    {
+      "id": "windows-uac",
+      "group": "Windows",
+      "name": "User Account Control",
+      "mode": "graphical",
+      "host": "User Account Control screen",
+      "action": "Provide administrator credentials",
+      "for": "Windows Command Processor",
+      "account": "passkeytest",
+      "scope": "Administrator request",
+      "afterApproval": "Fills the administrator password field. Windows still decides whether to allow elevation.",
+      "fallback": "Cancel to return to the app."
+    },
+    {
+      "id": "windows-plugin",
+      "group": "Windows",
+      "name": "Windows passkey plugin",
+      "mode": "graphical",
+      "host": "Windows passkey chooser then Passkey approval",
+      "action": "Use passkey",
+      "for": "signin.example.test",
+      "account": "alex@example.test",
+      "scope": "Windows passkey provider",
+      "afterApproval": "Returns one passkey response to Windows. The requesting app still applies its checks.",
+      "fallback": "Cancel to return to the app's sign in options.",
+      "proposed": true,
+      "nativeStep": "Windows currently shows its passkey chooser and Continue before the custom approval."
+    }
+  ]
+}
+</script>
+<script>
+(function () {
+  const data = JSON.parse(document.getElementById("prompt-copy").textContent);
+  const surfaces = document.getElementById("surfaces");
+  const reasons = document.getElementById("reasons");
+  const esc = function (s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+    });
+  };
+  const row = function (label, value) {
+    return "<dt>" + esc(label) + "</dt><dd>" + esc(value) + "</dd>";
+  };
+  const accountRow = function (s) {
+    let value = esc(s.account);
+    if (s.accountChoices) {
+      value = "<select class=\"account-choice\" aria-label=\"Account\">";
+      s.accountChoices.forEach(function (choice) {
+        value += "<option" + (choice === s.account ? " selected" : "") + ">" + esc(choice) + "</option>";
+      });
+      value += "</select>";
+    }
+    return "<dt>" + esc(data.labels.account) + "</dt><dd>" + value + "</dd>";
+  };
+  data.surfaces.forEach(function (s) {
+    const card = document.createElement("article");
+    card.className = "surface-card";
+    const heading = "<div class=\"surface-head\"><h2>" + esc(s.name) + "</h2><div class=\"surface-host\">" + esc(s.host) + (s.proposed ? " · proposed" : "") + "</div></div>";
+    let inside = "";
+    if (s.mode === "text") {
+      inside = "<div class=\"text-stage\"><div class=\"terminal\">";
+      if (s.disabledReason) inside += "<div class=\"reason\">" + esc(s.disabledReason) + "</div>";
+      inside += "<div class=\"terminal-title\">" + esc(data.title) + "</div>";
+      inside += "<div class=\"terminal-heading\">" + esc(data.heading) + "</div>";
+      inside += "<div class=\"terminal-line\"><span class=\"terminal-label\">" + esc(data.labels.action) + ":</span> " + esc(s.action) + "</div>";
+      inside += "<div class=\"terminal-line\"><span class=\"terminal-label\">" + esc(data.labels.for) + ":</span> " + esc(s.for) + "</div>";
+      inside += "<div class=\"terminal-line\"><span class=\"terminal-label\">" + esc(data.labels.account) + ":</span> " + esc(s.account) + "</div>";
+      if (s.scope) inside += "<div class=\"terminal-line\"><span class=\"terminal-label\">" + esc(data.labels.scope) + ":</span> " + esc(s.scope) + "</div>";
+      inside += "<div class=\"terminal-effect\"><span class=\"terminal-label\">" + esc(data.labels.afterApproval) + ":</span> " + esc(s.afterApproval) + "</div>";
+      if (s.safetyNote) inside += "<div class=\"terminal-line\"><span class=\"terminal-label\">" + esc(data.labels.safetyNote) + ":</span> " + esc(s.safetyNote) + "</div>";
+      inside += "<div class=\"terminal-expiry\">" + esc(data.timeout.line) + "</div>";
+      inside += "<div class=\"terminal-choice\">[A] " + esc(data.buttons[0].label) + "    [C] " + esc(data.buttons[1].label) + "</div>";
+      inside += "<div class=\"terminal-fallback\"><span class=\"terminal-label\">" + esc(data.labels.fallback) + ":</span> " + esc(s.fallback) + "</div></div></div>";
+    } else {
+      let stageClass = "host-stage";
+      if (s.id.indexOf("browser-") === 0) stageClass += " browser-stage";
+      if (s.id === "windows-uac" || s.id === "windows-plugin" || s.id.indexOf("windows-") === 0) stageClass += " light-stage";
+      inside = "<div class=\"" + stageClass + "\">";
+      if (s.id.indexOf("browser-") === 0) inside += "<div class=\"browser-page-label\">Example sign in page · saved account form</div>";
+      if (s.nativeStep) inside += "<div class=\"native-step\">" + esc(s.nativeStep) + "</div>";
+      inside += "<div class=\"prompt" + (s.witness ? " witness" : "") + "\">";
+      if (s.disabledReason) inside += "<div class=\"reason\">" + esc(s.disabledReason) + "</div>";
+      inside += "<div class=\"brand\">" + esc(data.title) + "</div>";
+      inside += "<div class=\"prompt-heading\">" + esc(data.heading) + "</div>";
+      inside += "<dl class=\"facts\">";
+      inside += row(data.labels.action, s.action);
+      inside += row(data.labels.for, s.for);
+      inside += accountRow(s);
+      if (s.scope) inside += row(data.labels.scope, s.scope);
+      inside += "</dl>";
+      inside += "<div class=\"after\"><strong>" + esc(data.labels.afterApproval) + "</strong>" + esc(s.afterApproval) + "</div>";
+      if (s.safetyNote) inside += "<div class=\"safety\"><strong>" + esc(data.labels.safetyNote) + "</strong>" + esc(s.safetyNote) + "</div>";
+      inside += "<div class=\"expiry\">" + esc(data.timeout.line) + "</div>";
+      inside += "<div class=\"actions\"><button class=\"mock-button\"" + (s.disabledReason ? " disabled" : "") + ">" + esc(data.buttons[0].label) + " <kbd>" + esc(data.buttons[0].key) + "</kbd></button><button class=\"mock-button cancel\">" + esc(data.buttons[1].label) + " <kbd>" + esc(data.buttons[1].key) + "</kbd></button></div>";
+      inside += "<div class=\"fallback\"><strong>" + esc(data.labels.fallback) + "</strong>" + esc(s.fallback) + "</div></div></div>";
+    }
+    let note = "";
+    if (s.note) note = s.note;
+    if (s.nativeStep) note = "Windows currently requires a separate Continue step before this approval. N18 will investigate whether it can be removed.";
+    card.innerHTML = heading + inside + (note ? "<div class=\"surface-note\">" + esc(note) + "</div>" : "");
+    surfaces.appendChild(card);
+  });
+  data.disabledReasons.forEach(function (r) {
+    const item = document.createElement("div");
+    item.className = "reason-item";
+    item.innerHTML = "<div class=\"reason-code\">" + esc(r.code) + "</div><div>" + esc(r.text) + "</div>";
+    reasons.appendChild(item);
+  });
+})();
+</script>
+</body>
+</html>
+

@@ -1,0 +1,47 @@
+Passkey power and USB front end mockup
+* Derived from the ASC with stock LTspice symbol pin coordinates.
+* Ideal behavioral LDO. Cable and protection parameters are assumptions.
+* RP2354A with stacked flash. Idle MCU proxy 7.585mA: verify.
+* Active IMCU 29.5mA plus ILED 0.5mA = 30mA: verify. No touch load.
+* SERVICE, not simulated: QSPI_SS -> 1k -> TP_BOOT; TP_GND -> ground.
+* Bridge recessed contacts during power up for BOOTSEL. No surface button.
+* Computer pop up approval is proposed and not simulated.
+* Rpu_internal is inside the MCU. Rref parts are numerical aids.
+* No MCU, core regulator, crystal, flash, host or USB protocol simulation.
+VBUS VBUS_HOST 0 PWL(0 0 100u 5 30m 5)
+Rsource N002 VBUS_HOST 0.1
+Rcable N003 N002 0.3
+Lcable N006 N003 1u
+Rconnector VBUS_CONN N006 0.05
+Rfuse VBUS_PROTECTED VBUS_CONN 0.1
+Blimit VBUS_PROTECTED VBUS_IN I=min((V(VBUS_PROTECTED)-V(VBUS_IN))/0.1,50m)
+Cconnector VBUS_CONN 0 1n
+Cin VBUS_IN 0 10u
+Binput VBUS_IN 0 I=max((V(REGCMD)-V(VDD3V3))/0.2,0)+1m*min(max(V(VBUS_IN),0),1)
+Breg REGCMD 0 V=min(max(V(VBUS_IN)-0.3,0),3.3*min(time/2m,1))
+Rout VDD3V3 REGCMD 0.2
+Cbulk VDD3V3 0 10u
+Cregin VDD3V3 0 4.7u
+Cio VDD3V3 0 100n
+IMCU VDD3V3 0 PWL(0 0 2.5m 0 2.51m 7.585m 10m 7.585m 10.01m 29.5m 15m 29.5m 15.01m 7.585m 30m 7.585m)
+ILED VDD3V3 0 PWL(0 0 10m 0 10.01m 0.5m 15m 0.5m 15.01m 0 30m 0)
+Rpu_internal VDD3V3 USB_DP_MCU 1.398k
+Rdp USB_DP_CONN USB_DP_MCU 27
+Rref_dp USB_DP_CONN 0 1G
+Rdm USB_DM_CONN USB_DM_MCU 27
+Rref_dm USB_DM_CONN 0 1G
+.tran 200n 30m 0 200n
+.meas tran rail_idle AVG V(VDD3V3) FROM=8m TO=9m
+.meas tran rail_active AVG V(VDD3V3) FROM=12m TO=14m
+.meas tran rail_pp PP V(VDD3V3) FROM=9m TO=16m
+.meas tran rail_settled_pp PP V(VDD3V3) FROM=12m TO=14m
+.meas tran vbus_idle AVG V(VBUS_IN) FROM=8m TO=9m
+.meas tran vbus_active AVG V(VBUS_IN) FROM=12m TO=14m
+.meas tran vbus_min MIN V(VBUS_IN) FROM=9m TO=16m
+.meas tran connector_min MIN V(VBUS_CONN) FROM=9m TO=16m
+.meas tran connector_droop PARAM='5-connector_min'
+.meas tran vbus_droop PARAM='5-vbus_min'
+.meas tran ibus_start_signed MIN I(VBUS) FROM=0 TO=3m
+.meas tran ibus_active_signed AVG I(VBUS) FROM=12m TO=14m
+.options reltol=1e-6 abstol=1e-12 vntol=1e-8
+.end

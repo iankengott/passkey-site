@@ -1,0 +1,197 @@
+[
+  {
+    "path": "analysis/test-register/register.json",
+    "role": "Current result counts and verbatim register rows",
+    "sha256": "cdb18267bc4282be625555c58933345909982381aabf0e56a019b75053daa500"
+  },
+  {
+    "path": "reports/Passkey feasibility paper - Revision 8.md",
+    "role": "Study findings, architecture and limits, dated 22 October 2026",
+    "sha256": "f3473af57e15c29875369c3def1fd16bf9b363d72958614f6a2d52e2ec63b4e3"
+  },
+  {
+    "path": "research_notes/Passkey project feasibility/n13-result.md",
+    "role": "Scope and completion of card N13",
+    "sha256": "e0a10d4e0d6119537a18a0ef43efc390315f6c6db7500e6e14423e814261436c"
+  },
+  {
+    "path": "research_notes/Passkey project feasibility/n17-result.md",
+    "role": "Scope and completion of card N17",
+    "sha256": "328e6b6559f025a4bb60f1841a17417cde6d3520dd192b67a115efd295bec5e0"
+  },
+  {
+    "path": "research_notes/Passkey project feasibility/n18-result.md",
+    "role": "Scope and completion of card N18",
+    "sha256": "02f2b5a475d811ba35c28ebbe55969bac3df528bb885b179eac4668be59dc85d"
+  },
+  {
+    "path": "research_notes/Passkey project feasibility/n19-result.md",
+    "role": "Scope and completion of card N19",
+    "sha256": "0abf3d5e2ddd71f61505ebf2b1224685bfa815cd900c5f49af5568e6b78d69ca"
+  },
+  {
+    "path": "research_notes/Passkey project feasibility/n20-result.md",
+    "role": "Scope and completion of card N20",
+    "sha256": "c4f59cfdaf7c6b855514b476a9951a908b58ec6c3f73188a203140d45307355c"
+  },
+  {
+    "path": "research_notes/Passkey project feasibility/n21-result.md",
+    "role": "Scope and completion of card N21",
+    "sha256": "956189a8a063f46814df43ec52c4e0f3797dd1fb401266b9f8f76825b4bd27d0"
+  },
+  {
+    "path": "research_notes/Passkey project feasibility/n22-result.md",
+    "role": "Scope and completion of card N22",
+    "sha256": "76237e9f4dc5787acf571acc7f4360f6f3237255f1d07d82e9a86ab55d5e2db5"
+  },
+  {
+    "path": "research_notes/Passkey project feasibility/n23-result.md",
+    "role": "Scope and completion of card N23",
+    "sha256": "ce69b447d5d319738b74231081c54cdf29a6e46f0c4f16f3d748e2dbaa63b558"
+  },
+  {
+    "path": "research_notes/Passkey project feasibility/t8-debian-result.md",
+    "role": "Scope and completion of card T8-DEBIAN",
+    "sha256": "95f1b513f99abca087938283edb4de090a27406790f44baaafa979a2ec9abbac"
+  },
+  {
+    "path": "analysis/prompt-design/spec.md",
+    "role": "N13 shared approval design",
+    "sha256": "f34ca0866a7427d65186d86dffefc4714b4a14e4705ccc0241d036466b6278b9"
+  },
+  {
+    "path": "analysis/prompt-design/wording.json",
+    "role": "N13 shared approval design",
+    "sha256": "d500046eb5e34590da0008da4bb312a07ffa0383e50060f7e2ce6cf86fea307d"
+  },
+  {
+    "path": "analysis/prompt-design/index.html",
+    "role": "N13 shared approval design",
+    "sha256": "a470b3ea99e088bdbd5fdaa0e92e8cde078676e4e75c195bca514bff806c0bc0"
+  },
+  {
+    "path": "analysis/hardware-mockups/enclosure/v2-no-touch/previews/key-isometric.png",
+    "role": "Existing key enclosure mock up",
+    "sha256": "656f8aa5c1ab7047be519345c12b55cd9cd415ad6641982f994e5ddaeca26cda"
+  },
+  {
+    "path": "analysis/hardware-mockups/enclosure/v2-no-touch/previews/tiny-isometric.png",
+    "role": "Existing tiny enclosure mock up",
+    "sha256": "f75cf8ded7eb9796319f7185dcc960886b7a7c41d268d000c1113ac289e13163"
+  },
+  {
+    "path": "analysis/hardware-mockups/enclosure/v2-no-touch/previews/tiny-bottom.png",
+    "role": "Proposed recessed service contacts",
+    "sha256": "4a71ef4b88fa303d94a9aeeb39aef83ef01bad7e50a7a3f5a3bac9e295976606"
+  },
+  {
+    "path": "analysis/hardware-mockups/enclosure/v2-no-touch/previews/tiny-budget.png",
+    "role": "Assumed component space budget",
+    "sha256": "dd3849d3a8a0363187a2f824e3530af82f6aa6e13e0310fd572045d0e0ff7f41"
+  },
+  {
+    "path": "analysis/hardware-mockups/README.md",
+    "role": "Hardware source assumptions and limits; the inline key drawing uses the tiny v2 dimensions from here",
+    "sha256": "225361c3326a9cf3740e7aef02ab64f330b26c07b0cecdf21f098f6a3ec2fde0"
+  },
+  {
+    "path": "analysis/hardware-mockups/circuit/README.md",
+    "role": "Hardware source assumptions and limits; the inline key drawing uses the tiny v2 dimensions from here",
+    "sha256": "93d29a4bc11396fcb734a6a69fd6fa6615d08b1d2a55dedf3957e905c0789f23"
+  },
+  {
+    "path": "analysis/hardware-mockups/circuit/v2-no-touch/README.md",
+    "role": "Hardware source assumptions and limits; the inline key drawing uses the tiny v2 dimensions from here",
+    "sha256": "f749197e30fd9c2a0e57c134390b28913dae01d080d84aad9caf2622b5d4be3d"
+  },
+  {
+    "path": "analysis/hardware-mockups/enclosure/README.md",
+    "role": "Hardware source assumptions and limits; the inline key drawing uses the tiny v2 dimensions from here",
+    "sha256": "9142d1eee80c8fb0df0b60b6848c9d33182f685df73736ed10d08372cbd1022d"
+  },
+  {
+    "path": "analysis/hardware-mockups/enclosure/v2-no-touch/README.md",
+    "role": "Hardware source assumptions and limits; the inline key drawing uses the tiny v2 dimensions from here",
+    "sha256": "12ff16c9dcee57cc5ef62ab6b48499e18dc13f2c4599a69af334447ca70b93d0"
+  },
+  {
+    "path": "analysis/test-register/n19-prompt-build/results/screens/chromium-wording-fill-prompt.png",
+    "role": "Real N19 local fixture screenshot, Chromium",
+    "sha256": "808575f59a967b0458630709c896c57c697aceeedabb6bcb1363b7eea00c890f"
+  },
+  {
+    "path": "analysis/test-register/n19-prompt-build/results/screens/firefox-wording-fill-prompt.png",
+    "role": "Real N19 local fixture screenshot, Firefox",
+    "sha256": "4fd6728c77316f5447f8bcfc5829a1ade69974c84cf7b5d91af0aab3b8d1a7c5"
+  },
+  {
+    "path": "analysis/linux-login-followup/evidence/reruns/20261023-005854/cold-key-01-context.png",
+    "role": "Historical N7 NixOS KDE VM screenshot, 23 October, before N20",
+    "sha256": "b5d865ed26138fa1fc5fcfc4acfee5e41406f9f451d43f49e0c4ebbb54c76306"
+  },
+  {
+    "path": "analysis/linux-login-followup/evidence/reruns/20261023-005854/polkit-key-01-context.png",
+    "role": "Historical N7 KDE graphical administrator prompt in VM",
+    "sha256": "03bdddfb2f413b365fb8a3e059859589b20b93ab0312078828cc072cf36eaf38"
+  },
+  {
+    "path": "analysis/windows-login/evidence/n17-prepare-20261024-211115/new-provider-smoke-prompt.png",
+    "role": "Historical N17 Windows 11 Pro VM screenshot, before N21",
+    "sha256": "56c4a7c148ec819850a4c64b61445a45a3207422943eec5aa71b5641c90f76e8"
+  },
+  {
+    "path": "analysis/windows-login/evidence/t7/assertion-mock-prompt.png",
+    "role": "Historical T7 Windows passkey mock approval, before N18 and N21",
+    "sha256": "6cf75ff921c3e18ca023dfa12526d698b64bd2f5a7c3027ef23ddd259bc61bbd"
+  },
+  {
+    "path": "analysis/linux-login-followup/evidence/reruns/20261023-005854/g-lock-key-01-typed.png",
+    "role": "KDE lock screen, historical VM capture with the mock signer",
+    "sha256": "a6fbd2c20290a678aa1bf03b95af4eba5a09f07ae3582ab27a52c6e8f698655b"
+  },
+  {
+    "path": "analysis/windows-login/evidence/reruns/20261025-014836/lock-10-prompt.png",
+    "role": "Windows unlock, historical VM capture with the mock signer",
+    "sha256": "af5c9e1322de4d30dab052e0463ec4c8eba92eca304ae9f57a507f37f482f222"
+  },
+  {
+    "path": "analysis/windows-login/evidence/reruns/20261025-014836/switch-3-prompt.png",
+    "role": "Windows switch user, historical VM capture with the mock signer",
+    "sha256": "82cbe3cd98ae521a5da5fa3e3371828d7382c14ef6dfa3dd528f87a1a370bc01"
+  },
+  {
+    "path": "analysis/windows-login/evidence/reruns/20261025-014836/uac-2-uac-prompt.png",
+    "role": "Windows administrator prompt, historical VM capture with the mock signer",
+    "sha256": "fbc547112d5499cd0a1b3febaebe9558aaf776aad445abd1854b7ab5442bf0ec"
+  },
+  {
+    "path": "analysis/prompt-design/index.html",
+    "role": "All 16 original N13 design mock ups. These are proposals, not captured VM evidence.",
+    "sha256": "a470b3ea99e088bdbd5fdaa0e92e8cde078676e4e75c195bca514bff806c0bc0"
+  },
+  {
+    "path": "analysis/linux-login-followup/evidence/reruns/20261023-005854/transcripts-results-console.json",
+    "role": "Historical N7 text capture for console",
+    "sha256": "7e3171d4216f219689c40929b8adb8a7658c26bd8ede744dd112fd13bed0a0e1"
+  },
+  {
+    "path": "analysis/linux-login-followup/evidence/reruns/20261023-005854/transcripts-results-sudo.json",
+    "role": "Historical N7 text capture for sudo",
+    "sha256": "2eb897ffa1ef59de804766540979c5760702a2e92da66bed6df36568bb57535c"
+  },
+  {
+    "path": "analysis/linux-login-followup/evidence/reruns/20261023-005854/transcripts-results-polkit.json",
+    "role": "Historical N7 text capture for polkit",
+    "sha256": "a9432b25ac351f21c0a58557a7dedbc10b82cf69f67bf93dc799c153c68d2b1f"
+  },
+  {
+    "path": "analysis/hardware-mockups/circuit/v2-no-touch/passkey_power_usb_mockup.cir",
+    "role": "Source of the circuit model export",
+    "sha256": "7aa4fa7b27669a73287e3373a41341ca0acbf40997a04daaf318b03f36c875d7"
+  },
+  {
+    "path": "analysis/hardware-mockups/circuit/v2-no-touch/passkey_power_usb_mockup.asc",
+    "role": "Original LTspice schematic",
+    "sha256": "bebf523fe498a93141c850bde5f27ddbcdeb2c97fd51d4c36df6f657ff3ceeac"
+  }
+]
