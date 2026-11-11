@@ -1,4 +1,4 @@
-/* Passkey concept site, round two. Offline progressive enhancement.
+/* Passkey concept site, N28 presentation. Offline progressive enhancement.
    No credentials, network, device or USB APIs. One stored preference: the Reduce motion choice. */
 (() => {
   'use strict';
@@ -171,7 +171,7 @@
     d.addEventListener('close', () => { if (opener) opener.focus(); });
     d.addEventListener('keydown', ev => {
       if (ev.key !== 'Tab') return;
-      const items = all('button,a[href]', d).filter(x => x.getClientRects().length);
+      const items = all('button,a[href],summary', d).filter(x => x.getClientRects().length);
       const first = items[0], last = items[items.length - 1];
       if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus(); }
       else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
@@ -190,7 +190,7 @@
 
   // ------------------------------------------------------------ column pickers for phone tables
   all('.col-pick').forEach(pick => {
-    const scope = pick.classList.contains('sec-pick') ? pick.parentElement : pick.closest('.spectrum, .home-works, .compat-works, .threat-wrap, details, .band');
+    const scope = pick.classList.contains('sec-pick') ? pick.parentElement : pick.closest('.home-works, .compat-works, .threat-wrap, details, .band');
     const table = scope && scope.querySelector('[data-active]');
     if (!table) return;
     all('[data-pick]', pick).forEach(b => b.addEventListener('click', () => {
@@ -215,21 +215,20 @@
     btn.textContent = open ? 'Hide all reasons' : 'Show all reasons';
   }));
 
-  // ------------------------------------------------------------ spectrum markers explain their place
-  all('.spectrum').forEach(sp => {
-    const out = sp.querySelector('.spec-reason');
-    const marks = all('.spec-mark', sp);
+  // ------------------------------------------------------------ position curves: each name explains its place
+  all('.curve').forEach(fig => {
+    const out = fig.querySelector('.curve-why');
+    const marks = all('.cm-label', fig);
     marks.forEach(m => m.addEventListener('click', () => {
       const on = m.getAttribute('aria-expanded') !== 'true';
-      marks.forEach(x => x.setAttribute('aria-expanded', 'false'));
+      marks.forEach(x => { x.setAttribute('aria-expanded', 'false'); x.parentElement.classList.remove('on'); });
       m.setAttribute('aria-expanded', String(on));
-      out.querySelector('.sr-title').textContent = on ? m.dataset.name : 'Why each one sits where it does';
-      out.querySelector('.sr-text').textContent = on ? m.dataset.reason : 'Tap or select a marker to see the reason for its place.';
+      m.parentElement.classList.toggle('on', on);
+      out.querySelector('strong').textContent = on ? m.dataset.name : 'Why here?';
+      out.querySelector('span').textContent = on ? m.dataset.reason : 'Select a name to see the reason for its place.';
       out.classList.remove('flash'); void out.offsetWidth; out.classList.add('flash');
-      const bounds = out.getBoundingClientRect();
-      if (on && (bounds.top < 0 || bounds.bottom > innerHeight)) {
-        out.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'instant' : 'smooth' });
-      }
+      const b = out.getBoundingClientRect();
+      if (on && (b.top < 0 || b.bottom > innerHeight)) out.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'instant' : 'smooth' });
     }));
   });
 
@@ -246,7 +245,8 @@
     const dotBtns = slides.map((s, i) => {
       const b = document.createElement('button');
       b.type = 'button';
-      b.setAttribute('aria-label', 'Show item ' + (i + 1) + ' of ' + slides.length);
+      if (s.dataset.label) { b.textContent = s.dataset.label; b.className = 'lbl'; b.setAttribute('aria-label', 'Show ' + s.dataset.label); }
+      else b.setAttribute('aria-label', 'Show item ' + (i + 1) + ' of ' + slides.length);
       b.addEventListener('click', () => go(i));
       dots.appendChild(b);
       return b;
@@ -267,6 +267,8 @@
       if (prev) prev.disabled = track.scrollLeft <= 4;
       if (next) next.disabled = atEnd;
       car.dataset.index = String(atEnd ? slides.length - visible : idx);
+      // One slide per view: the hidden one leaves the tab order until it is shown.
+      if (track.classList.contains('one')) slides.forEach(s => { s.inert = !s.classList.contains('on'); });
     }
     let raf = 0;
     track.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(sync); });
@@ -295,190 +297,100 @@
   }
   all('[data-route]').forEach(b => b.addEventListener('click', () => setFlow(b.dataset.route)));
 
-  // ------------------------------------------------------------ hero: turnable key, hotspots, plug-in sign-in demo
-  const viewer = $('viewer');
-  const demo = document.querySelector('.demo');
-  if (viewer && demo) {
-    const ORDER = ['iso', 'under', 'side'];
-    const views = all('.view', viewer);
-    const info = $('hotspot-info');
-    let mode = 'password', state = 'ready';
-    const DEFAULT = {
-      iso: ['Try it', 'Tap a gold point to learn what it is. Drag to turn the key. Plug it in to sign in.'],
-      under: ['Underside', 'Flat base with a recessed service well. Tap the gold point.'],
-      side: ['Profile', '3.5 mm thin. Tap a gold point for the dimensions.']
-    };
-    // The info card follows the demo state; the view text applies only before a sign-in starts.
-    function stateInfo() {
-      const pw = mode === 'password';
-      return {
-        review: ['Plugged in', 'The key is connected. Approve in the prompt on screen. The key itself has no button.'],
-        released: ['Approved', pw ? 'The password travelled from the key, through the computer, to the exact saved site.' : 'The site sent a challenge. The key signed it and the signature went back.'],
-        complete: ['Signed in', 'Demo complete. Replay to try again, or switch between Password and Passkey.'],
-        cancelled: ['Cancelled', 'Nothing left the key. Replay to try again.'],
-        excluded: ['Refused', 'This site asks for a PIN or fingerprint. The key has neither, so nothing is released.']
-      }[state] || DEFAULT[viewer.dataset.view];
+  // ------------------------------------------------------------ hero: rendered plug-in, one approval, the user submits
+  // Fake data only. Nothing here touches real credentials, devices, USB or the network.
+  const product = $('product');
+  const frameImg = $('plug-frame');
+  const demo = $('demo');
+  if (product && frameImg && demo) {
+    const N = Number(frameImg.dataset.frames);
+    const DUR = Number(frameImg.dataset.duration);
+    const start = $('start');
+    const startLabel = start.querySelector('span');
+    const frameSrc = i => 'assets/hero/plug-' + String(i).padStart(2, '0') + '.webp';
+    let warm = null;
+    const preload = () => warm || (warm = Promise.all(Array.from({ length: N }, (_, i) => {
+      const im = new Image();
+      im.src = frameSrc(i);
+      return im.decode().catch(() => null);
+    })));
+    // Warm the frames once the page is idle, so the first plug-in plays without gaps.
+    addEventListener('load', () => (window.requestIdleCallback ? requestIdleCallback(preload, { timeout: 2500 }) : setTimeout(preload, 1500)));
+    function showFrame(i) {
+      if (frameImg.dataset.frame === String(i)) return;
+      frameImg.dataset.frame = String(i);
+      frameImg.src = frameSrc(i);
     }
-    function setInfo(title, text) {
-      info.querySelector('.hi-title').textContent = title;
-      info.querySelector('.hi-text').textContent = text;
-      info.classList.remove('flash'); void info.offsetWidth; info.classList.add('flash');
+    // The frame follows a Web Animation clock, so it can be paused and seeked like a CSS transition.
+    let motion = null;
+    function play(forward) {
+      const last = forward ? N - 1 : 0;
+      if (motion) { motion.cancel(); motion = null; }
+      if (reduced()) { showFrame(last); return Promise.resolve(); }
+      const anim = frameImg.animate([{ opacity: 1 }, { opacity: 1 }], { duration: DUR, easing: 'linear' });
+      anim.id = forward ? 'plug-in' : 'unplug';
+      motion = anim;
+      const tick = () => {
+        if (motion !== anim) return;
+        const t = Math.min(1, Math.max(0, (anim.currentTime || 0) / DUR));
+        showFrame(Math.round((forward ? t : 1 - t) * (N - 1)));
+        if (anim.playState !== 'finished') requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      return anim.finished.then(() => { if (motion === anim) { motion = null; showFrame(last); } });
     }
-    function clearSpots() { all('.hs', viewer).forEach(h => h.setAttribute('aria-expanded', 'false')); delete viewer.dataset.focus; info.classList.remove('on'); }
-    function setView(v) {
-      const vi = ORDER.indexOf(v);
-      // Keep keyboard focus: a focused hotspot in the old view is about to become inert.
-      if (viewer.contains(document.activeElement) && document.activeElement.closest('.view')) viewer.focus({ preventScroll: true });
-      viewer.dataset.view = v;
-      views.forEach(el => {
-        const active = el.dataset.v === v;
-        el.classList.toggle('is-active', active);
-        el.classList.toggle('before', ORDER.indexOf(el.dataset.v) < vi);
-        el.style.transform = '';
-        el.inert = !active;
-      });
-      all('[data-goto]', viewer).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.goto === v)));
-      clearSpots();
-      setInfo(...stateInfo());
-    }
-    const turn = d => { viewer.classList.add('touched'); setView(ORDER[(ORDER.indexOf(viewer.dataset.view) + d + ORDER.length) % ORDER.length]); };
-    all('[data-turn]', viewer).forEach(b => b.addEventListener('click', () => turn(Number(b.dataset.turn))));
-    all('[data-goto]', viewer).forEach(b => b.addEventListener('click', () => { viewer.classList.add('touched'); setView(b.dataset.goto); }));
-    viewer.addEventListener('keydown', ev => {
-      if (ev.target.closest('.seg')) return;
-      if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') { ev.preventDefault(); turn(ev.key === 'ArrowRight' ? 1 : -1); }
-    });
-    all('.hs', viewer).forEach(h => h.addEventListener('click', () => {
-      viewer.classList.add('touched');
-      const was = h.getAttribute('aria-expanded') === 'true';
-      clearSpots();
-      if (was) { setInfo(...stateInfo()); return; }
-      h.setAttribute('aria-expanded', 'true');
-      viewer.dataset.focus = h.dataset.hs;
-      info.classList.add('on');
-      setInfo(h.dataset.title, h.dataset.text);
-    }));
-    // Drag to turn. A press without movement on the key plugs it in.
-    let drag = null;
-    viewer.addEventListener('pointerdown', ev => {
-      if (ev.button !== 0 || ev.target.closest('button,a')) return;
-      drag = { x: ev.clientX, y: ev.clientY, id: ev.pointerId, moved: false, onKey: !!ev.target.closest('.key') };
-    });
-    viewer.addEventListener('pointermove', ev => {
-      if (!drag || ev.pointerId !== drag.id) return;
-      const dx = ev.clientX - drag.x, dy = ev.clientY - drag.y;
-      if (!drag.moved && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
-        drag.moved = true;
-        viewer.classList.add('dragging', 'touched');
-        try { viewer.setPointerCapture(ev.pointerId); } catch (err) { /* ignore */ }
-      }
-      if (drag.moved) {
-        const active = viewer.querySelector('.view.is-active');
-        if (!reduced()) active.style.transform = 'rotateY(' + Math.max(-45, Math.min(45, dx * 0.28)) + 'deg)';
-      }
-    });
-    const endDrag = ev => {
-      if (!drag || ev.pointerId !== drag.id) return;
-      const dx = ev.clientX - drag.x;
-      const d = drag;
-      drag = null;
-      viewer.classList.remove('dragging');
-      const active = viewer.querySelector('.view.is-active');
-      active.style.transform = '';
-      if (d.moved && ev.type === 'pointerup' && Math.abs(dx) > 50) turn(dx < 0 ? 1 : -1);
-      else if (!d.moved && ev.type === 'pointerup' && d.onKey && viewer.dataset.view === 'iso' && state === 'ready') plug();
-    };
-    viewer.addEventListener('pointerup', endDrag);
-    viewer.addEventListener('pointercancel', endDrag);
 
-    // Sign-in state machine. Nothing here touches real credentials, devices or the network.
-    const route = $('route');
-    const ROUTE = {
-      password: { key: 'Holds the password', pc: 'Helper and on-screen prompt', site: 'Gets the password' },
-      passkey: { key: 'Holds the passkey', pc: 'Helper and on-screen prompt', site: 'Checks a signature' }
-    };
+    let state = 'ready';
     const MESSAGES = {
-      ready: 'Plug in the key to start. The add-on and helper would need to be installed first.',
-      review: 'The key is in. Check the site and account in the prompt, then approve or cancel.',
-      released: { password: 'Filled. Nothing was submitted. Press Sign in on the site yourself.', passkey: 'Signed. The site checks the signature. Press Continue.' },
-      complete: 'Signed in to the demo. No real account, key or network was used.',
-      cancelled: 'Cancelled. Nothing was released.',
-      excluded: 'Refused. This site requires a PIN or fingerprint, and the key has neither.'
+      review: 'Check the site and account, then approve.',
+      released: 'Filled. Nothing was submitted. Press Sign in yourself.',
+      complete: 'Signed in to demo.example.',
+      cancelled: 'Cancelled. Nothing left the key.'
     };
-    function runRoute(cls) {
-      route.classList.remove('go', 'go2', 'gopk');
-      if (reduced()) return;
-      void route.offsetWidth;
-      route.classList.add(cls);
-    }
+    const VALUES = { review: 'Waiting for your approval', released: '•••••••••••• (demo)', complete: '•••••••••••• (demo)', cancelled: 'Nothing released' };
     function render() {
-      const pw = mode === 'password';
-      const inKey = ['review', 'released', 'complete'].includes(state);
-      const overlay = state === 'review' || state === 'excluded';
+      product.dataset.state = state;
       demo.dataset.state = state;
-      demo.dataset.mode = mode;
-      viewer.classList.toggle('plugged', inKey);
-      if (inKey && viewer.dataset.view !== 'iso') setView('iso');
-      // Hidden hotspots and the hidden plug pill leave the tab order while the key is in.
-      all('.hs', viewer).forEach(h => { h.inert = inKey; });
-      viewer.classList.toggle('idle', state === 'ready');
-      $('plug').inert = state !== 'ready';
+      demo.hidden = state === 'ready' || state === 'plugging';
       $('review').hidden = state !== 'review';
-      $('refusal').hidden = state !== 'excluded';
-      // Controls under an open prompt are hidden, so nothing shows through or stays focusable.
-      all('.site > :not(.prompt):not(.site-brand):not(.site-title)', demo).forEach(el => { el.classList.toggle('under-prompt', overlay); el.inert = overlay; });
-      $('review-action').textContent = pw ? 'Fill the password for alex@demo.example on demo.example?' : 'Sign in to demo.example as alex@demo.example with your passkey?';
-      $('credential-label').textContent = pw ? 'Password' : 'Passkey';
-      const values = { ready: 'Waiting for the key', review: 'Waiting for your approval', released: pw ? '•••••••••••• (demo)' : 'Challenge signed (demo)', cancelled: 'Nothing released', excluded: 'Refused' };
-      values.complete = values.released;
-      $('credential').textContent = values[state];
+      // Fields under the open prompt leave the tab order and stay hidden behind it.
+      all('.site > :not(.prompt):not(.site-brand):not(.site-title)', demo).forEach(el => { el.classList.toggle('under-prompt', state === 'review'); el.inert = state === 'review'; });
+      $('credential').textContent = VALUES[state] || 'Waiting for the key';
       const submit = $('submit');
       submit.disabled = state !== 'released';
-      submit.textContent = state === 'complete' ? 'Signed in (demo)' : pw ? 'Sign in' : 'Continue';
-      $('start').hidden = state !== 'ready';
-      $('start').textContent = pw ? 'Plug in and sign in' : 'Plug in and use a passkey';
-      $('replay').hidden = state === 'ready' || state === 'review';
-      $('exclude').hidden = state === 'review' || state === 'excluded';
-      const msg = MESSAGES[state];
-      $('demo-status').textContent = typeof msg === 'string' ? msg : msg[mode];
-      all('button[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
-      Object.entries(ROUTE[mode]).forEach(([k, v]) => { const el = route.querySelector('[data-r=' + k + ']'); if (el) el.textContent = v; });
-      route.querySelector('.n-key').classList.toggle('lit', inKey);
-      route.querySelector('.n-pc').classList.toggle('lit', inKey);
-      route.querySelector('.w1').classList.toggle('lit', inKey);
-      route.querySelector('.n-site').classList.toggle('lit', state === 'released' || state === 'complete');
-      route.querySelector('.w2').classList.toggle('lit', state === 'released' || state === 'complete');
-      if (!inKey) route.classList.remove('go', 'go2', 'gopk');
-      clearSpots();
-      setInfo(...stateInfo());
+      submit.textContent = state === 'complete' ? 'Signed in' : 'Sign in';
+      start.disabled = state === 'plugging';
+      startLabel.textContent = state === 'ready' || state === 'plugging' ? 'Plug in and sign in' : 'Unplug';
+      start.setAttribute('aria-expanded', String(!demo.hidden));
+      $('demo-status').textContent = MESSAGES[state] || '';
     }
     function set(next) { state = next; render(); }
-    function plug() {
+    start.setAttribute('aria-controls', 'demo');
+    async function plug() {
       if (state !== 'ready') return;
-      viewer.classList.add('touched');
+      set('plugging');
+      await play(true);
+      if (state !== 'plugging') return;
       set('review');
-      runRoute('go');
       $('approve').focus({ preventScroll: true });
-      // On a phone the prompt sits below the key: bring it into view once the key is in.
-      const card = demo.getBoundingClientRect();
-      if (card.bottom > innerHeight) setTimeout(() => demo.scrollIntoView({ block: 'end', behavior: reduced() ? 'instant' : 'smooth' }), reduced() ? 0 : 750);
+      // On a phone the prompt sits below the key: bring it into view.
+      const r = demo.getBoundingClientRect();
+      if (r.bottom > innerHeight || r.top < 0) demo.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'instant' : 'smooth' });
     }
-    $('plug').addEventListener('click', plug);
-    $('start').addEventListener('click', plug);
+    function unplug() {
+      set('ready');
+      play(false);
+    }
+    start.addEventListener('click', () => (state === 'ready' ? plug() : state !== 'plugging' && unplug()));
+    frameImg.addEventListener('click', () => { if (state === 'ready') plug(); });
     $('approve').addEventListener('click', () => {
       set('released');
-      runRoute(mode === 'password' ? 'go2' : 'gopk');
       const field = demo.querySelector('.cred');
       field.classList.remove('filled'); void field.offsetWidth; field.classList.add('filled');
       $('submit').focus({ preventScroll: true });
     });
-    $('cancel').addEventListener('click', () => { set('cancelled'); $('replay').focus({ preventScroll: true }); });
-    $('submit').addEventListener('click', () => { if (state === 'released') { set('complete'); $('replay').focus({ preventScroll: true }); } });
-    $('replay').addEventListener('click', () => { set('ready'); $('start').focus({ preventScroll: true }); });
-    $('exclude').addEventListener('click', () => { mode = 'passkey'; set('excluded'); $('fallback').focus({ preventScroll: true }); });
-    $('fallback').addEventListener('click', () => { mode = 'password'; set('ready'); $('start').focus({ preventScroll: true }); });
-    all('button[data-mode]').forEach(b => b.addEventListener('click', () => { mode = b.dataset.mode; set('ready'); }));
-    setView('iso');
+    $('cancel').addEventListener('click', () => { set('cancelled'); start.focus({ preventScroll: true }); });
+    $('submit').addEventListener('click', () => { if (state === 'released') { set('complete'); start.focus({ preventScroll: true }); } });
     render();
   }
 

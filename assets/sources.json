@@ -193,5 +193,155 @@
     "path": "analysis/hardware-mockups/circuit/v2-no-touch/passkey_power_usb_mockup.asc",
     "role": "Original LTspice schematic",
     "sha256": "bebf523fe498a93141c850bde5f27ddbcdeb2c97fd51d4c36df6f657ff3ceeac"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-00.webp",
+    "role": "Product render, insertion frame 0 of 23",
+    "sha256": "0e55896e6f0d9e502e78bb924f659445dbada533fd838b896e20b6eaf7f0a163"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-01.webp",
+    "role": "Product render, insertion frame 1 of 23",
+    "sha256": "0f189a66dd8e61b3657e9f4e8e6365cdf8239ec9059db44a2ac653e3b22776c0"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-02.webp",
+    "role": "Product render, insertion frame 2 of 23",
+    "sha256": "3bba4efb0680105e38479cb03ef2ed0c8d4484c234141ad6187f760aa56daf4f"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-03.webp",
+    "role": "Product render, insertion frame 3 of 23",
+    "sha256": "8cf3080bbf09233e1c0b63a0b73f0173ad691cece48f9ad870087afed1718d1d"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-04.webp",
+    "role": "Product render, insertion frame 4 of 23",
+    "sha256": "c9087399372107357e62cda86a364ad9c3513e1408999e2ddbbb906d49ff65d7"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-05.webp",
+    "role": "Product render, insertion frame 5 of 23",
+    "sha256": "7d00be7261d9497375d5c73ba651af32d0af513d3e94eec454b9920cc57f76a6"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-06.webp",
+    "role": "Product render, insertion frame 6 of 23",
+    "sha256": "f69cda366306c29427f0548b527f02114c66c3ae04667eff9f26c5bca8664e61"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-07.webp",
+    "role": "Product render, insertion frame 7 of 23",
+    "sha256": "697f59767a590586b22a214893751a9f5d12e78e6ec915191efd561d94ed7f7a"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-08.webp",
+    "role": "Product render, insertion frame 8 of 23",
+    "sha256": "36e66405e2691ff792318f89bf4d15e27f332409e23f1045c534c7f3935a251d"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-09.webp",
+    "role": "Product render, insertion frame 9 of 23",
+    "sha256": "d24ce1eead2fc79c001ebbecf2c4074c0b0d8163b8c4ec0dd458ba014861a5d6"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-10.webp",
+    "role": "Product render, insertion frame 10 of 23",
+    "sha256": "821cdb0dc4cc521532e6a7c6d37a250e4b9d2717bccf1445f32075c0145bee9b"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-11.webp",
+    "role": "Product render, insertion frame 11 of 23",
+    "sha256": "37e093a83b07b384d1494de08906976f3633732f3dd45197259b7cf1ac3e5a17"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-12.webp",
+    "role": "Product render, insertion frame 12 of 23",
+    "sha256": "4d62e28d8100b02179c9c4a9900852c347e84fc7167638acf9ed84d07fc282ce"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-13.webp",
+    "role": "Product render, insertion frame 13 of 23",
+    "sha256": "75dd723555ade9403dbad25c7d022a9345ca13e0e2ca2d447ddcb832358ea5e4"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-14.webp",
+    "role": "Product render, insertion frame 14 of 23",
+    "sha256": "4951f7a0c748e325b96364b4e17c65dc5f0a0d9dda69594c1e5e94e5f279a206"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-15.webp",
+    "role": "Product render, insertion frame 15 of 23",
+    "sha256": "0245bb87cd8ed15077630f418d066546d25b036a8e821471c176aa8a4721935b"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-16.webp",
+    "role": "Product render, insertion frame 16 of 23",
+    "sha256": "d558d158c02f6a692be5835f1d25ef0678f68280923f61c184cb3fd19f1f076b"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-17.webp",
+    "role": "Product render, insertion frame 17 of 23",
+    "sha256": "0ca91b8e48ebd5c9c63bc4a0306cb654f95b9aaaaca97534699e0a04ff08d455"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-18.webp",
+    "role": "Product render, insertion frame 18 of 23",
+    "sha256": "a3b5a6c081262ccb43184198a5ee8375bf135ff2c52ac18597a6034a82e6b978"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-19.webp",
+    "role": "Product render, insertion frame 19 of 23",
+    "sha256": "aaad6268fa62d78a6de8b03611e00489f09f207ebee91b3bf34c1d6a167886f2"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-20.webp",
+    "role": "Product render, insertion frame 20 of 23",
+    "sha256": "48566847bb976ccb0eb98bb7458890b56f7bd847fb2cb937e8f4296836ec6678"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-21.webp",
+    "role": "Product render, insertion frame 21 of 23",
+    "sha256": "221688c2eb91fa7bf5fa5cfa0c0f2197e4249f64e343a00bfba1e592d6a74a36"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-22.webp",
+    "role": "Product render, insertion frame 22 of 23",
+    "sha256": "aa150a706556cfbf8d900b266343ce6c041e658c6b046d22f4326a8f94c625ec"
+  },
+  {
+    "path": "analysis/demo-site/render/out/plug-23.webp",
+    "role": "Product render, insertion frame 23 of 23",
+    "sha256": "299819f41cf99573fad44c39f6d66a871398f5d94e03c7b1861ffc9f12bf87c0"
+  },
+  {
+    "path": "analysis/demo-site/render/out/passkey-still.jpg",
+    "role": "Product render of the key alone, used for sharing and the hardware dialog",
+    "sha256": "baf8fc8d74935df12e6bfae30870cce65b599ff21c51cb809e1475d6250e8564"
+  },
+  {
+    "path": "analysis/demo-site/render/out/render-meta.json",
+    "role": "Render camera, timing, projected casing points and ray visibility checks",
+    "sha256": "05a933b03da0415443982423d04ce70436420b12deebc36919a4e63afaec48e2"
+  },
+  {
+    "path": "analysis/demo-site/render/scene.py",
+    "role": "Render source: tiny v2 no-touch enclosure to Blender scene",
+    "sha256": "d7e91aaf8c00ffa7ddef7673b65ccb275d86f8d70985103336478418ef622c68"
+  },
+  {
+    "path": "analysis/demo-site/render/export_parts.py",
+    "role": "Render source: tiny v2 no-touch enclosure to Blender scene",
+    "sha256": "0e32ea38ccc1fb652052a12ee5acb7e59286422f8f7eea69d65b6b1ce2103c28"
+  },
+  {
+    "path": "analysis/demo-site/render/build/parts.json",
+    "role": "Render source: tiny v2 no-touch enclosure to Blender scene",
+    "sha256": "e014a1b8460c8f086f085281af87cbf62c68fc6fb2c1a9e107de85caa2f56aff"
+  },
+  {
+    "path": "analysis/hardware-mockups/enclosure/v2-no-touch/tiny.scad",
+    "role": "Enclosure geometry used by the render",
+    "sha256": "c628fa3b4c2074eae58c33831e6cc4d3e7502cf11b91b0c2cbbea5c76c6a7b4c"
   }
 ]
