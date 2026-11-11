@@ -373,9 +373,10 @@
       if (state !== 'plugging') return;
       set('review');
       $('approve').focus({ preventScroll: true });
-      // On a phone the prompt sits below the key: bring it into view.
+      // On a phone or narrow laptop the prompt sits below the key: bring it into view, below the sticky header.
       const r = demo.getBoundingClientRect();
-      if (r.bottom > innerHeight || r.top < 0) demo.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'instant' : 'smooth' });
+      const head = document.querySelector('.top');
+      if (r.bottom > innerHeight || r.top < (head ? head.getBoundingClientRect().bottom : 0)) demo.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'instant' : 'smooth' });
     }
     function unplug() {
       set('ready');
