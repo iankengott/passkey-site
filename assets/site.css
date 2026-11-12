@@ -979,3 +979,63 @@ html.capture *,html.capture *::before,html.capture *::after{animation:none!impor
 /* Large and ultrawide screens: the card grows with the stage instead of shrinking beside it. */
 @media (min-width:2200px) and (min-height:1000px){.product .demo{zoom:1.2}}
 @media (min-width:3000px) and (min-height:1300px){.product .demo{zoom:1.35}}
+
+/* ---------------- V1: hero video, "Take control" continuation, captions and controls ----------------
+   The hero media slot (.render) now holds the V1 video. The continuation video sits on top of it and starts on the same frame,
+   so the switch after Take control shows no cut. Captions are page text synced to the video, so they stay legible on phones. */
+.enhanced .take[hidden],.enhanced .hcap[hidden]{display:none!important}
+.sr-only{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.stage{position:relative;isolation:isolate}
+.stage .hv{display:block;width:100%;height:auto;aspect-ratio:16/10;background:#000;object-fit:cover}
+.stage .hv.cont{position:absolute;inset:0 0 auto 0;z-index:1}   /* same box as the main video: captions and the popup sit below it on stacked layouts */
+.enhanced .stage .hv{cursor:default}
+.hcap{position:relative;z-index:3;margin:0;padding:14px var(--gut) 4px;min-height:92px;pointer-events:none}
+.hcap-t{margin:0;font-size:clamp(19px,4.6vw,24px);font-weight:650;letter-spacing:-.015em;line-height:1.22;color:var(--text)}
+.hcap-s{margin:4px 0 0;font:15px/1.4 var(--mono);letter-spacing:.02em;color:var(--gold-hi)}
+.hcap-s:empty{display:none}
+.hcap.swap{animation:rise .5s var(--ease) both}
+.product[data-state=poised] .hcap{display:none!important}
+.take{position:relative;z-index:4;margin:12px var(--gut) 0;padding:16px 18px 18px;border:1.5px solid var(--gold);border-radius:18px;background:rgba(9,9,10,.92);box-shadow:0 26px 60px -26px #000,0 0 0 6px rgba(224,170,62,.12);backdrop-filter:blur(6px)}
+.take:not([hidden]){animation:pop .45s var(--spring) both}
+.take-tag{display:flex;align-items:center;gap:8px;margin:0 0 6px;font:14px var(--mono);letter-spacing:.16em;color:var(--gold)}
+.take-q{margin:0 0 14px;font-size:18px;font-weight:600;line-height:1.3}
+#take-control{width:100%;min-height:52px;font-size:18px;border-radius:999px;box-shadow:0 14px 36px -14px rgba(224,170,62,.8)}
+#take-control:focus-visible{outline:3px solid var(--gold-hi);outline-offset:3px}
+.vctl{position:absolute;z-index:4;right:10px;top:10px;display:flex;gap:6px}
+.enhanced .vctl.js-only{display:flex!important}
+.vbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:44px;min-height:44px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(8,8,10,.62);color:var(--text);backdrop-filter:blur(6px);font-size:15px}
+.vbtn:hover{border-color:var(--gold);color:var(--gold-hi)}
+.vbtn:focus-visible{outline:3px solid var(--gold-hi);outline-offset:2px}
+.vbtn .snd-l{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#v-play .i-play,#v-play[data-paused=true] .i-pause{display:none}
+#v-play[data-paused=true] .i-play{display:block}
+#v-sound .i-sound,#v-sound[aria-pressed=true] .i-mute{display:none}
+#v-sound[aria-pressed=true] .i-sound{display:block}
+#v-sound[aria-pressed=true]{border-color:var(--gold);color:var(--gold-hi)}
+@media (max-width:1199px){
+ .stage{max-width:860px;margin:0 auto}
+ .hcap{padding-inline:max(var(--gut),16px)}
+}
+@media (min-width:600px) and (max-width:1199px){.take{max-width:440px;margin-inline:auto}.hcap{padding-inline:0}}
+@media (min-width:1200px){
+ .stage .hv{position:absolute;inset:0;height:100%;aspect-ratio:auto;object-position:72% 50%}
+ .render.stage::before{z-index:2}
+ .stage::after{content:"";position:absolute;z-index:2;inset:auto 0 0 0;height:34%;background:linear-gradient(0deg,rgba(0,0,0,.72),transparent);pointer-events:none}
+ .hcap{position:absolute;left:max(12%,72px);bottom:clamp(28px,7%,96px);right:28%;padding:0;min-height:0}
+ .hcap-t{font-size:clamp(22px,min(1.75vw,3.4vh),44px);text-shadow:0 2px 18px rgba(0,0,0,.8)}
+ .hcap-s{font-size:clamp(15px,min(.95vw,1.8vh),22px)}
+ .take{position:absolute;margin:0;left:var(--tx,30%);top:var(--ty,56%);transform:translate(-100%,-50%);width:clamp(270px,17vw,380px)}
+ .take:not([hidden]){animation:fade .5s var(--ease) both}
+ .take[data-place=above]{transform:translate(-50%,-100%)}
+ .take-q{font-size:clamp(18px,1.1vw,24px)}
+ #take-control{min-height:clamp(52px,3vw,64px);font-size:clamp(18px,1.05vw,23px)}
+ .vctl{top:auto;right:max(24px,calc(var(--gut) * .75));bottom:clamp(20px,4%,48px);gap:8px}
+ .vbtn{min-width:48px;min-height:48px}
+ .vbtn .snd-l{position:static;width:auto;height:auto;overflow:visible;clip:auto}
+ #v-sound{padding:0 16px 0 12px}
+}
+@media (min-width:2200px) and (min-height:1000px){.vctl{zoom:1.2}.take-q{font-size:26px}}   /* no zoom on the popup: it would scale its computed position too */
+.motion-off .take:not([hidden]),.motion-off .hcap.swap{animation:none}
+.draft-tag{position:absolute;z-index:4;left:10px;top:10px;margin:0;padding:3px 9px;border:1px solid var(--line2);border-radius:999px;background:rgba(8,8,10,.7);font:12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);pointer-events:none}
+@media (min-width:1200px){.draft-tag{left:auto;right:max(24px,calc(var(--gut) * .75));top:18px}}
+.take{scroll-margin-block:84px 24px}

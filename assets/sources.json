@@ -195,134 +195,9 @@
     "sha256": "bebf523fe498a93141c850bde5f27ddbcdeb2c97fd51d4c36df6f657ff3ceeac"
   },
   {
-    "path": "analysis/demo-site/render/out/plug-00.webp",
-    "role": "Product render, insertion frame 0 of 23",
-    "sha256": "0e55896e6f0d9e502e78bb924f659445dbada533fd838b896e20b6eaf7f0a163"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-01.webp",
-    "role": "Product render, insertion frame 1 of 23",
-    "sha256": "0f189a66dd8e61b3657e9f4e8e6365cdf8239ec9059db44a2ac653e3b22776c0"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-02.webp",
-    "role": "Product render, insertion frame 2 of 23",
-    "sha256": "3bba4efb0680105e38479cb03ef2ed0c8d4484c234141ad6187f760aa56daf4f"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-03.webp",
-    "role": "Product render, insertion frame 3 of 23",
-    "sha256": "8cf3080bbf09233e1c0b63a0b73f0173ad691cece48f9ad870087afed1718d1d"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-04.webp",
-    "role": "Product render, insertion frame 4 of 23",
-    "sha256": "c9087399372107357e62cda86a364ad9c3513e1408999e2ddbbb906d49ff65d7"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-05.webp",
-    "role": "Product render, insertion frame 5 of 23",
-    "sha256": "7d00be7261d9497375d5c73ba651af32d0af513d3e94eec454b9920cc57f76a6"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-06.webp",
-    "role": "Product render, insertion frame 6 of 23",
-    "sha256": "f69cda366306c29427f0548b527f02114c66c3ae04667eff9f26c5bca8664e61"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-07.webp",
-    "role": "Product render, insertion frame 7 of 23",
-    "sha256": "697f59767a590586b22a214893751a9f5d12e78e6ec915191efd561d94ed7f7a"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-08.webp",
-    "role": "Product render, insertion frame 8 of 23",
-    "sha256": "36e66405e2691ff792318f89bf4d15e27f332409e23f1045c534c7f3935a251d"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-09.webp",
-    "role": "Product render, insertion frame 9 of 23",
-    "sha256": "d24ce1eead2fc79c001ebbecf2c4074c0b0d8163b8c4ec0dd458ba014861a5d6"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-10.webp",
-    "role": "Product render, insertion frame 10 of 23",
-    "sha256": "821cdb0dc4cc521532e6a7c6d37a250e4b9d2717bccf1445f32075c0145bee9b"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-11.webp",
-    "role": "Product render, insertion frame 11 of 23",
-    "sha256": "37e093a83b07b384d1494de08906976f3633732f3dd45197259b7cf1ac3e5a17"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-12.webp",
-    "role": "Product render, insertion frame 12 of 23",
-    "sha256": "4d62e28d8100b02179c9c4a9900852c347e84fc7167638acf9ed84d07fc282ce"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-13.webp",
-    "role": "Product render, insertion frame 13 of 23",
-    "sha256": "75dd723555ade9403dbad25c7d022a9345ca13e0e2ca2d447ddcb832358ea5e4"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-14.webp",
-    "role": "Product render, insertion frame 14 of 23",
-    "sha256": "4951f7a0c748e325b96364b4e17c65dc5f0a0d9dda69594c1e5e94e5f279a206"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-15.webp",
-    "role": "Product render, insertion frame 15 of 23",
-    "sha256": "0245bb87cd8ed15077630f418d066546d25b036a8e821471c176aa8a4721935b"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-16.webp",
-    "role": "Product render, insertion frame 16 of 23",
-    "sha256": "d558d158c02f6a692be5835f1d25ef0678f68280923f61c184cb3fd19f1f076b"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-17.webp",
-    "role": "Product render, insertion frame 17 of 23",
-    "sha256": "0ca91b8e48ebd5c9c63bc4a0306cb654f95b9aaaaca97534699e0a04ff08d455"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-18.webp",
-    "role": "Product render, insertion frame 18 of 23",
-    "sha256": "a3b5a6c081262ccb43184198a5ee8375bf135ff2c52ac18597a6034a82e6b978"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-19.webp",
-    "role": "Product render, insertion frame 19 of 23",
-    "sha256": "aaad6268fa62d78a6de8b03611e00489f09f207ebee91b3bf34c1d6a167886f2"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-20.webp",
-    "role": "Product render, insertion frame 20 of 23",
-    "sha256": "48566847bb976ccb0eb98bb7458890b56f7bd847fb2cb937e8f4296836ec6678"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-21.webp",
-    "role": "Product render, insertion frame 21 of 23",
-    "sha256": "221688c2eb91fa7bf5fa5cfa0c0f2197e4249f64e343a00bfba1e592d6a74a36"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-22.webp",
-    "role": "Product render, insertion frame 22 of 23",
-    "sha256": "aa150a706556cfbf8d900b266343ce6c041e658c6b046d22f4326a8f94c625ec"
-  },
-  {
-    "path": "analysis/demo-site/render/out/plug-23.webp",
-    "role": "Product render, insertion frame 23 of 23",
-    "sha256": "299819f41cf99573fad44c39f6d66a871398f5d94e03c7b1861ffc9f12bf87c0"
-  },
-  {
     "path": "analysis/demo-site/render/out/passkey-still.jpg",
     "role": "Product render of the key alone, used for sharing and the hardware dialog",
     "sha256": "baf8fc8d74935df12e6bfae30870cce65b599ff21c51cb809e1475d6250e8564"
-  },
-  {
-    "path": "analysis/demo-site/render/out/render-meta.json",
-    "role": "Render camera, timing, projected casing points and ray visibility checks",
-    "sha256": "05a933b03da0415443982423d04ce70436420b12deebc36919a4e63afaec48e2"
   },
   {
     "path": "analysis/demo-site/render/scene.py",
@@ -343,5 +218,95 @@
     "path": "analysis/hardware-mockups/enclosure/v2-no-touch/tiny.scad",
     "role": "Enclosure geometry used by the render",
     "sha256": "c628fa3b4c2074eae58c33831e6cc4d3e7502cf11b91b0c2cbbea5c76c6a7b4c"
+  },
+  {
+    "path": "analysis/demo-site/video/out-draft/passkey-hero-draft-960.mp4",
+    "role": "V1 hero video, 960 px wide, H.264 and AAC",
+    "sha256": "2552a974ecc14c01d5fa40bcb6b7de41ac321fa9753a29c99be4c38cdbdc54bb"
+  },
+  {
+    "path": "analysis/demo-site/video/out-draft/passkey-hero-draft.vtt",
+    "role": "V1 hero video, captions",
+    "sha256": "298df20ec051f4113c9ea16e15ffb2ed3b22531e7ec1ba3d2d55f9321e485d82"
+  },
+  {
+    "path": "analysis/demo-site/video/out-draft/passkey-continue-draft-960.mp4",
+    "role": "V1 continuation after Take control, 960 px wide, H.264 and AAC",
+    "sha256": "298fdc3ced8d68b44c4c046202f3a7676d9501e6891e94ca66eae5c4f3bdbbf8"
+  },
+  {
+    "path": "analysis/demo-site/video/out-draft/passkey-continue-draft.vtt",
+    "role": "V1 continuation after Take control, captions",
+    "sha256": "40ac43be01654ca117f44fa88a3e4c01d7666058f76a99a3d6da35dd5b1567e0"
+  },
+  {
+    "path": "analysis/demo-site/video/out-draft/poster-draft-start.jpg",
+    "role": "V1 poster frame: start",
+    "sha256": "bb531d5b6e4b9f8f5fc29bacd96a0164fe7e1c05a1ed0de61752703b1de30fc1"
+  },
+  {
+    "path": "analysis/demo-site/video/out-draft/poster-draft-poised.jpg",
+    "role": "V1 poster frame: poised",
+    "sha256": "a15a4a3a429e9105fc8324faf38c918096da671d6db7f40ca9b2b5ac46dc3d7f"
+  },
+  {
+    "path": "analysis/demo-site/video/out-draft/poster-draft-signed.jpg",
+    "role": "V1 poster frame: signed",
+    "sha256": "226406879f5c65733f4904b3b6e119d01f652b62a5c803be4f1a6df4b68b305e"
+  },
+  {
+    "path": "analysis/demo-site/video/out-draft/video-meta.json",
+    "role": "V1 timings, page anchors, seam check and media hashes",
+    "sha256": "ea1c58094fdc4d14ae7bdfe2192b78779726d32917a8ac479f9c290ab4cc4abc"
+  },
+  {
+    "path": "analysis/demo-site/video/src/timeline.json",
+    "role": "V1 production source",
+    "sha256": "7df691a87da850b6902e21ba97a0cff278ac1d3629bb856de7d53ce7b6aa91ce"
+  },
+  {
+    "path": "analysis/demo-site/video/src/scene.py",
+    "role": "V1 production source",
+    "sha256": "ea4ada7371e953c99a9a65eb1be9a2d95059774f457afeb995c38032f604623c"
+  },
+  {
+    "path": "analysis/demo-site/video/src/export_parts.py",
+    "role": "V1 production source",
+    "sha256": "07a5a8d0c6d0b26e1f300b7a4b65143120862b5be90eefa334bc47b09d6da4e9"
+  },
+  {
+    "path": "analysis/demo-site/video/src/screen.html",
+    "role": "V1 production source",
+    "sha256": "4a4ab221377643b5fbcefa3c2073fc9d2291c66a16a1f74eb81fe126b1e73574"
+  },
+  {
+    "path": "analysis/demo-site/video/src/capture_screen.py",
+    "role": "V1 production source",
+    "sha256": "efe581d0d3d92d237edfd7578a30f19047fbfc83b82304d3d64c74943ac28d0d"
+  },
+  {
+    "path": "analysis/demo-site/video/src/cdp.py",
+    "role": "V1 production source",
+    "sha256": "0185df9b5196497d62897e193146da2d9059e8ebfb10d7845b19a2cf17757251"
+  },
+  {
+    "path": "analysis/demo-site/video/src/audio.py",
+    "role": "V1 production source",
+    "sha256": "b7031a714790e09255bd9d321e69f5406f9a1ab9cca46925576691b4d1290f78"
+  },
+  {
+    "path": "analysis/demo-site/video/src/encode.py",
+    "role": "V1 production source",
+    "sha256": "b3e826554510f442bf4e5c40942dfc405475ddf188e9dd017f522c78e0c7caf9"
+  },
+  {
+    "path": "analysis/demo-site/video/build/parts/parts.json",
+    "role": "V1 STL export record for both enclosures",
+    "sha256": "113e51aaffa854a5691c535c8faa6e9e1c8b1bed89eb0feea4d6998bfc17b7e8"
+  },
+  {
+    "path": "analysis/hardware-mockups/enclosure/v2-no-touch/key.scad",
+    "role": "Key-shaped enclosure geometry used by the V1 video",
+    "sha256": "b1f38249c6d6c9bea245308120822041688d5995c8d713bfcc71d2218adf19b6"
   }
 ]

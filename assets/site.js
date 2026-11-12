@@ -1,4 +1,4 @@
-/* Passkey concept site, N28 presentation. Offline progressive enhancement.
+/* Passkey concept site, N28 presentation with the V1 hero video. Offline progressive enhancement.
    No credentials, network, device or USB APIs. One stored preference: the Reduce motion choice. */
 (() => {
   'use strict';
@@ -31,6 +31,7 @@
       if (motionNote) motionNote.hidden = !media.matches;
     }
     if (reduced()) revealAll();
+    dispatchEvent(new Event('passkey-motion'));
   }
   if (motionBtn) motionBtn.addEventListener('click', () => {
     if (media.matches) return;
@@ -297,102 +298,210 @@
   }
   all('[data-route]').forEach(b => b.addEventListener('click', () => setFlow(b.dataset.route)));
 
-  // ------------------------------------------------------------ hero: rendered plug-in, one approval, the user submits
-  // Fake data only. Nothing here touches real credentials, devices, USB or the network.
+  // ------------------------------------------------------------ hero: V1 video, then "Take control" plugs the key in and signs in
+  // Fake demo data only. The continuation is a rendered video; nothing here touches credentials, devices, USB or the network.
+  // States: intro (main video) -> poised (key waits at the port, popup, indefinitely) -> taking (continuation) -> signed.
+  // The key goes in only from the Take control button. Replay returns to intro; the popup always comes back before insertion.
   const product = $('product');
-  const frameImg = $('plug-frame');
-  const demo = $('demo');
-  if (product && frameImg && demo) {
-    const N = Number(frameImg.dataset.frames);
-    const DUR = Number(frameImg.dataset.duration);
+  const main = $('hero-video');
+  const cont = $('hero-cont');
+  if (product && main && cont) {
+    const V = JSON.parse(product.dataset.video);
+    const stage = $('stage');
     const start = $('start');
     const startLabel = start.querySelector('span');
-    const frameSrc = i => 'assets/hero/plug-' + String(i).padStart(2, '0') + '.webp';
-    let warm = null;
-    const preload = () => warm || (warm = Promise.all(Array.from({ length: N }, (_, i) => {
-      const im = new Image();
-      im.src = frameSrc(i);
-      return im.decode().catch(() => null);
-    })));
-    // Warm the frames once the page is idle, so the first plug-in plays without gaps.
-    addEventListener('load', () => (window.requestIdleCallback ? requestIdleCallback(preload, { timeout: 2500 }) : setTimeout(preload, 1500)));
-    function showFrame(i) {
-      if (frameImg.dataset.frame === String(i)) return;
-      frameImg.dataset.frame = String(i);
-      frameImg.src = frameSrc(i);
+    const startIcon = start.querySelector('use');
+    const take = $('take');
+    const takeBtn = $('take-control');
+    const cap = $('hero-cap');
+    const capT = cap.querySelector('.hcap-t');
+    const capS = cap.querySelector('.hcap-s');
+    const bPlay = $('v-play'), bSkip = $('v-skip'), bReplay = $('v-replay'), bSound = $('v-sound');
+    const status = $('hero-status');
+    let state = 'intro';
+    let played = false;          // the main video has played at least once
+    let soundOn = false;
+    let offscreenPaused = false;
+    main.removeAttribute('controls');
+    const quietTracks = () => { for (const t of main.textTracks) t.mode = 'disabled'; };
+    quietTracks();
+    main.textTracks.addEventListener && main.textTracks.addEventListener('addtrack', quietTracks);
+    // Pick the file by the drawn size: object-fit: cover can draw the picture wider than the slot.
+    const width = () => { const r = stage.getBoundingClientRect(); return Math.max(r.width, r.height * 1.6) * (window.devicePixelRatio || 1) > 1100 ? '1920' : '960'; };
+    function load(v, part, preload) {
+      if (v.dataset.src) return;
+      const files = V[part].src;
+      v.dataset.src = files[width()] || files['960'] || Object.values(files)[0];   // a draft encode has only one size
+      v.src = v.dataset.src;
+      v.preload = preload;
+      v.load();
     }
-    // The frame follows a Web Animation clock, so it can be paused and seeked like a CSS transition.
-    let motion = null;
-    function play(forward) {
-      const last = forward ? N - 1 : 0;
-      if (motion) { motion.cancel(); motion = null; }
-      if (reduced()) { showFrame(last); return Promise.resolve(); }
-      const anim = frameImg.animate([{ opacity: 1 }, { opacity: 1 }], { duration: DUR, easing: 'linear' });
-      anim.id = forward ? 'plug-in' : 'unplug';
-      motion = anim;
-      const tick = () => {
-        if (motion !== anim) return;
-        const t = Math.min(1, Math.max(0, (anim.currentTime || 0) / DUR));
-        showFrame(Math.round((forward ? t : 1 - t) * (N - 1)));
-        if (anim.playState !== 'finished') requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-      return anim.finished.then(() => { if (motion === anim) { motion = null; showFrame(last); } });
+    // The poised still must be decoded before the continuation layer covers the main video, so the swap never flashes.
+    const poisedImg = new Image();
+    poisedImg.src = V.posters.poised;
+    const poisedReady = poisedImg.decode().catch(() => null);
+    new Image().src = V.posters.signed;
+
+    // captions: page text, synced to the playing part; the latest caption holds until the next one
+    let capKey = '';
+    function caption(part, t) {
+      const caps = V[part].caps;
+      let c = caps[0];
+      for (const x of caps) if (t >= x.start) c = x;
+      const key = part + c.start;
+      if (key === capKey) return;
+      capKey = key;
+      capT.textContent = c.title;
+      capS.textContent = c.sub;
+      cap.classList.remove('swap'); void cap.offsetWidth; cap.classList.add('swap');
+    }
+    function tick() {
+      if (state === 'intro') caption('main', main.currentTime || 0);
+      else if (state === 'taking' || state === 'signed') caption('cont', state === 'signed' ? V.cont.dur : cont.currentTime || 0);
+      if (!main.paused || !cont.paused) requestAnimationFrame(tick);
     }
 
-    let state = 'ready';
-    const MESSAGES = {
-      review: 'Check the site and account, then approve.',
-      released: 'Filled. Nothing was submitted. Press Sign in yourself.',
-      complete: 'Signed in to demo.example.',
-      cancelled: 'Cancelled. Nothing left the key.'
-    };
-    const VALUES = { review: 'Waiting for your approval', released: '•••••••••••• (demo)', complete: '•••••••••••• (demo)', cancelled: 'Nothing released' };
+    // where the popup goes on the desktop stage: left of the poised key, mapped through object-fit: cover at 72% 50%
+    function place() {
+      if (getComputedStyle(take).position !== 'absolute') { take.style.removeProperty('--tx'); take.style.removeProperty('--ty'); return; }
+      const r = stage.getBoundingClientRect();
+      const s = Math.max(r.width / 1920, r.height / 1200);
+      const dw = 1920 * s, dh = 1200 * s;
+      const ox = (r.width - dw) * 0.72, oy = (r.height - dh) * 0.5;
+      const pts = ['key_tip', 'key_centre', 'key_rear', 'port'].map(k => [ox + V.anchor[k][0] * dw, oy + V.anchor[k][1] * dh]);
+      const card = take.getBoundingClientRect();
+      const left = Math.min(r.width * 0.12, 96);                     // clear of the soft left edge
+      const minX = Math.min(...pts.map(p => p[0])), minY = Math.min(...pts.map(p => p[1]));
+      const cy = oy + V.anchor.key_centre[1] * dh;
+      if (minX - 28 - card.width >= left) {                          // room beside the key: to its left
+        take.dataset.place = 'left';
+        take.style.setProperty('--tx', (minX - 28).toFixed(1) + 'px');
+        take.style.setProperty('--ty', Math.min(Math.max(cy, card.height / 2 + 16), r.height - card.height / 2 - 16).toFixed(1) + 'px');
+      } else {                                                       // otherwise above the key and the port
+        take.dataset.place = 'above';
+        const cx = ox + V.anchor.key_centre[0] * dw;
+        take.style.setProperty('--tx', Math.min(Math.max(cx, left + card.width / 2), r.width - card.width / 2 - 16).toFixed(1) + 'px');
+        take.style.setProperty('--ty', Math.max(minY - 28, card.height + 16).toFixed(1) + 'px');
+      }
+    }
+    addEventListener('resize', () => { if (state === 'poised') place(); });
+
     function render() {
       product.dataset.state = state;
-      demo.dataset.state = state;
-      demo.hidden = state === 'ready' || state === 'plugging';
-      $('review').hidden = state !== 'review';
-      // Fields under the open prompt leave the tab order and stay hidden behind it.
-      all('.site > :not(.prompt):not(.site-brand):not(.site-title)', demo).forEach(el => { el.classList.toggle('under-prompt', state === 'review'); el.inert = state === 'review'; });
-      $('credential').textContent = VALUES[state] || 'Waiting for the key';
-      const submit = $('submit');
-      submit.disabled = state !== 'released';
-      submit.textContent = state === 'complete' ? 'Signed in' : 'Sign in';
-      start.disabled = state === 'plugging';
-      startLabel.textContent = state === 'ready' || state === 'plugging' ? 'Plug in and sign in' : 'Unplug';
-      start.setAttribute('aria-expanded', String(!demo.hidden));
-      $('demo-status').textContent = MESSAGES[state] || '';
+      take.hidden = state !== 'poised';
+      const playing = (state === 'intro' && !main.paused) || (state === 'taking' && !cont.paused);
+      bPlay.hidden = !(state === 'intro' || state === 'taking');
+      bPlay.dataset.paused = String(!playing);
+      bPlay.setAttribute('aria-label', playing ? 'Pause the video' : 'Play the video');
+      bSkip.hidden = state !== 'intro';
+      bReplay.hidden = state === 'intro';
+      let label = 'Watch again', ic = 'replay';
+      if (state === 'intro') { label = playing ? 'Skip to the end' : 'Play the video'; ic = playing ? 'skip' : 'play'; }
+      else if (!played && state === 'poised') { label = 'Play the video'; ic = 'play'; }
+      startLabel.textContent = label;
+      startIcon.setAttribute('href', '#i-' + ic);
+      if (state === 'poised') requestAnimationFrame(place);
     }
-    function set(next) { state = next; render(); }
-    start.setAttribute('aria-controls', 'demo');
-    async function plug() {
-      if (state !== 'ready') return;
-      set('plugging');
-      await play(true);
-      if (state !== 'plugging') return;
-      set('review');
-      $('approve').focus({ preventScroll: true });
-      // On a phone or narrow laptop the prompt sits below the key: bring it into view, below the sticky header.
-      const r = demo.getBoundingClientRect();
-      const head = document.querySelector('.top');
-      if (r.bottom > innerHeight || r.top < (head ? head.getBoundingClientRect().bottom : 0)) demo.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'instant' : 'smooth' });
+    function say(text) { status.textContent = ''; setTimeout(() => { status.textContent = text; }, 60); }
+
+    function playMain(fromStart) {
+      load(main, 'main', 'auto');
+      state = 'intro';
+      cont.pause();
+      cont.hidden = true;
+      if (fromStart) { try { main.currentTime = 0; } catch (err) { /* not seekable yet: starts at 0 anyway */ } }
+      main.muted = !soundOn;
+      capKey = '';
+      caption('main', fromStart ? 0 : main.currentTime || 0);
+      render();
+      const p = main.play();
+      if (p) p.then(() => { played = true; render(); requestAnimationFrame(tick); }).catch(() => toPoised(false));
     }
-    function unplug() {
-      set('ready');
-      play(false);
+    async function toPoised(focus) {
+      if (state === 'poised') return;
+      state = 'poised';
+      main.pause();
+      // Show the poised frame: the continuation layer, still at its first frame or poster, which is the same picture.
+      try { if (cont.dataset.src && cont.readyState >= 1) cont.currentTime = 0; } catch (err) { /* poster shows instead */ }
+      cont.poster = V.posters.poised;
+      await poisedReady;
+      if (state !== 'poised') return;
+      cont.hidden = false;
+      render();
+      load(cont, 'cont', 'auto');
+      say('The key is ready at the port. Take control to plug it in.');
+      if (focus) {
+        // After a viewer action, bring the popup into view on stacked layouts, below the sticky header. A natural end never scrolls.
+        const r = take.getBoundingClientRect(), head = document.querySelector('.top');
+        if (r.bottom > innerHeight || r.top < (head ? head.getBoundingClientRect().bottom : 0)) take.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'instant' : 'smooth' });
+        takeBtn.focus({ preventScroll: true });
+      }
     }
-    start.addEventListener('click', () => (state === 'ready' ? plug() : state !== 'plugging' && unplug()));
-    frameImg.addEventListener('click', () => { if (state === 'ready') plug(); });
-    $('approve').addEventListener('click', () => {
-      set('released');
-      const field = demo.querySelector('.cred');
-      field.classList.remove('filled'); void field.offsetWidth; field.classList.add('filled');
-      $('submit').focus({ preventScroll: true });
+    function showSigned() {
+      state = 'signed';
+      cont.hidden = false;
+      cont.pause();
+      if (cont.readyState >= 1 && isFinite(cont.duration)) { try { cont.currentTime = Math.max(0, cont.duration - 0.05); } catch (err) { cont.poster = V.posters.signed; } }
+      else cont.poster = V.posters.signed;
+      capKey = '';
+      caption('cont', V.cont.dur);
+      render();
+      say('Signed in to the demo computer.');
+    }
+    async function takeControl() {
+      if (state !== 'poised') return;
+      load(cont, 'cont', 'auto');
+      cont.muted = !soundOn;
+      if (reduced()) { showSigned(); bReplay.focus({ preventScroll: true }); return; }
+      state = 'taking';
+      capKey = '';
+      caption('cont', 0);
+      render();
+      bPlay.focus({ preventScroll: true });
+      say('Plugging in the key. The screen asks for approval, then signs in to the demo account.');
+      try { await cont.play(); requestAnimationFrame(tick); render(); } catch (err) { showSigned(); bReplay.focus({ preventScroll: true }); }
+    }
+
+    main.addEventListener('ended', () => { if (state === 'intro') toPoised(false); });
+    main.addEventListener('error', () => { if (state === 'intro') toPoised(false); }, true);
+    cont.addEventListener('ended', () => { if (state === 'taking') { showSigned(); if (document.activeElement === bPlay || document.activeElement === document.body) bReplay.focus({ preventScroll: true }); } });
+    cont.addEventListener('error', () => { if (state === 'taking') showSigned(); }, true);
+    ['play', 'pause'].forEach(ev => { main.addEventListener(ev, render); cont.addEventListener(ev, render); });
+    main.addEventListener('playing', () => { played = true; });
+
+    takeBtn.addEventListener('click', takeControl);
+    bSkip.addEventListener('click', () => toPoised(true));
+    bReplay.addEventListener('click', () => { offscreenPaused = false; playMain(true); bPlay.focus({ preventScroll: true }); });
+    bPlay.addEventListener('click', () => {
+      const v = state === 'taking' ? cont : main;
+      offscreenPaused = false;
+      if (v.paused) { v.play().then(() => requestAnimationFrame(tick)).catch(() => null); } else v.pause();
     });
-    $('cancel').addEventListener('click', () => { set('cancelled'); start.focus({ preventScroll: true }); });
-    $('submit').addEventListener('click', () => { if (state === 'released') { set('complete'); start.focus({ preventScroll: true }); } });
-    render();
+    main.addEventListener('click', () => { if (state === 'intro') bPlay.click(); });
+    bSound.addEventListener('click', () => {
+      soundOn = !soundOn;
+      main.muted = cont.muted = !soundOn;
+      bSound.setAttribute('aria-pressed', String(soundOn));
+    });
+    start.addEventListener('click', () => {
+      if (state === 'intro' && !main.paused) { toPoised(true); return; }
+      if (state === 'intro') { playMain(false); return; }
+      playMain(true);
+      if (stage.getBoundingClientRect().top > innerHeight * 0.6) stage.scrollIntoView({ block: 'center', behavior: reduced() ? 'instant' : 'smooth' });
+    });
+    // Pause while the hero is scrolled away, resume when it returns (unless the viewer paused it).
+    if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => {
+      const v = state === 'taking' ? cont : state === 'intro' ? main : null;
+      if (!v) return;
+      if (!en.isIntersecting && !v.paused) { offscreenPaused = true; v.pause(); }
+      else if (en.isIntersecting && offscreenPaused) { offscreenPaused = false; v.play().then(() => requestAnimationFrame(tick)).catch(() => null); }
+    }, { threshold: 0.25 }).observe(stage);
+    // Turning Reduce motion on stops the video where it is; the viewer can still press play.
+    addEventListener('passkey-motion', () => { if (reduced()) { if (!main.paused) main.pause(); if (!cont.paused) cont.pause(); } });
+
+    // Start: muted autoplay, unless motion is reduced or the browser blocks it; then the poised still and popup.
+    if (reduced()) toPoised(false);
+    else playMain(false);
   }
 
   applyMotion();
