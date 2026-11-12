@@ -267,7 +267,7 @@
   {
     "path": "analysis/demo-site/video/src/scene.py",
     "role": "V1 production source",
-    "sha256": "ea4ada7371e953c99a9a65eb1be9a2d95059774f457afeb995c38032f604623c"
+    "sha256": "9b51f961f4782d0871c484838bfd91f04b7116489fddb409f6073fbac725f9fd"
   },
   {
     "path": "analysis/demo-site/video/src/export_parts.py",
