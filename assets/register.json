@@ -1,971 +1,1011 @@
 {
- "date": "11 November 2026",
- "statuses": {
-  "Repeatable": "Tested already, and a one command rerun exists, so it can be repeated cheaply and also counts as a sub requirement of larger tests.",
-  "Tested": "Run and recorded once. No cheap automated rerun yet.",
-  "Not tested": "Never tested. Documentation or design only."
- },
- "evidence_levels": {
-  "Calculation": "Arithmetic from stated assumptions.",
-  "Model": "A software model of a proposed rule. Not firmware, a device or an operating system.",
-  "Simulated": "Chrome with a virtual authenticator and a local test site. Not a device or CTAP firmware.",
-  "Synthetic page": "A scripted test page in Chrome. Not a real website.",
-  "Document": "Documentation read only.",
-  "Hardware": "A real device. None exists yet.",
-  "Host software": "Real Linux-PAM and pam_u2f libraries run in a private configuration with synthetic fallback modules. Not a real login surface, a device or CTAP firmware."
- },
- "features": [
-  [
-   "R01",
-   "Key with no user verification fails a service that requires verification",
-   "Repeatable",
-   "Simulated",
-   "WV-01: 120 of 120 trials failed",
-   "webauthn-virtual/run.sh"
-  ],
-  [
-   "R02",
-   "A key without user verification succeeds when the service discourages or prefers verification, with presence reported and verification not reported, and the username supplied",
-   "Repeatable",
-   "Simulated",
-   "WV-01: 120 of 120 successful responses from keys with no verification were accepted by the server checks. All 270 successful responses in the whole matrix passed",
-   "webauthn-virtual/run.sh"
-  ],
-  [
-   "R03",
-   "Discoverable credentials: creation and login without a username were refused with no verification in Chrome",
-   "Repeatable",
-   "Simulated",
-   "WV-01: 40 credential creation trials and 20 login trials failed",
-   "webauthn-virtual/run.sh"
-  ],
-  [
-   "R04",
-   "Without a presence signal, standard browser requests wait and time out",
-   "Repeatable",
-   "Simulated",
-   "WV-01: 720 of 720 timed out",
-   "webauthn-virtual/run.sh"
-  ],
-  [
-   "R05",
-   "Browser and service enforce the identifier and the origin after changes to the port or host",
-   "Repeatable",
-   "Simulated",
-   "WV-01: wrong port rejected by the service, wrong host refused by Chrome",
-   "webauthn-virtual/run.sh"
-  ],
-  [
-   "R06",
-   "hmac-secret secret requested through the browser PRF extension, without verification",
-   "Repeatable",
-   "Simulated",
-   "WV-01: 60 responses returned PRF output with verification not reported. The same run reproduces it. G9 audit: the saved assertions have signed verification flag 0 and two 32 byte PRF outputs. This is Chrome virtual authenticator behavior. The data does not show which hmac-secret key family produced the outputs, so it cannot show a specification violation or hardware behavior. Open question for Ian: whether PRF is meant to derive or protect the password store key",
-   "webauthn-virtual/run.sh, g9-prf/run.sh"
-  ],
-  [
-   "R07",
-   "On screen approval pop up releases a signature",
-   "Repeatable",
-   "Synthetic page",
-   "T2 on 21 October 2026: 12 cases, twice each, in Chromium 155 and Firefox 158. Create and get pass with the verification flag unset. Cancel, timeout, wrong identifier, forbidden frames, stale requests and replay were refused without signing. One click approved one request. A page can imitate the pop up and fake its own success result, and the verifier rejected the forgery. The browser native credential API stays reachable. Software signer, not hardware",
-   "t2-approval-popup/run.sh"
-  ],
-  [
-   "R08",
-   "Browser extension that takes over WebAuthn requests and asks a USB key to sign",
-   "Not tested",
-   "Document",
-   "T2 shows the extension part works in software for create and get in Chromium and Firefox, with a software signer. The USB part is Not tested. Signer removal passed as a model only",
-   "t2-approval-popup/run.sh; USB part none"
-  ],
-  [
-   "R09",
-   "Chrome webAuthenticationProxy API for this purpose",
-   "Repeatable",
-   "Synthetic page",
-   "T3 on 21 October 2026, Linux only: does not pass. Attach without a remote session, synthetic create and get, and caller abort worked. A timeout request stayed pending until the harness deadline. The proxy supplies the caller origin and a same origin flag but not the top origin of a cross origin frame, which triggers the study's lost context stop condition if iframe requests are required. Windows and store approval Not tested",
-   "t3-chrome-proxy/run.sh"
-  ],
-  [
-   "R10",
-   "Windows passkey plugin accepts a provider that returns approval with no PIN",
-   "Repeatable",
-   "Model",
-   "N18 on Windows 11 Pro 26H2 with the seeded software mock. Config 65 used WebAuthn options version 9 and one modern credential allow-list entry. Ten of ten approved assertions skipped the Windows chooser and Continue click. Every signature followed mock approval. No PIN was entered. Deny at the mock approval, native chooser Cancel, timeout, strict UV required and wrong credential released no signature or assertion. The caller logged discouraged enum 3 while the plugin received uv=true, including after metadata updates that set uv=false or omitted uv. Strict mode refused before approval. The exact mapping remains unknown. One offline fixture and one Windows build only. N21 reran the same validation with the N13 prompt: 10 of 10 repeats with zero Continue clicks and zero PIN inputs, 16 of 16 strict controls and 5 of 5 refusal controls released nothing, and the focused chooser cancel passed.",
-   "windows-login/n18_validate.py --config 65"
-  ],
-  [
-   "R11",
-   "Password release only for the exact enrolled origin",
-   "Repeatable",
-   "Model",
-   "OR-01: 129 URL cases, 0 release decision differences. 4 differences between the model and Chrome in how they read addresses, flagged",
-   "logic-tests/origin-rule/rerun.sh"
-  ],
-  [
-   "R12",
-   "Page code can read filled values, scripted submit is cancelable, 12 origin cases",
-   "Repeatable",
-   "Synthetic page",
-   "G8 runner on 21 October 2026: 7 of 7 checks pass in headless Chromium, with 100 readable values, 100 canceled scripted submits and 12 origin fixtures. No manual steps remain. A real person pressing Enter is outside this test. Browser trial on 22 October 2026 extends this end to end, see R55",
-   "g8-runner/run.sh"
-  ],
-  [
-   "R13",
-   "Service style identifier scope is wider than the exact origin rule",
-   "Repeatable",
-   "Model",
-   "OR-01: 20 scope examples",
-   "logic-tests/origin-rule/rerun.sh"
-  ],
-  [
-   "R14",
-   "Release policy outcomes for possession, enrolled host, touch and software manager, plus enrolled host and touch, with removal, replay of earlier requests, expired replies and unenrolled profiles",
-   "Repeatable",
-   "Model",
-   "RP-01: 71 passed. Covers 12 outcomes in four current release policy rows and 3 more for enrolled host and touch. The two pop up rows are not modeled",
-   "logic-tests/release-policy/rerun.sh"
-  ],
-  [
-   "R15",
-   "Host enrollment with a browser profile key",
-   "Not tested",
-   "Document",
-   "Design only",
-   "none"
-  ],
-  [
-   "R16",
-   "Vendor protocol version rules and malformed frame handling",
-   "Repeatable",
-   "Model",
-   "PV-01: 36 passed, 120,000 randomly generated messages, no forbidden acceptance",
-   "logic-tests/protocol-versioning/rerun.sh"
-  ],
-  [
-   "R17",
-   "USB vendor HID transport through WebHID or a native helper",
-   "Not tested",
-   "Document",
-   "Design only. Browser trial wrote the device protocol so a USB vendor HID device could carry it, tested with a mock device only",
-   "tr-browser-trial/protocol"
-  ],
-  [
-   "R18",
-   "Field finding and fill on real login pages",
-   "Not tested",
-   "Document",
-   "Design only for real login pages. Local fixtures are covered by R37 and R38. No real site was attempted. T13 on 22 October 2026 filled three live demo login forms, see R40 and R41",
-   "t13-real-sites/run.sh"
-  ],
-  [
-   "R19",
-   "Choosing among several accounts for one destination",
-   "Not tested",
-   "Document",
-   "Explicit choice among three accounts filled correctly on local fixtures in T10. Automatic choice is Not tested and needs a policy decision",
-   "t10-destination-checks/run.sh"
-  ],
-  [
-   "R20",
-   "Keyboard fallback: text to key positions on six layouts, wrong layout gives wrong characters",
-   "Repeatable",
-   "Model",
-   "KL-01: 26 passed, 570 character reproductions on six layouts",
-   "logic-tests/keyboard-layout/rerun.sh"
-  ],
-  [
-   "R21",
-   "Typing accepted at startup, disk and login prompts; Ctrl+Alt+Del from a hardware keyboard",
-   "Not tested",
-   "Document",
-   "Needs a real board",
-   "none"
-  ],
-  [
-   "R22",
-   "Windows local account login through a credential provider with an approval dialog",
-   "Repeatable",
-   "Model",
-   "N17, Windows 11 Pro 26H2 VM with a mock signer. One combined matrix completed. Startup, unlock, switch user and the administrator credential prompt each passed 10 of 10. All 21 negative cases released nothing. Guest internet was off. Enter remains separate after approval. See the N17 result for the exact negative scope and limits. N21 reran the same matrix with the N13 prompt: 40 of 40 approvals, 40 distinct request IDs and 21 of 21 refusal cases with nothing released. N16 Home 26H2 Core 26300.9457 SAC-Off combined matrix completed 1 November and independently validated 9 November: 10/10 each surface, 40 unique requests with the full N21 prompt, 21 refusals with no release and 18 native recoveries. Mismatch and expiry are direct broker probes. T4 ran at 8192 MiB. Under D30, later Home blocks use 6144 MiB with the original guards. T5 and custom T6 policy checks passed; restart/update and T7 have separate rows.",
-   "windows-login/n17_offline_run.py matrix; windows-home/run.py matrix --execute --checkpoint n16-installed-offline-20261101-1642; windows-home/validate_matrix.py"
-  ],
-  [
-   "R23",
-   "Windows personal Microsoft account with a password through a credential provider",
-   "Not tested",
-   "Document",
-   "Research only",
-   "research windows-local-and-microsoft-account-research.md"
-  ],
-  [
-   "R24",
-   "Passwordless Microsoft account, and the Windows Hello only setting",
-   "Not tested",
-   "Document",
-   "Research: no password exists to submit",
-   "research windows-local-and-microsoft-account-research.md"
-  ],
-  [
-   "R25",
-   "Windows session unlock and first login after an update, with automatic restart sign on",
-   "Tested",
-   "Model",
-   "N8: the provider loads with Secure Boot and LSA protection on and survives four updates. ARSO restores a locked session after shutdown /g without approval, then unlock goes through the provider. ARSO did not sign in after the TrustedInstaller restart chain. First sign in after the update passed",
-   "research windows-login/README.md"
-  ],
-  [
-   "R26",
-   "Linux login, lock screen and sudo through pam_u2f, using a key without a PIN",
-   "Not tested",
-   "Document",
-   "Documented options only. G1 design and a rootless probe exist, see R39. No PAM to USB signing or real login surface has been exercised. Ian chose lane D, a direct PAM adapter, instead; see R58 to R61. This pam_u2f row stays Not tested",
-   "linux-bridge-design/design.md"
-  ],
-  [
-   "R27",
-   "Linux PAM confirmation prompt using interactive mode in a real greeter",
-   "Not tested",
-   "Document",
-   "Research only. Source inspection shows pam_u2f 1.4.0 interactive mode is not a yes or no approval gate. Not run in a greeter",
-   "linux-bridge-design/design.md"
-  ],
-  [
-   "R28",
-   "Linux disk unlock through systemd-cryptenroll, using a key without a PIN",
-   "Not tested",
-   "Document",
-   "Optional feature. Documented options only",
-   "none"
-  ],
-  [
-   "R29",
-   "Application adapters on Windows and Linux",
-   "Not tested",
-   "Document",
-   "Needs named applications",
-   "none"
-  ],
-  [
-   "R30",
-   "Storage budget of 2,560 KiB and calculated record capacities",
-   "Repeatable",
-   "Calculation",
-   "Builder assertions check the table",
-   "build_paper_r7.py"
-  ],
-  [
-   "R31",
-   "Power supply and USB interface circuitry modeled in ngspice, an electronic circuit simulator",
-   "Repeatable",
-   "Model",
-   "Simulated supply of 3.294 V in the active state, a 4.5 mV change between idle and active",
-   "hardware-mockups/circuit"
-  ],
-  [
-   "R32",
-   "Enclosure dimensions and computer model geometry for two models, a key shaped one and a tiny one",
-   "Repeatable",
-   "Calculation",
-   "Checks confirmed that the key model at 45 by 25 by 5.5 mm and the tiny model at 24.25 by 12 by 3.5 mm form closed surfaces. Physical fit was not tested",
-   "hardware-mockups/enclosure"
-  ],
-  [
-   "R33",
-   "Firmware update, signature check and recovery",
-   "Not tested",
-   "Document",
-   "Design only",
-   "none"
-  ],
-  [
-   "R34",
-   "Backup and restore of the password store",
-   "Repeatable",
-   "Model",
-   "N22, 25 October 2026, main PC with software mock devices: encrypted password snapshot protected by a random recovery secret shown once, restore to a fresh device under its own PRF-style root. 171 of 171 recovery and helper checks and 28 of 28 restored-device browser checks pass. Empty, varied and large stores, wrong or missing secret, corruption, truncation, swapping, nonempty target refusal, old password snapshots and secret scans pass. Twenty restored browser fills pass with the original device stopped. Unchanged browser trial before and after: 40 fixtures, 20 passkey cases, 51 attack checks and 10 native cases. Linux signing and wallet data and Windows DPAPI passwords use separate stores and are not restored here. Passkeys excluded. Mock roots are volatile; no hardware custody, persistence, PRF or extraction claim. R33 and R35 unchanged.",
-   "backup-restore/rerun.sh"
-  ],
-  [
-   "R35",
-   "Protection of stored keys against extraction",
-   "Not tested",
-   "Document",
-   "Design only",
-   "none"
-  ],
-  [
-   "R36",
-   "Loss and revocation steps",
-   "Not tested",
-   "Document",
-   "Design only",
-   "none"
-  ],
-  [
-   "R37",
-   "Destination checks refuse lookalike origins, subdomains, Punycode impostors, HTTP, other ports, stale documents, changed form actions and replaced frames",
-   "Repeatable",
-   "Synthetic page",
-   "T10: 111 ordinary trials gave 33 expected fills, 78 refusals and zero direct wrong fills. Frame policies disagree between exact origin equality and matching ancestors, so G6 is open",
-   "t10-destination-checks/run.sh"
-  ],
-  [
-   "R38",
-   "Enter is a user action: a hostile enrolled page cannot take the password and submit without Enter",
-   "Repeatable",
-   "Synthetic page",
-   "T10 stop finding: the guarantee failed. An enrolled hostile page forwarded the dummy password and submitted without Enter. Exit code 2 reproduces it. The Enter rule holds only against pages that are not enrolled",
-   "t10-destination-checks/run.sh"
-  ],
-  [
-   "R39",
-   "Private PAM stack probe and access to /dev/uhid",
-   "Repeatable",
-   "Host software",
-   "G1: Linux-PAM 1.7.2 and pam_u2f 1.4.0 passed 8 checks in a private configuration with synthetic fallback modules. /dev/uhid is root owned mode 0600 and was refused for iank, also inside a user namespace. No virtual device was started",
-   "linux-bridge-design/probe.py"
-  ],
-  [
-   "R40",
-   "Real form detection, approval and fill on three named live demo login forms (AuthenticationTest, The Internet, same origin iframe)",
-   "Repeatable",
-   "Synthetic page",
-   "T13: seven dummy fills, no observed submit events, unrelated enrollment refused. Reference adapter on live demo pages. Live sites can change",
-   "t13-real-sites/run.sh"
-  ],
-  [
-   "R41",
-   "Multi step logins, unfamiliar username field names and JavaScript forms",
-   "Repeatable",
-   "Synthetic page",
-   "T15 on 22 October 2026: two step logins with one click per step, unusual field names, script handlers and GET forms now fill in Chromium and Firefox on local fixtures and on AuthenticationTest, SauceDemo and Randomly Online, without submission. Covers the listed classes and routes, not arbitrary forms. Earlier T13 refusals kept in its record",
-   "t15-adapter-hardening/verify.sh local; live: t15-adapter-hardening/run.sh live"
-  ],
-  [
-   "R42",
-   "Same origin iframe fill and nested document traversal on live pages",
-   "Repeatable",
-   "Synthetic page",
-   "T13: one iframe form filled and five nested fixture documents inspected. Nested password filling and cross origin frames Not tested",
-   "t13-real-sites/run.sh"
-  ],
-  [
-   "R43",
-   "T2 create and get on Microsoft Passkey Playground and Duo WebAuthn.io with verification unset",
-   "Repeatable",
-   "Synthetic page",
-   "T13: two independently verified assertions. Microsoft needed changed demo settings and refused defaults. Not Ian accounts, not hardware. Feeds R01 to R03 and T1",
-   "t13-real-sites/run.sh"
-  ],
-  [
-   "R44",
-   "T2 compatibility with sites that require discoverable credentials (Yubico, passwordless.id)",
-   "Repeatable",
-   "Synthetic page",
-   "T13 refusals. Does not show a server rejecting a key only for lacking verification",
-   "t13-real-sites/run.sh"
-  ],
-  [
-   "R45",
-   "Token2 creation and authentication with verification unset",
-   "Repeatable",
-   "Synthetic page",
-   "T13 rerun on 22 October 2026 under Ian's two class stop rule: creation and authentication with verification unset succeeded, signature independently verified, the attestation note was recorded as informational and no blocking notice appeared. The first run had continued past the warning against the old rule, which stays recorded as a rule violation",
-   "t13-real-sites/run.sh"
-  ],
-  [
-   "R46",
-   "XQA and fill.dev live login compatibility",
-   "Not tested",
-   "Document",
-   "T13 availability checks found a certificate error and a server timeout",
-   "t13-real-sites/run.sh"
-  ],
-  [
-   "R47",
-   "Inline prompt beside the login field, one click fills, in top level, same origin, cross origin and nested frames",
-   "Repeatable",
-   "Synthetic page",
-   "T14, Chromium 155 and Firefox 158: 136 local trials, none failed. Prompt names the site and the top origin. Adapter never submits",
-   "t14-inline-prompt-frames/run.sh local|live"
-  ],
-  [
-   "R48",
-   "Allowed parent list for cross origin frames: first time Allow click per credential",
-   "Repeatable",
-   "Model",
-   "T14: policy model matched all 20 measured outcomes. Exact origin lets a hostile parent through silently; matching ancestors breaks the Canvas case. No policy blocks a parent that was allowed once and later turns hostile",
-   "t14-inline-prompt-frames/run.sh local|live"
-  ],
-  [
-   "R49",
-   "Passkey create and get from frames with page replacement and a visible top origin",
-   "Repeatable",
-   "Synthetic page",
-   "T14: works in Chromium with signatures verified. Firefox cannot expose the frame permissions policy, so the prototype refuses frame passkeys there. T15 rerun: same result, Firefox frame passkeys still refused because no supported API exposes the frame policy",
-   "t14-inline-prompt-frames/run.sh local|live"
-  ],
-  [
-   "R50",
-   "Inline prompt resists clickjacking and decoys",
-   "Repeatable",
-   "Synthetic page",
-   "T14 findings: Firefox accepted a small decoy patch over the prompt label and added a hostile parent. Transparent frame clickjacking filled 11 of 11 times in Firefox until a screenshot check was added; after it, all attempts were refused in both browsers. T15 hardening: full prompt patch and focus removal checks gave zero successes in two final grids of 192 attempts per browser. Earlier successful attacks stay recorded",
-   "t14-inline-prompt-frames/run.sh local|live; t15-adapter-hardening/verify.sh local"
-  ],
-  [
-   "R51",
-   "Inline prompt hidden from page script",
-   "Repeatable",
-   "Synthetic page",
-   "T14 finding: pages can detect the prompt and its position and probe its text with window.find in both browsers; Firefox returns the matched text. T15: prompt moved into an extension owned frame; tested window.find text probes are now blocked. Presence, geometry and the frame address are still visible to the page",
-   "t14-inline-prompt-frames/run.sh local|live; t15-adapter-hardening/verify.sh local"
-  ],
-  [
-   "R52",
-   "Inline prompt on live demo sites",
-   "Repeatable",
-   "Synthetic page",
-   "T14: AuthenticationTest simple form and same origin iframe, and The Internet, filled in both browsers. Public demos send X-Frame-Options SAMEORIGIN, so no live cross origin frame was measured. XQA and fill.dev unavailable",
-   "t14-inline-prompt-frames/run.sh live"
-  ],
-  [
-   "R53",
-   "Hidden and decoy fields, fields changed after approval and alternate destinations refused by the extended finder",
-   "Repeatable",
-   "Synthetic page",
-   "T15 local refusals in both browsers. Exact origin boundary unchanged",
-   "t15-adapter-hardening/verify.sh local"
-  ],
-  [
-   "R54",
-   "Dynamic resource address for the extension, against fixed address probes",
-   "Repeatable",
-   "Synthetic page",
-   "T15, Chromium: four fixed address fetch probes blocked. Not complete fingerprinting protection",
-   "t15-adapter-hardening/verify.sh local"
-  ],
-  [
-   "R55",
-   "End to end path: extension, native helper and a separate mock device over a written protocol, Chromium and Firefox",
-   "Repeatable",
-   "Model",
-   "Browser trial, mock device stage: 40 login fixtures, 20 passkey create and get requests, 51 browser and protocol attack checks and 10 native messaging cases passed in both browsers. Branded Google Chrome not tested because it ignores the command line extension loading switch. No USB transport",
-   "tr-browser-trial/run.sh"
-  ],
-  [
-   "R56",
-   "Replacement native helper cannot capture passwords",
-   "Repeatable",
-   "Model",
-   "Browser trial finding: a replacement helper captured a password after approval, because without pairing the device cannot tell a genuine helper from a fake one. Consequence of the no pairing decision",
-   "tr-browser-trial/run.sh"
-  ],
-  [
-   "R57",
-   "Page code cannot forge a passkey result",
-   "Repeatable",
-   "Model",
-   "Browser trial: page code produced a synthetic passkey result in its own JavaScript context but without a device signature. A relying party that verifies signatures rejects it",
-   "tr-browser-trial/run.sh"
-  ],
-  [
-   "R58",
-   "Linux lane D: direct PAM adapter, broker and mock signer for console login, sudo and KDE lock screen",
-   "Repeatable",
-   "Model",
-   "N7 matrix rerun with the N13 prompt on 26 October 2026, one complete run of 329 of 329: console 44 of 44, sudo 46 of 46, KDE lock screen 52 of 52, lifecycle 17 of 17, signature binding 10 of 10. Console and sudo each approved 10 of 10 with the full N13 text in the transcript, and the lock screen 10 of 10 with ten screenshots. Cancel, invalid input, timeout and a missing signer released nothing. Approval is now A then Enter, C cancels, and 30 second expiry is checked before the signer. KDE Plasma 6.8 starts its PAM conversation on the first touch of the locked screen, so an idle lock screen holds no stale prompt; a prompt held on screen past 30 seconds is refused with no signer call. At 1280 by 800 the lock text fits but the key entry field is below the screen edge. Broker failure on the lock screen can still require a second password entry. Mock signer, no USB. T8 part two repeated the lane D adapter on Debian 13.7 with GNOME and GDM; see R100 to R107. The NixOS and KDE result in this row is unchanged.",
-   "linux-login-followup/rerun.py all; research_notes/Passkey project feasibility/n20-result.md"
-  ],
-  [
-   "R59",
-   "Linux lane D at the SDDM login screen shows the approval context",
-   "Repeatable",
-   "Model",
-   "N7 and N20: the SDDM theme now shows the N13 prompt, with account, scope, expiry, Approve and Cancel and the password fallback below. SDDM 53 of 53 including ten cold key logins with ten screenshots. The separate prompts suite passed 11 of 11: C, Escape and panel Enter make no request, A and Enter on the focused Approve button each approve once, the panel refuses after 30 seconds and shows Request expired, and the letter A in the password field is a password attempt. A cancelled or expired request needs an explicit new request. The theme cannot retract a submitted authentication",
-   "linux-login-followup/rerun.py all and prompts; research_notes/Passkey project feasibility/n20-result.md"
-  ],
-  [
-   "R60",
-   "Polkit through lane D",
-   "Repeatable",
-   "Model",
-   "N7 and N20: text agent 45 of 45 and the real KDE graphical agent 44 of 44. Each approved 10 of 10 with the N13 text, in the transcript for the text agent and in ten screenshots of the KDE dialog next to the selected administrator. KDE polkit receives the text as an information message because it hides the input label. Cancel, invalid input, timeout and a missing signer released nothing. The signature binds account and PAM service, not the exact polkit action",
-   "linux-login-followup/rerun.py all; research_notes/Passkey project feasibility/n20-result.md"
-  ],
-  [
-   "R61",
-   "No separate KWallet password after a key login",
-   "Repeatable",
-   "Model",
-   "N7 and N20: after a key login KWallet opens with no second password, 11 of 11 in the N20 rerun, with the cold wrong secret control. The signer stores a copy of the wallet secret and releases it to the computer, so a compromised computer can steal it. Wallet password and encryption unchanged",
-   "linux-login-followup/rerun.py"
-  ],
-  [
-   "R62",
-   "Login field finder and inline prompt on 30 realistic login designs rebuilt from Dribbble",
-   "Repeatable",
-   "Synthetic page",
-   "T17, Chromium and Firefox: desktop 30 of 30, mobile 30 of 30, cross origin frame 10 of 10, hostile variants 10 of 10 in each browser. Multi step flows 18 of 21 in Chromium and 16 of 21 in Firefox",
-   "t17-login-designs/rerun.sh"
-  ],
-  [
-   "R63",
-   "Occlusion check accepts rounded, pill and decorated fields without weakening it, N10 fix",
-   "Repeatable",
-   "Synthetic page",
-   "T17: clear field shapes accepted 3 of 10 before the fix and 10 of 10 after, in both browsers. All 14 hiding and cover cases refused, and a cover over the right 30% of a field, missed before, is now refused",
-   "t17-login-designs/rerun.sh"
-  ],
-  [
-   "R64",
-   "T15 defenses still hold after the prompt follow ups",
-   "Repeatable",
-   "Synthetic page",
-   "N15 regression: Chromium 100 of 100, Firefox 99 of 99 with one case not applicable, 390 of 390 evidence checks. Completed after resuming the double density grid. All N14 counts matched.",
-   "n14-prompt-reasons/rerun.sh"
-  ],
-  [
-   "R65",
-   "Login flows where the password box unlocks late, the card keeps moving, or the screen is double density",
-   "Repeatable",
-   "Synthetic page",
-   "N12 fixed all three T17 failures: flows 21 of 21 in Chromium and Firefox, up from 18 and 16. D13 gets a password only second prompt. Endless CSS animations that move the field are paused while the prompt is open; the 650 ms stability rule is unchanged. The Firefox screenshot check cell is now 8 CSS pixels at any density",
-   "n12-flow-fixes/rerun.sh"
-  ],
-  [
-   "R66",
-   "Moving cards that a script moves, or whose animation the page restarts, are refused",
-   "Repeatable",
-   "Synthetic page",
-   "N12: 4 of 4 attack cases per browser, nothing filled or released",
-   "n12-flow-fixes/rerun.sh"
-  ],
-  [
-   "R67",
-   "Only a username the adapter filled opens the password only second prompt",
-   "Repeatable",
-   "Synthetic page",
-   "N12: a username typed by a person, then a password box that unlocks, gets no prompt and no release in either browser",
-   "n12-flow-fixes/rerun.sh"
-  ],
-  [
-   "R68",
-   "Decoy patch grid at double density",
-   "Repeatable",
-   "Synthetic page",
-   "N15 regression: 0 of 96 decoy successes in Chromium and Firefox. The first grid launch failed before Chromium found its extension worker. The detached resume passed. N14 counts matched.",
-   "n14-prompt-reasons/rerun.sh"
-  ],
-  [
-   "R69",
-   "Approval prompt says why its button is disabled",
-   "Repeatable",
-   "Synthetic page",
-   "N15: the reason is the first row at every frame size. Its text is empty when the account box already says Choose an account. The button still needs an account choice. N14 reason cases 8 of 8 per browser after a full reason stage retry. The first Firefox D03 account attempt released once but did not fill. Busy and changed reasons still not driven live. N19 kept every N15 count with the new design.",
-   "n15-prompt-followup/run_checks.sh, n14-prompt-reasons/rerun.sh"
-  ],
-  [
-   "R70",
-   "The page cannot read the reason text",
-   "Repeatable",
-   "Synthetic page",
-   "N15 selected reason stage: 0 findings in 14 N14 reason checks. The 14 new N15 checks also found no reason text or credential leak to the local page. N19 kept every N15 count with the new design.",
-   "n15-prompt-followup/run_checks.sh, n14-prompt-reasons/rerun.sh"
-  ],
-  [
-   "R71",
-   "The reason stays at the top and changes no enable rule",
-   "Repeatable",
-   "Synthetic page",
-   "N15: 14 of 14 checks across both browsers. Reason first and visible in 150, 230, 300 and 700 pixel frames and narrow overflow. No duplicate account instruction. The reason row stays reserved. T15 small frame cases and all N14 counts matched.",
-   "n15-prompt-followup/run_checks.sh, n14-prompt-reasons/rerun.sh"
-  ],
-  [
-   "R72",
-   "Windows credential provider: startup sign in with approval and mock signer",
-   "Repeatable",
-   "Model",
-   "N8: 10 of 10, each with a distinct request and a native password path kept working. N21 rerun with the N13 prompt: 10 of 10 again in the combined matrix, full new text shown before each approval.",
-   "windows-login/rerun.py startup"
-  ],
-  [
-   "R73",
-   "Windows credential provider: lock screen unlock with approval and mock signer",
-   "Repeatable",
-   "Model",
-   "N8: 10 of 10, each with a distinct request and a native password path kept working. N21 rerun with the N13 prompt: 10 of 10 again in the combined matrix, full new text shown before each approval.",
-   "windows-login/rerun.py lock"
-  ],
-  [
-   "R74",
-   "Windows credential provider: switch user with approval and mock signer",
-   "Repeatable",
-   "Model",
-   "N8: 10 of 10, each with a distinct request and a native password path kept working. N21 rerun with the N13 prompt: 10 of 10 again in the combined matrix, full new text shown before each approval.",
-   "windows-login/rerun.py switch"
-  ],
-  [
-   "R75",
-   "Windows credential provider: administrator credential prompt with approval and mock signer",
-   "Repeatable",
-   "Model",
-   "N8: 10 of 10, each with a distinct request and a native password path kept working. N21 rerun with the N13 prompt: 10 of 10 again in the combined matrix. Enter alone, Escape and Alt+C refused with nothing released or elevated, and Tab then Enter approved once.",
-   "windows-login/rerun.py uac"
-  ],
-  [
-   "R76",
-   "App Control signed only policy blocks the unsigned credential provider",
-   "Tested",
-   "Model",
-   "N8: Code Integrity blocked the unsigned DLL in LogonUI; native password sign in still worked",
-   "windows-login/README.md"
-  ],
-  [
-   "R77",
-   "A signed credential provider is accepted under a policy that trusts its publisher",
-   "Tested",
-   "Model",
-   "N8: a guest only test certificate; distribution signing and arbitrary customer policies not tested",
-   "windows-login/README.md"
-  ],
-  [
-   "R78",
-   "Local account unlock while offline",
-   "Tested",
-   "Model",
-   "N8: native and mock provider unlock with the VM network disconnected, once each. Not a Microsoft account offline cache",
-   "windows-login/t5_local.py"
-  ],
-  [
-   "R79",
-   "Windows passkey plugin setup with a local account",
-   "Tested",
-   "Model",
-   "N8: enabled after a one time Hello PIN, with no Microsoft account, as a development package",
-   "windows-login/t7_prepare.py"
-  ],
-  [
-   "R80",
-   "A caller that requires user verification rejects the plugin response without it",
-   "Tested",
-   "Model",
-   "N8: the Windows API returned success but the caller rejected the missing verification flag. A false verification claim is never valid. N21 reran both T7 plugin fixtures with the N13 prompt: strict refused, honest verification clear passed with no PIN and after a clean reboot, and the required caller rejected the missing bit.",
-   "windows-login/t7_trial.py"
-  ],
-  [
-   "R81",
-   "Password rotation and a stale stored password on Windows",
-   "Tested",
-   "Model",
-   "N17, Windows 11 Pro 26H2 VM with a mock signer. The Passkey password change tile updated the saved copy 10 of 10. Ten approved sign ins and a cold boot check passed. Recovery accepted and declined both passed. Wrong old password, mismatched confirmation and a rejected manual save changed no saved copy. A local administrator reset simulated an outside change. The positive change process later stopped on an OCR miss. Completed rejection and recovery suites supply the remaining coverage. No Microsoft or domain account claim. N21 reran the change and recovery suites with the N13 prompt: 10 of 10 changes and saved sign ins, cold boot sign in, both refusals, and all recovery cases passed.",
-   "windows-login/n17_offline_run.py change, change-failures, recovery"
-  ],
-  [
-   "R82",
-   "Windows VBS, Credential Guard, older builds and USB signer, plus Home tests outside the measured N16 scope",
-   "Not tested",
-   "Document",
-   "N16 establishes Home installation, native sign in, T4, disconnected local unlock, custom App Control and separate unsigned and locally signed SAC-On loads through offline SATA. T7/N18 remain pending at this boundary. VBS, Credential Guard, older releases, cloud reputation and hardware remain untested.",
-   "windows-home/HANDOVER.md; research_notes/Passkey project feasibility/n16-result.md"
-  ],
-  [
-   "R83",
-   "Approval prompt follows the N13 design, with keys, 30 second expiry and Cancel",
-   "Repeatable",
-   "Synthetic page",
-   "N19: browser fill and passkey prompts use the wording from wording.json through a generated block. A and the button approve only with focus and an enabled button, C and Escape cancel, Enter alone never approves, 30 seconds expire and release nothing. 5 size tiers. New and N15 checks 24 of 24 per browser. Whole prompt shade kept because a narrow edge misses every patch. No bold and 1 pixel borders so double density passes. All 86 comparisons against the saved N15 counts match.",
-   "n19-prompt-build/run_checks.sh, n14-prompt-reasons/rerun.sh"
-  ],
-  [
-   "R84",
-   "Prompt fits a 300 pixel frame and refuses safely when smaller",
-   "Repeatable",
-   "Synthetic page",
-   "N19: 300 pixel frame fits (Chromium tier 0, Firefox tier 1). 230 fits at tier 3. 150 and 180 refuse with the reason first and release nothing. A sweep of 11 frame heights per browser passes.",
-   "n19-prompt-build/run_checks.sh"
-  ],
-  [
-   "R85",
-   "Screenshot check refuses a stray shade pixel box",
-   "Tested",
-   "Synthetic page",
-   "N19: on the animated gradient page D22, two stray page pixels of exactly the random shade stretched the measured box in 1 of 25 runs, and the prompt refused safely. Chromium D05 mobile had one unexplained failure in the full run, passed 30 of 30 on repeat, and the T17 stage retry passed. Ian, 25 October (D26): rare, so the check stays as it is.",
-   "n19-prompt-build/results/first-after-run, N19_STRESS=25 bash run_checks.sh --browser chromium"
-  ],
-  [
-   "R86",
-   "Linux approval prompt follows N13 on console, sudo, polkit, SDDM, KDE lock screen and KDE polkit",
-   "Repeatable",
-   "Model",
-   "N20, 26 October 2026, NixOS KDE VM, mock signer: the shared N13 wording is generated into both Linux lanes and the SDDM panel. Full N7 run 329 of 329. Six surfaces each approved 10 of 10 with the new prompt shown. The broker compares the whole display and the remaining lifetime, so lazy preparation grants no new 30 seconds. Native surfaces keep host controls, need Enter after A or C and cannot close the host input at 30 seconds. They reject a late reply before the signer. Known gap: at 1280 by 800 the KDE lock key entry field is off screen. GNOME and GDM are left to T8",
-   "linux-prompt-build/run_checks.sh and linux-login-followup/rerun.py all; research_notes/Passkey project feasibility/n20-result.md"
-  ],
-  [
-   "R87",
-   "Windows approval prompt follows the N13 design on startup, unlock, switch user, the administrator prompt and the passkey plugin",
-   "Repeatable",
-   "Model",
-   "N21 on Windows 11 Pro 26H2 with the mock signer, guest internet off. The native dialog shows title, heading, Action, For, Account, Scope, After approval, expiry, Approve [A] and Cancel [C], then the fallback line below the buttons, with no request ID and no Deny. Every approval in the matrix and the N18 repeats showed the full text first. A, Alt+A, Tab then Enter and a click approve once. Enter alone, C, Escape, the close button, Cancel and Alt+C release nothing. At 150 percent scale and in high contrast nothing is clipped. Found and fixed one code bug: the buttons have no dialog item IDs, so focus and enabled checks failed until they were replaced. Limits: no screen reader transcript, scales above 150 percent not reached, the 31 second on screen text check missed once, native TaskDialog colours instead of the N13 palette.",
-   "windows-login/n17_offline_run.py matrix --n21; windows-login/n18_validate.py --config 65 --n21; windows-prompt-build/p2/kbd_checks.py"
-  ],
-  [
-   "R88",
-   "Windows 11 Home Smart App Control loads the mock provider and broker through the offline SATA fixture",
-   "Tested",
-   "Model",
-   "N16, Windows 11 Home 26H2 Core 26300.9457 VM. Stock SAC was changed from Evaluation to On through Windows Security. Registry 1 and enforced VerifiedAndReputableDesktop policy were retained before and after both restored branches. Current unsigned N21 binaries executed and the provider loaded in LogonUI. The same source bytes with a guest-only RSA self signature and local trust also executed and loaded with Valid Authenticode. Native recovery passed, no password store or signer key was provisioned, no release/submission occurred and no new 3077 block event followed record 70. Offline SATA transport only; no cloud reputation or Mark of the Web claim. Functional authentication is a separate SAC-Off branch.",
-   "windows-home/HANDOVER.md; windows-home/evidence/part-two/sac/unsigned/summary.json; windows-home/evidence/part-two/sac/signed/summary.json"
-  ],
-  [
-   "R89",
-   "Windows Home native and mock local unlock with the network link disconnected",
-   "Tested",
-   "Model",
-   "Home Core 26300.9457, SAC Off, 6144 MiB under D30. Native and mock local unlock passed with QEMU link down; both disconnected desktop screenshots reviewed. Mock required the full N21 approval, exactly one signature/release/fill and separate Windows submission. Maximized Settings and accessibility text show local account and no Microsoft-account Hello-only toggle. Microsoft accounts and offline cold startup excluded.",
-   "windows-home/evidence/part-two/d30-20261109/t5-prep-1794249386945415122; windows-home/run.py t5"
-  ],
-  [
-   "R90",
-   "Windows Home enforced custom App Control blocks unsigned provider and admits signed provider",
-   "Tested",
-   "Model",
-   "Home at 6144 MiB. Pro authored Microsoft base plus one Home-only leaf signer policy offline, without installing it on Pro. Home unsigned provider absent and new 3077 after record 76; native password recovery passed. Same policy accepted provider signed by already admitted certificate with approved sign in. Secure Boot on, no TESTSIGNING or unsigned executable exception; script enforcement excluded. Pro restored and native checked. Process ended after successful assertions on historical host PID collection, then Home clean shutdown verified.",
-   "windows-home/evidence/t6/20261109-140617-1794251177269178723/policy-result.json; windows-home/evidence/part-two/d30-20261109/author"
-  ],
-  [
-   "R91",
-   "Windows Home automatic restart sign on and mixed Windows Update servicing boundary",
-   "Tested",
-   "Model",
-   "Home at 6144 MiB. Offline default-allowed shutdown /g restored passkeytest and Explorer locked without signer release; subsequent approved unlock passed. Disabled-ARSO control returned no console user or Explorer and native sign in passed. Update-only internet first batch installed KB890830 and KB2267602 but cumulative KB5127648 failed; background security platform updates also succeeded. A fresh retry lost the agent during polling and later reported download result 3 without a completed installation batch. Post-update restricted boot, native sign in and approved unlock passed with original provider hash, Secure Boot on and SAC Off. OS build stayed 26300.9457. Successful cumulative/build-update coverage remains pending. First run was interrupted 14:27 to 16:13, preventing its intended 75/100-minute boundaries; clean shutdown ultimately completed before the two-hour cap, without forced exit.",
-   "windows-home/evidence/part-two/d30-20261109/restart-update; windows-home/evidence/part-two/d30-20261109/update-retry; windows-home/evidence/part-two/d30-20261109/post-update"
-  ],
-  [
-   "R92",
-   "Windows Home local Hello enrollment, plugin setup and WebAuthn API 9 control requests",
-   "Tested",
-   "Model",
-   "Home at 6144 MiB, SAC Off, offline. A new Home-only setup PIN enrolled a local Hello PIN, the N8 mock provider was enabled in Settings (one PIN prompt at enablement), both one-time consents were granted (caller and provider enumeration) and the probe reported WebAuthn API 9, Hello available and provider state 1 with one seeded credential for n8.invalid. Controls passed 16 of 16: four request JSON probes (configs 513, 577, 1537, 1601) and twelve strict metadata combinations (original, uv-false and omitted UV, configs 0 and 65, discouraged and required). Every one refused before the mock approval, with no signature and no assertion; the native chooser showed in 8 of them with 8 Continue clicks, which the controls do not restrict. Setup gaps found: with a PIN enrolled the native tile defaults to PIN entry so formal suites sign in through the mock provider, and the enumeration consent is raised by the inventory launch. Harness fix: window-only OCR fallback for the light Windows error panel (n18_native_ui.py, n18_run.py), Pro unchanged. No MakeCredential, browser or real site.",
-   "windows-home/evidence/part-two/d30-20261109/hello; windows-home/evidence/t7-controls/20261110-035707-1794301027168665671; windows-home/run.py t7-controls"
-  ],
-  [
-   "R93",
-   "Windows Home passkey plugin repeats: ten approvals plus a clean reboot repeat",
-   "Tested",
-   "Model",
-   "Home at 6144 MiB, SAC Off, offline, enrolled checkpoint n16-enrolled-consent-20261110-031652. Eleven of eleven passed: ten repeats, then a clean supervised shutdown and boot, then a post-reboot repeat. Config 65, honest probe flag 1. Every trial: no chooser, zero native Continue clicks, zero routine PIN inputs, full N21 plugin approval dialog read before approval, one signature, assertion returned with flags 1 (presence set, verification clear) and GetAssertion S_OK. Sign in each boot through the mock provider. Seeded fixture only, no browser, MakeCredential or hardware.",
-   "windows-home/evidence/t7-repeat/20261110-041635-1794302195950373557/plugin-results.json; windows-home/run.py t7-repeat"
-  ],
-  [
-   "R94",
-   "Windows Home plugin refusals, required verification, and keyboard refusals at sign in",
-   "Tested",
-   "Model",
-   "Five refusals each returned no signature and no assertion, with zero Continue clicks and zero PIN inputs: Cancel, timeout, required verification with the strict mock, wrong allow-list credential (config 193) and native chooser cancel. The legacy caller control with verification required rejected a UV-clear response even though Windows returned S_OK (false_uv_is_valid_verification false). Separately at the Home sign in screen, initial Enter and Escape on the approval prompt cancelled with no sign, release, fill or submission and native recovery followed. The original unexplained Windows uv=true request stays a stated limit.",
-   "windows-home/evidence/t7-refusals/20261110-043608-1794303368411038737; windows-home/evidence/part-two/d30-20261109/enrollment/keyboard-refusals.json"
-  ],
-  [
-   "R95",
-   "Windows Home final recovery to the clean baseline",
-   "Tested",
-   "Model",
-   "Protected n16-clean-sac-20261101-1504 restored on the new Hermes hardware; disk byte equal and vars.fd and every TPM file equal. Offline boot, native password sign in accepted (native form visually verified), then a read-only elevated check: EditionID Core, build 26300.9457, Secure Boot true, no Passkey provider or COM registration, no Passkey directory, native password provider present. Clean shutdown, transport stopped, lock cleared, no Windows qemu or swtpm left. Pro was last restored and native checked on 9 November.",
-   "windows-home/evidence/part-two/d30-20261109/final-recovery"
-  ],
-  [
-   "R100",
-   "Debian lane D: console login and sudo with the N13 approval prompt",
-   "Tested",
-   "Model",
-   "T8 part two, 9 and 10 November 2026, Debian 13.7 trixie in the Hermes VM with the mock signer. Console 44 of 44 (10 of 10 key approvals, all negative rows matched, password fallback), run 2 after a 0.5 s pause was added before each new pty (run 1 had one harness race at key-09, kept). Sudo 46 of 46 in run 1. Lifecycle extras 17 of 17 and signature binding 10 of 10. Every key row has one fresh request, one approval, one signer call, one verified signature. Cancel, invalid input, 30 s timeout, signer missing and the other faults released nothing. Stock password baseline 4 of 4 before the port. No physical signer.",
-   "linux-login-debian/guest_tests_debian.py (run in the guest); evidence/part2/console-sudo-run1, console-sudo-run2; research_notes/Passkey project feasibility/t8-debian-result.md"
-  ],
-  [
-   "R101",
-   "Debian GDM login screen with the N13 approval prompt and password fallback",
-   "Tested",
-   "Model",
-   "T8 part two, run-g4: 10 of 10 cold boot key logins (a fresh VM boot each), each with the N13 facts on screen (OCR audit 12 of 12 screenshots including 2 extras, a person looked at samples), one prepared, approved, signed and verified request for pk-test, role 1. 36 of 36 negatives (12 kinds, 3 each: C, Esc, mouse Cancel, Enter alone, A typed into the password field, timeout, signer missing, unenrolled, wrong challenge, wrong credential, replay, slow signer) with nothing released, and 12 of 12 recoveries (wrong password fails, correct password signs in). Mouse Approve and Tab then Enter pass. Unknown account: no request, no session. GNOME Wayland greeter at 1280 by 800.",
-   "linux-login-debian/gsuite.py RUN gdm-pos|gdm-neg|gdm-extras; evidence/part2/runs/run-g4"
-  ],
-  [
-   "R102",
-   "Debian GNOME lock screen with the N13 approval prompt and password fallback",
-   "Tested",
-   "Model",
-   "T8 part two: 10 of 10 key unlocks of one session (run-g1), each with role 3 and surface gdm-password-unlock, one request, one signer call, one verified signature, OCR audit passed. 36 of 36 negatives and 12 of 12 recoveries in run-g2 (same 12 kinds). Mouse Approve and Tab then Enter pass. Earlier lock negative rows in run-g1 and a first Tab row failed from a harness race and a missing Tab handler; both are kept and superseded. No loginctl unlock was used.",
-   "linux-login-debian/gsuite.py RUN lock-pos|lock-neg|extras-pos; evidence/part2/runs/run-g1, run-g2"
-  ],
-  [
-   "R103",
-   "Debian GNOME polkit agent with the N13 approval prompt and password fallback",
-   "Tested",
-   "Model",
-   "T8 part two, run-g1: 10 of 10 approvals of the harmless exec action (auth_admin, no keep) for the selected administrator pk-admin from a pk-test session, one request, one signer call, one verified signature each, OCR audit passed. 36 of 36 negatives and 12 of 12 recoveries, mouse Approve and Tab then Enter pass. A competing sudo while the panel is pending gets no approval prompt. A broker restart or a dead pkcheck with the panel up releases nothing. The signature binds the account and the polkit service, not the action.",
-   "linux-login-debian/gsuite.py RUN polkit-pos|polkit-neg; evidence/part2/runs/run-g1, run-g5"
-  ],
-  [
-   "R104",
-   "Debian GNOME panel on small screens and larger text",
-   "Tested",
-   "Model",
-   "When the panel does not fit it shows a reason and Approve stays disabled. 800 by 600: the greeter, lock screen and polkit dialog each refused A, kept Cancel and password recovery working. 1.5 times text: the lock screen clipped and refused A, the polkit dialog fit and approved. GDM at 1.5 times text and 1024 by 768 were not run. The panel overlaps the Debian logo at 1280 by 800 (cosmetic). AT-SPI shows the panel text and two named buttons for the polkit panel.",
-   "linux-login-debian/evidence/part2/runs/run-g5"
-  ],
-  [
-   "R105",
-   "Debian GNOME Keyring after a key login",
-   "Tested",
-   "Model",
-   "After a key login the login keyring stays locked. A secret request shows a separate GNOME Keyring prompt. The port releases no keyring password and the keyring password was not changed. This differs from the KDE wallet result in R61.",
-   "linux-login-debian/evidence/part2/runs/run-g5/keyring-after-key-login-prompt.png"
-  ],
-  [
-   "R106",
-   "Debian port local checks: PAM, broker, panel, installer and GNOME resources",
-   "Repeatable",
-   "Model",
-   "bash run_checks.sh passes 192 of 192: 84 PAM, 16 broker, 25 PAM to broker, 19 state, 21 panel with mocked actors, 23 installer and policy, 4 real GJS resource imports. The VM found five defects the mocks missed (stage bounds in the fit check, symlinked polkit helper path, stripped final newline in polkit prompts, a non clipping dialog group, no Tab focus); each has a new local check. Mocks are not native layout evidence.",
-   "linux-login-debian/run_checks.sh"
-  ],
-  [
-   "R107",
-   "Debian install, rollback and restore to the clean baseline",
-   "Tested",
-   "Model",
-   "Unattended Debian 13.7 install from the signature verified ISO (the part one preseed needed fixes for GDM enabling and the pk-test password). Offline stock baselines before the port. rollback_guest.py restored the original PAM files, removed the module, services and Shell wrapper; after a reboot native console, sudo, GDM, lock and polkit sign in all worked and no Passkey prompt appeared. Disk restored from clean-login, offline boot, native GDM, console and sudo sign in checked, guest off, no qemu, own lock removed.",
-   "linux-login-debian/rollback_guest.py; evidence/part2/rollback, restore-check; HANDOVER.md"
-  ],
-  [
-   "R108",
-   "Windows setup: install, enroll and uninstall from the built ZIP",
-   "Tested",
-   "Model",
-   "Clean Windows 11 Home 26H2 (build 26300.9457) VM. The ZIP hash in the guest matched the build record. windows.ps1 Install verified the payload, took the dummy password at a protected prompt, started both services, registered the extra tile beside the native one and started the user mock task. PluginEnroll returned AddAuthenticator and AddCredentials 0x0, the fixture was enabled in Settings after a local Hello PIN, and export-public wrote only the 72 byte public key. Uninstall removed tile, services, task, plugin, stores and native host keys, and the guest matched its pre install inspection. Repeated with three ZIP builds, last bb328078.",
-   "installer/evidence/part2/windows (baseline-before.json, installed-state*.json, baseline-after-*.json); no one command rerun"
-  ],
-  [
-   "R109",
-   "Windows browser fills with the installed add-on: Chrome 156 and Firefox 160",
-   "Tested",
-   "Model",
-   "Chrome loaded the generated unpacked add-on and Firefox the temporary add-on in fresh profiles. Each filled the local dummy login 3 of 3 times after approval with the right username, the exact fake password and zero submits. Fields were empty before approval, Cancel released nothing, an expired prompt released nothing, a stopped user mock released nothing, and a fill after a cold reboot and add-on reload worked. Limit: Chrome refused every approval under the Windows default ClearType text setting (see R110).",
-   "installer/evidence/part2/windows (chrome-fill*, ff-fill*, montage-*.png)"
-  ],
-  [
-   "R110",
-   "Windows Chrome ClearType refusal reproduced and fixed by N26",
-   "Tested",
-   "Model",
-   "Original N23 defect reproduced with the old prompt under default ClearType. N26 forces grayscale compositor text and replaces opacity with alpha text colors without relaxing pixel checks. Final packaged Chrome and Firefox each fill 3/3 with no auto submit; Cancel empty. See R118/R119 for hashes, full regression, controlled decoy negatives and the explained mixed-run b8 artifact. No hardware evidence.",
-   "installer/evidence/part2/windows; windows-n26-d29/evidence; research_notes/Passkey project feasibility/n26-result.md"
-  ],
-  [
-   "R111",
-   "Windows approved sign in and refusals on the installed package",
-   "Tested",
-   "Model",
-   "10 of 10 approved sign ins in the first full run (5 lock screen unlocks and 5 cold sign ins) with one prepared request, one signature, one fill and one separate submit each; 4 more on the later ZIP builds. Cancel, deny, a 30 second timeout and a stopped signer released nothing and each was followed by a native password sign in. Four native password sign ins passed after uninstall and reboot, with no Passkey tile. An enrolled Hello PIN makes the native tile open on PIN, so password sign in goes through Sign-in options.",
-   "installer/evidence/part2/windows (signins*.jsonl, refusals.jsonl, nat*.png)"
-  ],
-  [
-   "R112",
-   "Windows setup faults and interrupted setup",
-   "Tested",
-   "Model",
-   "A changed payload byte was refused before any change. A pre existing C:\\PasskeyN8 was refused and kept. A wrong password rolled everything back; a strict mode error hid the message and was fixed. An installer killed after registration was recovered by Uninstall and the guest matched its baseline. One install failed with a 10 second user mock wait on a slow cold start and rolled back cleanly; the wait is now 60 seconds.",
-   "installer/evidence/part2/windows (fault-*.png, baseline-after-fault-recovery.json)"
-  ],
-  [
-   "R113",
-   "Debian setup from the .deb: install, enroll, both browsers",
-   "Tested",
-   "Model",
-   "Debian 13.7, GNOME Shell 48.7, offline guest from the T8 baseline. apt installed the built .deb (hash matched), setup built the PAM module in the guest (same hash as the host build), edited the four named PAM stacks, diverted the Shell binary and started the signer and broker. The user mock started at the first GDM sign in. Chromium 156 (default profile, add-on loaded by flag) and Firefox ESR 153.6 (temporary add-on) each filled the local login 3 of 3 times with the exact fake password and zero submits; Cancel released nothing. The first install failed and rolled back because systemctl --user needs a user bus before first sign in; fixed.",
-   "installer/evidence/part2/debian (installed-state.txt, setup-install2.txt, deb-*-console.png)"
-  ],
-  [
-   "R114",
-   "Debian installed package: GDM and unlock approvals and refusals",
-   "Tested",
-   "Model",
-   "6 of 6 cold GDM sign ins, 5 of 5 GNOME unlocks and 1 polkit approval with the N13 panel, each with one prepared request, one approval, one signature and one verified result. Cancel (GDM and unlock), a 30 second timeout (GDM) and a stopped signer (GDM and unlock) each ran 3 times with no signature or release and password recovery after. Counts are on the T8 harness with evidence redirected here.",
-   "installer/evidence/part2/runs/n23-* (results.jsonl)"
-  ],
-  [
-   "R115",
-   "Debian uninstall, .deb removal, native recovery and setup faults",
-   "Tested",
-   "Model",
-   "Uninstall restored all five PAM files byte for byte, removed module, diversion, services and user files; the stock Shell binary was back. Native GDM password sign in passed twice after cold reboots and native sudo worked. apt remove ran the uninstall hook and left the same clean state. A changed payload and a pre existing signer directory were refused with no change. A setup killed with SIGKILL after its first PAM edit left a durable journal, native sudo still worked, and Uninstall restored the baseline. A changed PAM file made uninstall refuse and keep its recovery state.",
-   "installer/evidence/part2/debian (setup-uninstall.txt, deb-removal-path.txt, faults-*.txt, deb-native*-result.json)"
-  ],
-  [
-   "R116",
-   "NixOS package in a VM",
-   "Not tested",
-   "Document",
-   "Packaged and evaluated only: 1,503 configuration assertions and the Nix build of the package and module pass locally. The linux guest has a reference configuration that imports files it does not have, and its store holds no nixpkgs source, compiler or PAM headers, so an offline rebuild needs a fresh fixture. Not VM validated.",
-   "installer/evidence/part2/nixos-feasibility.txt"
-  ],
-  [
-   "R117",
-   "N23 packages: reproducible build and local checks",
-   "Repeatable",
-   "Model",
-   "bash run_checks.sh passes after the VM fixes: 53 installer, 25 browser and 15 package checks and 1,503 NixOS assertions. Packaging now uses fixed times and no PE timestamp, so two builds give identical hashes (zip bb328078, tar 59e65056, deb a1f716e0). Not signed.",
-   "installer/run_checks.sh; evidence/part2/rebuild"
-  ],
-  [
-   "R118",
-   "Windows packaged Chrome approval with default ClearType",
-   "Tested",
-   "Model",
-   "Grayscale compositor prompt and alpha text colors preserve the exact random shade. Windows Home 26H2, Chrome 157 and Firefox 160: 3/3 exact fake fills each, no auto submit, Cancel empty. Final ZIP and both installed prompt hashes verified. Full regression and final LCD T15: 390 checks each, zero failures; patch grids 96/0 per browser.",
-   "windows-n26-d29/evidence/package-hashes-resume.json; chrome-final-run.json; ff-final-run.json; regression/"
-  ],
-  [
-   "R119",
-   "Windows decoy refusal and b8 artifact investigation",
-   "Tested",
-   "Model",
-   "Alleged b8 fill image identified as b7 by its unique VM381 console source and journal; overlapping jobs reused filenames, and b7 images show no patch over the prompt. Original mixed trials excluded. Isolated controlled2 run: positive control fills with approve/fill audit; four top-layer overlap negatives refuse 7000-7009 foreign pixels and release nothing via click/A/Enter/resize-A. Original b8 audit lost at prereq restore; not invented.",
-   "windows-n26-d29/evidence/b8-investigation.md; controlled2-results.json; controlled2-correlated-summary.json; controlled2-overlap-verification.json"
-  ],
-  [
-   "R120",
-   "Windows native approval at 175 and 200 percent on 1080p",
-   "Tested",
-   "Model",
-   "Actual secure-desktop approval window reports DPI 168 and 192. Full request text, footer and controls visible. Tab reaches Approve; Cancel reachable. 200 percent keyboard approval fills and waits for separate Enter. Initial session-0 probe failed and early requested-scale screenshots excluded. Outside-dialog status line shortened at 200 percent.",
-   "windows-n26-d29/evidence/dpi-actual175.txt; dpi-actual200.txt; d29-actual175-prompt.png; d29-actual200-prompt2.png; d29-actual200-approved-no-submit.png"
-  ],
-  [
-   "R121",
-   "Windows Narrator audio including fallback footer",
-   "Tested",
-   "Model",
-   "QEMU HDA/WAV recording captures action, account, scope, outcome, expiry and buttons. Focused Narrator+Right reads the complete fallback line about choosing the Windows password tile. Raw small.en transcript and timed audio retained, including recognition errors and unsuccessful speed-command attempt. Not a complete screen-reader usability study.",
-   "windows-n26-d29/evidence/narrator-original.flac; narrator-transcript.srt; narrator-footer-targeted-16k.wav; narrator-footer-targeted-transcript.srt; narrator-footer-targeted-markers.json; audio-storage.md"
-  ],
-  [
-   "R122",
-   "KDE N13 lock prompt geometry at stock and fixture 1080p",
-   "Tested",
-   "Model",
-   "Actual protected Plasma 6.8 screen at 1920x1080@60, scale1. Stock layout fits complete facts and entry but clips Sleep/Switch User; 1280x800 also clips entry. Fixture-only local KDE shell copy widens the message and collapses the spacer, showing full facts and controls. Current product does not ship this override. Larger scaling and patched 1280 not tested.",
-   "kde-d28/evidence/d28-1080-initial.png; d28-1080-final-layout.png; output-1080.txt; png-dimensions.json; geometry.json; layout.patch"
-  ],
-  [
-   "R123",
-   "KDE lock approval, no-release, recovery and native controls with D28 fixture layout",
-   "Tested",
-   "Model",
-   "Final fixture layout 13/13 bounded checks: 3 keyboard and 1 mixed mouse approval, each one signer call and verification; 2 cancellations, 1 held-prompt expiry, 4 password recoveries, 1 focus check and 1 connected Switch User transition release nothing. Original session stays locked during switch. Sleep focus only; no mouse-only approval or full accessibility claim. No product source changes or full N7 rerun.",
-   "kde-d28/evidence/accepted-results.json; final-keyboard-completed.json; fast-access-completed.json; d28-final-fast-tab-sleep.png; d28-final-fast-tab-switch-user.png; connected-switch-seat.json; audit-final.json"
+  "date": "13 November 2026",
+  "statuses": {
+    "Repeatable": "Tested already, and a one command rerun exists, so it can be repeated cheaply and also counts as a sub requirement of larger tests.",
+    "Tested": "Run and recorded once. No cheap automated rerun yet.",
+    "Not tested": "Never tested. Documentation or design only."
+  },
+  "evidence_levels": {
+    "Calculation": "Arithmetic from stated assumptions.",
+    "Model": "A software model of a proposed rule. Not firmware, a device or an operating system.",
+    "Simulated": "Chrome with a virtual authenticator and a local test site. Not a device or CTAP firmware.",
+    "Synthetic page": "A scripted test page in Chrome. Not a real website.",
+    "Document": "Documentation read only.",
+    "Hardware": "A real device. None exists yet.",
+    "Host software": "Real Linux-PAM and pam_u2f libraries run in a private configuration with synthetic fallback modules. Not a real login surface, a device or CTAP firmware."
+  },
+  "features": [
+    [
+      "R01",
+      "Key with no user verification fails a service that requires verification",
+      "Repeatable",
+      "Simulated",
+      "WV-01: 120 of 120 trials failed",
+      "webauthn-virtual/run.sh"
+    ],
+    [
+      "R02",
+      "A key without user verification succeeds when the service discourages or prefers verification, with presence reported and verification not reported, and the username supplied",
+      "Repeatable",
+      "Simulated",
+      "WV-01: 120 of 120 successful responses from keys with no verification were accepted by the server checks. All 270 successful responses in the whole matrix passed",
+      "webauthn-virtual/run.sh"
+    ],
+    [
+      "R03",
+      "Discoverable credentials: creation and login without a username were refused with no verification in Chrome",
+      "Repeatable",
+      "Simulated",
+      "WV-01: 40 credential creation trials and 20 login trials failed",
+      "webauthn-virtual/run.sh"
+    ],
+    [
+      "R04",
+      "Without a presence signal, standard browser requests wait and time out",
+      "Repeatable",
+      "Simulated",
+      "WV-01: 720 of 720 timed out",
+      "webauthn-virtual/run.sh"
+    ],
+    [
+      "R05",
+      "Browser and service enforce the identifier and the origin after changes to the port or host",
+      "Repeatable",
+      "Simulated",
+      "WV-01: wrong port rejected by the service, wrong host refused by Chrome",
+      "webauthn-virtual/run.sh"
+    ],
+    [
+      "R06",
+      "hmac-secret secret requested through the browser PRF extension, without verification",
+      "Repeatable",
+      "Simulated",
+      "WV-01: 60 responses returned PRF output with verification not reported. The same run reproduces it. G9 audit: the saved assertions have signed verification flag 0 and two 32 byte PRF outputs. This is Chrome virtual authenticator behavior. The data does not show which hmac-secret key family produced the outputs, so it cannot show a specification violation or hardware behavior. Open question for Ian: whether PRF is meant to derive or protect the password store key",
+      "webauthn-virtual/run.sh, g9-prf/run.sh"
+    ],
+    [
+      "R07",
+      "On screen approval pop up releases a signature",
+      "Repeatable",
+      "Synthetic page",
+      "T2 on 21 October 2026: 12 cases, twice each, in Chromium 155 and Firefox 158. Create and get pass with the verification flag unset. Cancel, timeout, wrong identifier, forbidden frames, stale requests and replay were refused without signing. One click approved one request. A page can imitate the pop up and fake its own success result, and the verifier rejected the forgery. The browser native credential API stays reachable. Software signer, not hardware",
+      "t2-approval-popup/run.sh"
+    ],
+    [
+      "R08",
+      "Browser extension that takes over WebAuthn requests and asks a USB key to sign",
+      "Not tested",
+      "Document",
+      "T2 shows the extension part works in software for create and get in Chromium and Firefox, with a software signer. The USB part is Not tested. Signer removal passed as a model only",
+      "t2-approval-popup/run.sh; USB part none"
+    ],
+    [
+      "R09",
+      "Chrome webAuthenticationProxy API for this purpose",
+      "Repeatable",
+      "Synthetic page",
+      "T3 on 21 October 2026, Linux only: does not pass. Attach without a remote session, synthetic create and get, and caller abort worked. A timeout request stayed pending until the harness deadline. The proxy supplies the caller origin and a same origin flag but not the top origin of a cross origin frame, which triggers the study's lost context stop condition if iframe requests are required. Windows and store approval Not tested",
+      "t3-chrome-proxy/run.sh"
+    ],
+    [
+      "R10",
+      "Windows passkey plugin accepts a provider that returns approval with no PIN",
+      "Repeatable",
+      "Model",
+      "N18 on Windows 11 Pro 26H2 with the seeded software mock. Config 65 used WebAuthn options version 9 and one modern credential allow-list entry. Ten of ten approved assertions skipped the Windows chooser and Continue click. Every signature followed mock approval. No PIN was entered. Deny at the mock approval, native chooser Cancel, timeout, strict UV required and wrong credential released no signature or assertion. The caller logged discouraged enum 3 while the plugin received uv=true, including after metadata updates that set uv=false or omitted uv. Strict mode refused before approval. The exact mapping remains unknown. One offline fixture and one Windows build only. N21 reran the same validation with the N13 prompt: 10 of 10 repeats with zero Continue clicks and zero PIN inputs, 16 of 16 strict controls and 5 of 5 refusal controls released nothing, and the focused chooser cancel passed.",
+      "windows-login/n18_validate.py --config 65"
+    ],
+    [
+      "R11",
+      "Password release only for the exact enrolled origin",
+      "Repeatable",
+      "Model",
+      "OR-01: 129 URL cases, 0 release decision differences. 4 differences between the model and Chrome in how they read addresses, flagged",
+      "logic-tests/origin-rule/rerun.sh"
+    ],
+    [
+      "R12",
+      "Page code can read filled values, scripted submit is cancelable, 12 origin cases",
+      "Repeatable",
+      "Synthetic page",
+      "G8 runner on 21 October 2026: 7 of 7 checks pass in headless Chromium, with 100 readable values, 100 canceled scripted submits and 12 origin fixtures. No manual steps remain. A real person pressing Enter is outside this test. Browser trial on 22 October 2026 extends this end to end, see R55",
+      "g8-runner/run.sh"
+    ],
+    [
+      "R13",
+      "Service style identifier scope is wider than the exact origin rule",
+      "Repeatable",
+      "Model",
+      "OR-01: 20 scope examples",
+      "logic-tests/origin-rule/rerun.sh"
+    ],
+    [
+      "R14",
+      "Release policy outcomes for possession, enrolled host, touch and software manager, plus enrolled host and touch, with removal, replay of earlier requests, expired replies and unenrolled profiles",
+      "Repeatable",
+      "Model",
+      "RP-01: 71 passed. Covers 12 outcomes in four current release policy rows and 3 more for enrolled host and touch. The two pop up rows are not modeled",
+      "logic-tests/release-policy/rerun.sh"
+    ],
+    [
+      "R15",
+      "Host enrollment with a browser profile key",
+      "Not tested",
+      "Document",
+      "Design only",
+      "none"
+    ],
+    [
+      "R16",
+      "Vendor protocol version rules and malformed frame handling",
+      "Repeatable",
+      "Model",
+      "PV-01: 36 passed, 120,000 randomly generated messages, no forbidden acceptance",
+      "logic-tests/protocol-versioning/rerun.sh"
+    ],
+    [
+      "R17",
+      "USB vendor HID transport through WebHID or a native helper",
+      "Not tested",
+      "Document",
+      "Design only. Browser trial wrote the device protocol so a USB vendor HID device could carry it, tested with a mock device only",
+      "tr-browser-trial/protocol"
+    ],
+    [
+      "R18",
+      "Field finding and fill on real login pages",
+      "Not tested",
+      "Document",
+      "Design only for real login pages. Local fixtures are covered by R37 and R38. No real site was attempted. T13 on 22 October 2026 filled three live demo login forms, see R40 and R41",
+      "t13-real-sites/run.sh"
+    ],
+    [
+      "R19",
+      "Choosing among several accounts for one destination",
+      "Not tested",
+      "Document",
+      "Explicit choice among three accounts filled correctly on local fixtures in T10. Automatic choice is Not tested and needs a policy decision",
+      "t10-destination-checks/run.sh"
+    ],
+    [
+      "R20",
+      "Keyboard fallback: text to key positions on six layouts, wrong layout gives wrong characters",
+      "Repeatable",
+      "Model",
+      "KL-01: 26 passed, 570 character reproductions on six layouts",
+      "logic-tests/keyboard-layout/rerun.sh"
+    ],
+    [
+      "R21",
+      "Typing accepted at startup, disk and login prompts; Ctrl+Alt+Del from a hardware keyboard",
+      "Not tested",
+      "Document",
+      "Needs a real board",
+      "none"
+    ],
+    [
+      "R22",
+      "Windows local account login through a credential provider with an approval dialog",
+      "Repeatable",
+      "Model",
+      "N17, Windows 11 Pro 26H2 VM with a mock signer. One combined matrix completed. Startup, unlock, switch user and the administrator credential prompt each passed 10 of 10. All 21 negative cases released nothing. Guest internet was off. Enter remains separate after approval. See the N17 result for the exact negative scope and limits. N21 reran the same matrix with the N13 prompt: 40 of 40 approvals, 40 distinct request IDs and 21 of 21 refusal cases with nothing released. N16 Home 26H2 Core 26300.9457 SAC-Off combined matrix completed 1 November and independently validated 9 November: 10/10 each surface, 40 unique requests with the full N21 prompt, 21 refusals with no release and 18 native recoveries. Mismatch and expiry are direct broker probes. T4 ran at 8192 MiB. Under D30, later Home blocks use 6144 MiB with the original guards. T5 and custom T6 policy checks passed; restart/update and T7 have separate rows.",
+      "windows-login/n17_offline_run.py matrix; windows-home/run.py matrix --execute --checkpoint n16-installed-offline-20261101-1642; windows-home/validate_matrix.py"
+    ],
+    [
+      "R23",
+      "Windows personal Microsoft account with a password through a credential provider",
+      "Not tested",
+      "Document",
+      "Research only",
+      "research windows-local-and-microsoft-account-research.md"
+    ],
+    [
+      "R24",
+      "Passwordless Microsoft account, and the Windows Hello only setting",
+      "Not tested",
+      "Document",
+      "Research: no password exists to submit",
+      "research windows-local-and-microsoft-account-research.md"
+    ],
+    [
+      "R25",
+      "Windows session unlock and first login after an update, with automatic restart sign on",
+      "Tested",
+      "Model",
+      "N8: the provider loads with Secure Boot and LSA protection on and survives four updates. ARSO restores a locked session after shutdown /g without approval, then unlock goes through the provider. ARSO did not sign in after the TrustedInstaller restart chain. First sign in after the update passed",
+      "research windows-login/README.md"
+    ],
+    [
+      "R26",
+      "Linux login, lock screen and sudo through pam_u2f, using a key without a PIN",
+      "Not tested",
+      "Document",
+      "Documented options only. G1 design and a rootless probe exist, see R39. No PAM to USB signing or real login surface has been exercised. Ian chose lane D, a direct PAM adapter, instead; see R58 to R61. This pam_u2f row stays Not tested",
+      "linux-bridge-design/design.md"
+    ],
+    [
+      "R27",
+      "Linux PAM confirmation prompt using interactive mode in a real greeter",
+      "Not tested",
+      "Document",
+      "Research only. Source inspection shows pam_u2f 1.4.0 interactive mode is not a yes or no approval gate. Not run in a greeter",
+      "linux-bridge-design/design.md"
+    ],
+    [
+      "R28",
+      "Linux disk unlock through systemd-cryptenroll, using a key without a PIN",
+      "Not tested",
+      "Document",
+      "Optional feature. Documented options only",
+      "none"
+    ],
+    [
+      "R29",
+      "Application adapters on Windows and Linux",
+      "Not tested",
+      "Document",
+      "Needs named applications",
+      "none"
+    ],
+    [
+      "R30",
+      "Storage budget of 2,560 KiB and calculated record capacities",
+      "Repeatable",
+      "Calculation",
+      "Builder assertions check the table",
+      "build_paper_r7.py"
+    ],
+    [
+      "R31",
+      "Power supply and USB interface circuitry modeled in ngspice, an electronic circuit simulator",
+      "Repeatable",
+      "Model",
+      "Simulated supply of 3.294 V in the active state, a 4.5 mV change between idle and active",
+      "hardware-mockups/circuit"
+    ],
+    [
+      "R32",
+      "Enclosure dimensions and computer model geometry for two models, a key shaped one and a tiny one",
+      "Repeatable",
+      "Calculation",
+      "Checks confirmed that the key model at 45 by 25 by 5.5 mm and the tiny model at 24.25 by 12 by 3.5 mm form closed surfaces. Physical fit was not tested",
+      "hardware-mockups/enclosure"
+    ],
+    [
+      "R33",
+      "Firmware update, signature check and recovery",
+      "Not tested",
+      "Document",
+      "Design only",
+      "none"
+    ],
+    [
+      "R34",
+      "Backup and restore of the password store",
+      "Repeatable",
+      "Model",
+      "N22, 25 October 2026, main PC with software mock devices: encrypted password snapshot protected by a random recovery secret shown once, restore to a fresh device under its own PRF-style root. 171 of 171 recovery and helper checks and 28 of 28 restored-device browser checks pass. Empty, varied and large stores, wrong or missing secret, corruption, truncation, swapping, nonempty target refusal, old password snapshots and secret scans pass. Twenty restored browser fills pass with the original device stopped. Unchanged browser trial before and after: 40 fixtures, 20 passkey cases, 51 attack checks and 10 native cases. Linux signing and wallet data and Windows DPAPI passwords use separate stores and are not restored here. Passkeys excluded. Mock roots are volatile; no hardware custody, persistence, PRF or extraction claim. R33 and R35 unchanged.",
+      "backup-restore/rerun.sh"
+    ],
+    [
+      "R35",
+      "Protection of stored keys against extraction",
+      "Not tested",
+      "Document",
+      "Design only",
+      "none"
+    ],
+    [
+      "R36",
+      "Loss and revocation steps",
+      "Not tested",
+      "Document",
+      "Design only",
+      "none"
+    ],
+    [
+      "R37",
+      "Destination checks refuse lookalike origins, subdomains, Punycode impostors, HTTP, other ports, stale documents, changed form actions and replaced frames",
+      "Repeatable",
+      "Synthetic page",
+      "T10: 111 ordinary trials gave 33 expected fills, 78 refusals and zero direct wrong fills. Frame policies disagree between exact origin equality and matching ancestors, so G6 is open",
+      "t10-destination-checks/run.sh"
+    ],
+    [
+      "R38",
+      "Enter is a user action: a hostile enrolled page cannot take the password and submit without Enter",
+      "Repeatable",
+      "Synthetic page",
+      "T10 stop finding: the guarantee failed. An enrolled hostile page forwarded the dummy password and submitted without Enter. Exit code 2 reproduces it. The Enter rule holds only against pages that are not enrolled",
+      "t10-destination-checks/run.sh"
+    ],
+    [
+      "R39",
+      "Private PAM stack probe and access to /dev/uhid",
+      "Repeatable",
+      "Host software",
+      "G1: Linux-PAM 1.7.2 and pam_u2f 1.4.0 passed 8 checks in a private configuration with synthetic fallback modules. /dev/uhid is root owned mode 0600 and was refused for iank, also inside a user namespace. No virtual device was started",
+      "linux-bridge-design/probe.py"
+    ],
+    [
+      "R40",
+      "Real form detection, approval and fill on three named live demo login forms (AuthenticationTest, The Internet, same origin iframe)",
+      "Repeatable",
+      "Synthetic page",
+      "T13: seven dummy fills, no observed submit events, unrelated enrollment refused. Reference adapter on live demo pages. Live sites can change",
+      "t13-real-sites/run.sh"
+    ],
+    [
+      "R41",
+      "Multi step logins, unfamiliar username field names and JavaScript forms",
+      "Repeatable",
+      "Synthetic page",
+      "T15 on 22 October 2026: two step logins with one click per step, unusual field names, script handlers and GET forms now fill in Chromium and Firefox on local fixtures and on AuthenticationTest, SauceDemo and Randomly Online, without submission. Covers the listed classes and routes, not arbitrary forms. Earlier T13 refusals kept in its record",
+      "t15-adapter-hardening/verify.sh local; live: t15-adapter-hardening/run.sh live"
+    ],
+    [
+      "R42",
+      "Same origin iframe fill and nested document traversal on live pages",
+      "Repeatable",
+      "Synthetic page",
+      "T13: one iframe form filled and five nested fixture documents inspected. Nested password filling and cross origin frames Not tested",
+      "t13-real-sites/run.sh"
+    ],
+    [
+      "R43",
+      "T2 create and get on Microsoft Passkey Playground and Duo WebAuthn.io with verification unset",
+      "Repeatable",
+      "Synthetic page",
+      "T13: two independently verified assertions. Microsoft needed changed demo settings and refused defaults. Not Ian accounts, not hardware. Feeds R01 to R03 and T1",
+      "t13-real-sites/run.sh"
+    ],
+    [
+      "R44",
+      "T2 compatibility with sites that require discoverable credentials (Yubico, passwordless.id)",
+      "Repeatable",
+      "Synthetic page",
+      "T13 refusals. Does not show a server rejecting a key only for lacking verification",
+      "t13-real-sites/run.sh"
+    ],
+    [
+      "R45",
+      "Token2 creation and authentication with verification unset",
+      "Repeatable",
+      "Synthetic page",
+      "T13 rerun on 22 October 2026 under Ian's two class stop rule: creation and authentication with verification unset succeeded, signature independently verified, the attestation note was recorded as informational and no blocking notice appeared. The first run had continued past the warning against the old rule, which stays recorded as a rule violation",
+      "t13-real-sites/run.sh"
+    ],
+    [
+      "R46",
+      "XQA and fill.dev live login compatibility",
+      "Not tested",
+      "Document",
+      "T13 availability checks found a certificate error and a server timeout",
+      "t13-real-sites/run.sh"
+    ],
+    [
+      "R47",
+      "Inline prompt beside the login field, one click fills, in top level, same origin, cross origin and nested frames",
+      "Repeatable",
+      "Synthetic page",
+      "T14, Chromium 155 and Firefox 158: 136 local trials, none failed. Prompt names the site and the top origin. Adapter never submits",
+      "t14-inline-prompt-frames/run.sh local|live"
+    ],
+    [
+      "R48",
+      "Allowed parent list for cross origin frames: first time Allow click per credential",
+      "Repeatable",
+      "Model",
+      "T14: policy model matched all 20 measured outcomes. Exact origin lets a hostile parent through silently; matching ancestors breaks the Canvas case. No policy blocks a parent that was allowed once and later turns hostile",
+      "t14-inline-prompt-frames/run.sh local|live"
+    ],
+    [
+      "R49",
+      "Passkey create and get from frames with page replacement and a visible top origin",
+      "Repeatable",
+      "Synthetic page",
+      "T14: works in Chromium with signatures verified. Firefox cannot expose the frame permissions policy, so the prototype refuses frame passkeys there. T15 rerun: same result, Firefox frame passkeys still refused because no supported API exposes the frame policy",
+      "t14-inline-prompt-frames/run.sh local|live"
+    ],
+    [
+      "R50",
+      "Inline prompt resists clickjacking and decoys",
+      "Repeatable",
+      "Synthetic page",
+      "T14 findings: Firefox accepted a small decoy patch over the prompt label and added a hostile parent. Transparent frame clickjacking filled 11 of 11 times in Firefox until a screenshot check was added; after it, all attempts were refused in both browsers. T15 hardening: full prompt patch and focus removal checks gave zero successes in two final grids of 192 attempts per browser. Earlier successful attacks stay recorded",
+      "t14-inline-prompt-frames/run.sh local|live; t15-adapter-hardening/verify.sh local"
+    ],
+    [
+      "R51",
+      "Inline prompt hidden from page script",
+      "Repeatable",
+      "Synthetic page",
+      "T14 finding: pages can detect the prompt and its position and probe its text with window.find in both browsers; Firefox returns the matched text. T15: prompt moved into an extension owned frame; tested window.find text probes are now blocked. Presence, geometry and the frame address are still visible to the page",
+      "t14-inline-prompt-frames/run.sh local|live; t15-adapter-hardening/verify.sh local"
+    ],
+    [
+      "R52",
+      "Inline prompt on live demo sites",
+      "Repeatable",
+      "Synthetic page",
+      "T14: AuthenticationTest simple form and same origin iframe, and The Internet, filled in both browsers. Public demos send X-Frame-Options SAMEORIGIN, so no live cross origin frame was measured. XQA and fill.dev unavailable",
+      "t14-inline-prompt-frames/run.sh live"
+    ],
+    [
+      "R53",
+      "Hidden and decoy fields, fields changed after approval and alternate destinations refused by the extended finder",
+      "Repeatable",
+      "Synthetic page",
+      "T15 local refusals in both browsers. Exact origin boundary unchanged",
+      "t15-adapter-hardening/verify.sh local"
+    ],
+    [
+      "R54",
+      "Dynamic resource address for the extension, against fixed address probes",
+      "Repeatable",
+      "Synthetic page",
+      "T15, Chromium: four fixed address fetch probes blocked. Not complete fingerprinting protection",
+      "t15-adapter-hardening/verify.sh local"
+    ],
+    [
+      "R55",
+      "End to end path: extension, native helper and a separate mock device over a written protocol, Chromium and Firefox",
+      "Repeatable",
+      "Model",
+      "Browser trial, mock device stage: 40 login fixtures, 20 passkey create and get requests, 51 browser and protocol attack checks and 10 native messaging cases passed in both browsers. Branded Google Chrome not tested because it ignores the command line extension loading switch. No USB transport",
+      "tr-browser-trial/run.sh"
+    ],
+    [
+      "R56",
+      "Replacement native helper cannot capture passwords",
+      "Repeatable",
+      "Model",
+      "Browser trial finding: a replacement helper captured a password after approval, because without pairing the device cannot tell a genuine helper from a fake one. Consequence of the no pairing decision",
+      "tr-browser-trial/run.sh"
+    ],
+    [
+      "R57",
+      "Page code cannot forge a passkey result",
+      "Repeatable",
+      "Model",
+      "Browser trial: page code produced a synthetic passkey result in its own JavaScript context but without a device signature. A relying party that verifies signatures rejects it",
+      "tr-browser-trial/run.sh"
+    ],
+    [
+      "R58",
+      "Linux lane D: direct PAM adapter, broker and mock signer for console login, sudo and KDE lock screen",
+      "Repeatable",
+      "Model",
+      "N7 matrix rerun with the N13 prompt on 26 October 2026, one complete run of 329 of 329: console 44 of 44, sudo 46 of 46, KDE lock screen 52 of 52, lifecycle 17 of 17, signature binding 10 of 10. Console and sudo each approved 10 of 10 with the full N13 text in the transcript, and the lock screen 10 of 10 with ten screenshots. Cancel, invalid input, timeout and a missing signer released nothing. Approval is now A then Enter, C cancels, and 30 second expiry is checked before the signer. KDE Plasma 6.8 starts its PAM conversation on the first touch of the locked screen, so an idle lock screen holds no stale prompt; a prompt held on screen past 30 seconds is refused with no signer call. At 1280 by 800 the lock text fits but the key entry field is below the screen edge. Broker failure on the lock screen can still require a second password entry. Mock signer, no USB. T8 part two repeated the lane D adapter on Debian 13.7 with GNOME and GDM; see R100 to R107. The NixOS and KDE result in this row is unchanged.",
+      "linux-login-followup/rerun.py all; research_notes/Passkey project feasibility/n20-result.md"
+    ],
+    [
+      "R59",
+      "Linux lane D at the SDDM login screen shows the approval context",
+      "Repeatable",
+      "Model",
+      "N7 and N20: the SDDM theme now shows the N13 prompt, with account, scope, expiry, Approve and Cancel and the password fallback below. SDDM 53 of 53 including ten cold key logins with ten screenshots. The separate prompts suite passed 11 of 11: C, Escape and panel Enter make no request, A and Enter on the focused Approve button each approve once, the panel refuses after 30 seconds and shows Request expired, and the letter A in the password field is a password attempt. A cancelled or expired request needs an explicit new request. The theme cannot retract a submitted authentication",
+      "linux-login-followup/rerun.py all and prompts; research_notes/Passkey project feasibility/n20-result.md"
+    ],
+    [
+      "R60",
+      "Polkit through lane D",
+      "Repeatable",
+      "Model",
+      "N7 and N20: text agent 45 of 45 and the real KDE graphical agent 44 of 44. Each approved 10 of 10 with the N13 text, in the transcript for the text agent and in ten screenshots of the KDE dialog next to the selected administrator. KDE polkit receives the text as an information message because it hides the input label. Cancel, invalid input, timeout and a missing signer released nothing. The signature binds account and PAM service, not the exact polkit action",
+      "linux-login-followup/rerun.py all; research_notes/Passkey project feasibility/n20-result.md"
+    ],
+    [
+      "R61",
+      "No separate KWallet password after a key login",
+      "Repeatable",
+      "Model",
+      "N7 and N20: after a key login KWallet opens with no second password, 11 of 11 in the N20 rerun, with the cold wrong secret control. The signer stores a copy of the wallet secret and releases it to the computer, so a compromised computer can steal it. Wallet password and encryption unchanged",
+      "linux-login-followup/rerun.py"
+    ],
+    [
+      "R62",
+      "Login field finder and inline prompt on 30 realistic login designs rebuilt from Dribbble",
+      "Repeatable",
+      "Synthetic page",
+      "T17, Chromium and Firefox: desktop 30 of 30, mobile 30 of 30, cross origin frame 10 of 10, hostile variants 10 of 10 in each browser. Multi step flows 18 of 21 in Chromium and 16 of 21 in Firefox",
+      "t17-login-designs/rerun.sh"
+    ],
+    [
+      "R63",
+      "Occlusion check accepts rounded, pill and decorated fields without weakening it, N10 fix",
+      "Repeatable",
+      "Synthetic page",
+      "T17: clear field shapes accepted 3 of 10 before the fix and 10 of 10 after, in both browsers. All 14 hiding and cover cases refused, and a cover over the right 30% of a field, missed before, is now refused",
+      "t17-login-designs/rerun.sh"
+    ],
+    [
+      "R64",
+      "T15 defenses still hold after the prompt follow ups",
+      "Repeatable",
+      "Synthetic page",
+      "N15 regression: Chromium 100 of 100, Firefox 99 of 99 with one case not applicable, 390 of 390 evidence checks. Completed after resuming the double density grid. All N14 counts matched.",
+      "n14-prompt-reasons/rerun.sh"
+    ],
+    [
+      "R65",
+      "Login flows where the password box unlocks late, the card keeps moving, or the screen is double density",
+      "Repeatable",
+      "Synthetic page",
+      "N12 fixed all three T17 failures: flows 21 of 21 in Chromium and Firefox, up from 18 and 16. D13 gets a password only second prompt. Endless CSS animations that move the field are paused while the prompt is open; the 650 ms stability rule is unchanged. The Firefox screenshot check cell is now 8 CSS pixels at any density",
+      "n12-flow-fixes/rerun.sh"
+    ],
+    [
+      "R66",
+      "Moving cards that a script moves, or whose animation the page restarts, are refused",
+      "Repeatable",
+      "Synthetic page",
+      "N12: 4 of 4 attack cases per browser, nothing filled or released",
+      "n12-flow-fixes/rerun.sh"
+    ],
+    [
+      "R67",
+      "Only a username the adapter filled opens the password only second prompt",
+      "Repeatable",
+      "Synthetic page",
+      "N12: a username typed by a person, then a password box that unlocks, gets no prompt and no release in either browser",
+      "n12-flow-fixes/rerun.sh"
+    ],
+    [
+      "R68",
+      "Decoy patch grid at double density",
+      "Repeatable",
+      "Synthetic page",
+      "N15 regression: 0 of 96 decoy successes in Chromium and Firefox. The first grid launch failed before Chromium found its extension worker. The detached resume passed. N14 counts matched.",
+      "n14-prompt-reasons/rerun.sh"
+    ],
+    [
+      "R69",
+      "Approval prompt says why its button is disabled",
+      "Repeatable",
+      "Synthetic page",
+      "N15: the reason is the first row at every frame size. Its text is empty when the account box already says Choose an account. The button still needs an account choice. N14 reason cases 8 of 8 per browser after a full reason stage retry. The first Firefox D03 account attempt released once but did not fill. Busy and changed reasons still not driven live. N19 kept every N15 count with the new design.",
+      "n15-prompt-followup/run_checks.sh, n14-prompt-reasons/rerun.sh"
+    ],
+    [
+      "R70",
+      "The page cannot read the reason text",
+      "Repeatable",
+      "Synthetic page",
+      "N15 selected reason stage: 0 findings in 14 N14 reason checks. The 14 new N15 checks also found no reason text or credential leak to the local page. N19 kept every N15 count with the new design.",
+      "n15-prompt-followup/run_checks.sh, n14-prompt-reasons/rerun.sh"
+    ],
+    [
+      "R71",
+      "The reason stays at the top and changes no enable rule",
+      "Repeatable",
+      "Synthetic page",
+      "N15: 14 of 14 checks across both browsers. Reason first and visible in 150, 230, 300 and 700 pixel frames and narrow overflow. No duplicate account instruction. The reason row stays reserved. T15 small frame cases and all N14 counts matched.",
+      "n15-prompt-followup/run_checks.sh, n14-prompt-reasons/rerun.sh"
+    ],
+    [
+      "R72",
+      "Windows credential provider: startup sign in with approval and mock signer",
+      "Repeatable",
+      "Model",
+      "N8: 10 of 10, each with a distinct request and a native password path kept working. N21 rerun with the N13 prompt: 10 of 10 again in the combined matrix, full new text shown before each approval.",
+      "windows-login/rerun.py startup"
+    ],
+    [
+      "R73",
+      "Windows credential provider: lock screen unlock with approval and mock signer",
+      "Repeatable",
+      "Model",
+      "N8: 10 of 10, each with a distinct request and a native password path kept working. N21 rerun with the N13 prompt: 10 of 10 again in the combined matrix, full new text shown before each approval.",
+      "windows-login/rerun.py lock"
+    ],
+    [
+      "R74",
+      "Windows credential provider: switch user with approval and mock signer",
+      "Repeatable",
+      "Model",
+      "N8: 10 of 10, each with a distinct request and a native password path kept working. N21 rerun with the N13 prompt: 10 of 10 again in the combined matrix, full new text shown before each approval.",
+      "windows-login/rerun.py switch"
+    ],
+    [
+      "R75",
+      "Windows credential provider: administrator credential prompt with approval and mock signer",
+      "Repeatable",
+      "Model",
+      "N8: 10 of 10, each with a distinct request and a native password path kept working. N21 rerun with the N13 prompt: 10 of 10 again in the combined matrix. Enter alone, Escape and Alt+C refused with nothing released or elevated, and Tab then Enter approved once.",
+      "windows-login/rerun.py uac"
+    ],
+    [
+      "R76",
+      "App Control signed only policy blocks the unsigned credential provider",
+      "Tested",
+      "Model",
+      "N8: Code Integrity blocked the unsigned DLL in LogonUI; native password sign in still worked",
+      "windows-login/README.md"
+    ],
+    [
+      "R77",
+      "A signed credential provider is accepted under a policy that trusts its publisher",
+      "Tested",
+      "Model",
+      "N8: a guest only test certificate; distribution signing and arbitrary customer policies not tested",
+      "windows-login/README.md"
+    ],
+    [
+      "R78",
+      "Local account unlock while offline",
+      "Tested",
+      "Model",
+      "N8: native and mock provider unlock with the VM network disconnected, once each. Not a Microsoft account offline cache",
+      "windows-login/t5_local.py"
+    ],
+    [
+      "R79",
+      "Windows passkey plugin setup with a local account",
+      "Tested",
+      "Model",
+      "N8: enabled after a one time Hello PIN, with no Microsoft account, as a development package",
+      "windows-login/t7_prepare.py"
+    ],
+    [
+      "R80",
+      "A caller that requires user verification rejects the plugin response without it",
+      "Tested",
+      "Model",
+      "N8: the Windows API returned success but the caller rejected the missing verification flag. A false verification claim is never valid. N21 reran both T7 plugin fixtures with the N13 prompt: strict refused, honest verification clear passed with no PIN and after a clean reboot, and the required caller rejected the missing bit.",
+      "windows-login/t7_trial.py"
+    ],
+    [
+      "R81",
+      "Password rotation and a stale stored password on Windows",
+      "Tested",
+      "Model",
+      "N17, Windows 11 Pro 26H2 VM with a mock signer. The Passkey password change tile updated the saved copy 10 of 10. Ten approved sign ins and a cold boot check passed. Recovery accepted and declined both passed. Wrong old password, mismatched confirmation and a rejected manual save changed no saved copy. A local administrator reset simulated an outside change. The positive change process later stopped on an OCR miss. Completed rejection and recovery suites supply the remaining coverage. No Microsoft or domain account claim. N21 reran the change and recovery suites with the N13 prompt: 10 of 10 changes and saved sign ins, cold boot sign in, both refusals, and all recovery cases passed.",
+      "windows-login/n17_offline_run.py change, change-failures, recovery"
+    ],
+    [
+      "R82",
+      "Windows VBS, Credential Guard, older builds and USB signer, plus Home tests outside the measured N16 scope",
+      "Not tested",
+      "Document",
+      "N16 establishes Home installation, native sign in, T4, disconnected local unlock, custom App Control and separate unsigned and locally signed SAC-On loads through offline SATA. T7/N18 remain pending at this boundary. VBS, Credential Guard, older releases, cloud reputation and hardware remain untested.",
+      "windows-home/HANDOVER.md; research_notes/Passkey project feasibility/n16-result.md"
+    ],
+    [
+      "R83",
+      "Approval prompt follows the N13 design, with keys, 30 second expiry and Cancel",
+      "Repeatable",
+      "Synthetic page",
+      "N19: browser fill and passkey prompts use the wording from wording.json through a generated block. A and the button approve only with focus and an enabled button, C and Escape cancel, Enter alone never approves, 30 seconds expire and release nothing. 5 size tiers. New and N15 checks 24 of 24 per browser. Whole prompt shade kept because a narrow edge misses every patch. No bold and 1 pixel borders so double density passes. All 86 comparisons against the saved N15 counts match.",
+      "n19-prompt-build/run_checks.sh, n14-prompt-reasons/rerun.sh"
+    ],
+    [
+      "R84",
+      "Prompt fits a 300 pixel frame and refuses safely when smaller",
+      "Repeatable",
+      "Synthetic page",
+      "N19: 300 pixel frame fits (Chromium tier 0, Firefox tier 1). 230 fits at tier 3. 150 and 180 refuse with the reason first and release nothing. A sweep of 11 frame heights per browser passes.",
+      "n19-prompt-build/run_checks.sh"
+    ],
+    [
+      "R85",
+      "Screenshot check refuses a stray shade pixel box",
+      "Tested",
+      "Synthetic page",
+      "N19: on the animated gradient page D22, two stray page pixels of exactly the random shade stretched the measured box in 1 of 25 runs, and the prompt refused safely. Chromium D05 mobile had one unexplained failure in the full run, passed 30 of 30 on repeat, and the T17 stage retry passed. Ian, 25 October (D26): rare, so the check stays as it is.",
+      "n19-prompt-build/results/first-after-run, N19_STRESS=25 bash run_checks.sh --browser chromium"
+    ],
+    [
+      "R86",
+      "Linux approval prompt follows N13 on console, sudo, polkit, SDDM, KDE lock screen and KDE polkit",
+      "Repeatable",
+      "Model",
+      "N20, 26 October 2026, NixOS KDE VM, mock signer: the shared N13 wording is generated into both Linux lanes and the SDDM panel. Full N7 run 329 of 329. Six surfaces each approved 10 of 10 with the new prompt shown. The broker compares the whole display and the remaining lifetime, so lazy preparation grants no new 30 seconds. Native surfaces keep host controls, need Enter after A or C and cannot close the host input at 30 seconds. They reject a late reply before the signer. Known gap: at 1280 by 800 the KDE lock key entry field is off screen. GNOME and GDM are left to T8",
+      "linux-prompt-build/run_checks.sh and linux-login-followup/rerun.py all; research_notes/Passkey project feasibility/n20-result.md"
+    ],
+    [
+      "R87",
+      "Windows approval prompt follows the N13 design on startup, unlock, switch user, the administrator prompt and the passkey plugin",
+      "Repeatable",
+      "Model",
+      "N21 on Windows 11 Pro 26H2 with the mock signer, guest internet off. The native dialog shows title, heading, Action, For, Account, Scope, After approval, expiry, Approve [A] and Cancel [C], then the fallback line below the buttons, with no request ID and no Deny. Every approval in the matrix and the N18 repeats showed the full text first. A, Alt+A, Tab then Enter and a click approve once. Enter alone, C, Escape, the close button, Cancel and Alt+C release nothing. At 150 percent scale and in high contrast nothing is clipped. Found and fixed one code bug: the buttons have no dialog item IDs, so focus and enabled checks failed until they were replaced. Limits: no screen reader transcript, scales above 150 percent not reached, the 31 second on screen text check missed once, native TaskDialog colours instead of the N13 palette.",
+      "windows-login/n17_offline_run.py matrix --n21; windows-login/n18_validate.py --config 65 --n21; windows-prompt-build/p2/kbd_checks.py"
+    ],
+    [
+      "R88",
+      "Windows 11 Home Smart App Control loads the mock provider and broker through the offline SATA fixture",
+      "Tested",
+      "Model",
+      "N16, Windows 11 Home 26H2 Core 26300.9457 VM. Stock SAC was changed from Evaluation to On through Windows Security. Registry 1 and enforced VerifiedAndReputableDesktop policy were retained before and after both restored branches. Current unsigned N21 binaries executed and the provider loaded in LogonUI. The same source bytes with a guest-only RSA self signature and local trust also executed and loaded with Valid Authenticode. Native recovery passed, no password store or signer key was provisioned, no release/submission occurred and no new 3077 block event followed record 70. Offline SATA transport only; no cloud reputation or Mark of the Web claim. Functional authentication is a separate SAC-Off branch.",
+      "windows-home/HANDOVER.md; windows-home/evidence/part-two/sac/unsigned/summary.json; windows-home/evidence/part-two/sac/signed/summary.json"
+    ],
+    [
+      "R89",
+      "Windows Home native and mock local unlock with the network link disconnected",
+      "Tested",
+      "Model",
+      "Home Core 26300.9457, SAC Off, 6144 MiB under D30. Native and mock local unlock passed with QEMU link down; both disconnected desktop screenshots reviewed. Mock required the full N21 approval, exactly one signature/release/fill and separate Windows submission. Maximized Settings and accessibility text show local account and no Microsoft-account Hello-only toggle. Microsoft accounts and offline cold startup excluded.",
+      "windows-home/evidence/part-two/d30-20261109/t5-prep-1794249386945415122; windows-home/run.py t5"
+    ],
+    [
+      "R90",
+      "Windows Home enforced custom App Control blocks unsigned provider and admits signed provider",
+      "Tested",
+      "Model",
+      "Home at 6144 MiB. Pro authored Microsoft base plus one Home-only leaf signer policy offline, without installing it on Pro. Home unsigned provider absent and new 3077 after record 76; native password recovery passed. Same policy accepted provider signed by already admitted certificate with approved sign in. Secure Boot on, no TESTSIGNING or unsigned executable exception; script enforcement excluded. Pro restored and native checked. Process ended after successful assertions on historical host PID collection, then Home clean shutdown verified.",
+      "windows-home/evidence/t6/20261109-140617-1794251177269178723/policy-result.json; windows-home/evidence/part-two/d30-20261109/author"
+    ],
+    [
+      "R91",
+      "Windows Home automatic restart sign on and mixed Windows Update servicing boundary",
+      "Tested",
+      "Model",
+      "Home at 6144 MiB. Offline default-allowed shutdown /g restored passkeytest and Explorer locked without signer release; subsequent approved unlock passed. Disabled-ARSO control returned no console user or Explorer and native sign in passed. Update-only internet first batch installed KB890830 and KB2267602 but cumulative KB5127648 failed; background security platform updates also succeeded. A fresh retry lost the agent during polling and later reported download result 3 without a completed installation batch. Post-update restricted boot, native sign in and approved unlock passed with original provider hash, Secure Boot on and SAC Off. OS build stayed 26300.9457. Successful cumulative/build-update coverage remains pending. First run was interrupted 14:27 to 16:13, preventing its intended 75/100-minute boundaries; clean shutdown ultimately completed before the two-hour cap, without forced exit.",
+      "windows-home/evidence/part-two/d30-20261109/restart-update; windows-home/evidence/part-two/d30-20261109/update-retry; windows-home/evidence/part-two/d30-20261109/post-update"
+    ],
+    [
+      "R92",
+      "Windows Home local Hello enrollment, plugin setup and WebAuthn API 9 control requests",
+      "Tested",
+      "Model",
+      "Home at 6144 MiB, SAC Off, offline. A new Home-only setup PIN enrolled a local Hello PIN, the N8 mock provider was enabled in Settings (one PIN prompt at enablement), both one-time consents were granted (caller and provider enumeration) and the probe reported WebAuthn API 9, Hello available and provider state 1 with one seeded credential for n8.invalid. Controls passed 16 of 16: four request JSON probes (configs 513, 577, 1537, 1601) and twelve strict metadata combinations (original, uv-false and omitted UV, configs 0 and 65, discouraged and required). Every one refused before the mock approval, with no signature and no assertion; the native chooser showed in 8 of them with 8 Continue clicks, which the controls do not restrict. Setup gaps found: with a PIN enrolled the native tile defaults to PIN entry so formal suites sign in through the mock provider, and the enumeration consent is raised by the inventory launch. Harness fix: window-only OCR fallback for the light Windows error panel (n18_native_ui.py, n18_run.py), Pro unchanged. No MakeCredential, browser or real site.",
+      "windows-home/evidence/part-two/d30-20261109/hello; windows-home/evidence/t7-controls/20261110-035707-1794301027168665671; windows-home/run.py t7-controls"
+    ],
+    [
+      "R93",
+      "Windows Home passkey plugin repeats: ten approvals plus a clean reboot repeat",
+      "Tested",
+      "Model",
+      "Home at 6144 MiB, SAC Off, offline, enrolled checkpoint n16-enrolled-consent-20261110-031652. Eleven of eleven passed: ten repeats, then a clean supervised shutdown and boot, then a post-reboot repeat. Config 65, honest probe flag 1. Every trial: no chooser, zero native Continue clicks, zero routine PIN inputs, full N21 plugin approval dialog read before approval, one signature, assertion returned with flags 1 (presence set, verification clear) and GetAssertion S_OK. Sign in each boot through the mock provider. Seeded fixture only, no browser, MakeCredential or hardware.",
+      "windows-home/evidence/t7-repeat/20261110-041635-1794302195950373557/plugin-results.json; windows-home/run.py t7-repeat"
+    ],
+    [
+      "R94",
+      "Windows Home plugin refusals, required verification, and keyboard refusals at sign in",
+      "Tested",
+      "Model",
+      "Five refusals each returned no signature and no assertion, with zero Continue clicks and zero PIN inputs: Cancel, timeout, required verification with the strict mock, wrong allow-list credential (config 193) and native chooser cancel. The legacy caller control with verification required rejected a UV-clear response even though Windows returned S_OK (false_uv_is_valid_verification false). Separately at the Home sign in screen, initial Enter and Escape on the approval prompt cancelled with no sign, release, fill or submission and native recovery followed. The original unexplained Windows uv=true request stays a stated limit.",
+      "windows-home/evidence/t7-refusals/20261110-043608-1794303368411038737; windows-home/evidence/part-two/d30-20261109/enrollment/keyboard-refusals.json"
+    ],
+    [
+      "R95",
+      "Windows Home final recovery to the clean baseline",
+      "Tested",
+      "Model",
+      "Protected n16-clean-sac-20261101-1504 restored on the new Hermes hardware; disk byte equal and vars.fd and every TPM file equal. Offline boot, native password sign in accepted (native form visually verified), then a read-only elevated check: EditionID Core, build 26300.9457, Secure Boot true, no Passkey provider or COM registration, no Passkey directory, native password provider present. Clean shutdown, transport stopped, lock cleared, no Windows qemu or swtpm left. Pro was last restored and native checked on 9 November.",
+      "windows-home/evidence/part-two/d30-20261109/final-recovery"
+    ],
+    [
+      "R100",
+      "Debian lane D: console login and sudo with the N13 approval prompt",
+      "Tested",
+      "Model",
+      "T8 part two, 9 and 10 November 2026, Debian 13.7 trixie in the Hermes VM with the mock signer. Console 44 of 44 (10 of 10 key approvals, all negative rows matched, password fallback), run 2 after a 0.5 s pause was added before each new pty (run 1 had one harness race at key-09, kept). Sudo 46 of 46 in run 1. Lifecycle extras 17 of 17 and signature binding 10 of 10. Every key row has one fresh request, one approval, one signer call, one verified signature. Cancel, invalid input, 30 s timeout, signer missing and the other faults released nothing. Stock password baseline 4 of 4 before the port. No physical signer.",
+      "linux-login-debian/guest_tests_debian.py (run in the guest); evidence/part2/console-sudo-run1, console-sudo-run2; research_notes/Passkey project feasibility/t8-debian-result.md"
+    ],
+    [
+      "R101",
+      "Debian GDM login screen with the N13 approval prompt and password fallback",
+      "Tested",
+      "Model",
+      "T8 part two, run-g4: 10 of 10 cold boot key logins (a fresh VM boot each), each with the N13 facts on screen (OCR audit 12 of 12 screenshots including 2 extras, a person looked at samples), one prepared, approved, signed and verified request for pk-test, role 1. 36 of 36 negatives (12 kinds, 3 each: C, Esc, mouse Cancel, Enter alone, A typed into the password field, timeout, signer missing, unenrolled, wrong challenge, wrong credential, replay, slow signer) with nothing released, and 12 of 12 recoveries (wrong password fails, correct password signs in). Mouse Approve and Tab then Enter pass. Unknown account: no request, no session. GNOME Wayland greeter at 1280 by 800.",
+      "linux-login-debian/gsuite.py RUN gdm-pos|gdm-neg|gdm-extras; evidence/part2/runs/run-g4"
+    ],
+    [
+      "R102",
+      "Debian GNOME lock screen with the N13 approval prompt and password fallback",
+      "Tested",
+      "Model",
+      "T8 part two: 10 of 10 key unlocks of one session (run-g1), each with role 3 and surface gdm-password-unlock, one request, one signer call, one verified signature, OCR audit passed. 36 of 36 negatives and 12 of 12 recoveries in run-g2 (same 12 kinds). Mouse Approve and Tab then Enter pass. Earlier lock negative rows in run-g1 and a first Tab row failed from a harness race and a missing Tab handler; both are kept and superseded. No loginctl unlock was used.",
+      "linux-login-debian/gsuite.py RUN lock-pos|lock-neg|extras-pos; evidence/part2/runs/run-g1, run-g2"
+    ],
+    [
+      "R103",
+      "Debian GNOME polkit agent with the N13 approval prompt and password fallback",
+      "Tested",
+      "Model",
+      "T8 part two, run-g1: 10 of 10 approvals of the harmless exec action (auth_admin, no keep) for the selected administrator pk-admin from a pk-test session, one request, one signer call, one verified signature each, OCR audit passed. 36 of 36 negatives and 12 of 12 recoveries, mouse Approve and Tab then Enter pass. A competing sudo while the panel is pending gets no approval prompt. A broker restart or a dead pkcheck with the panel up releases nothing. The signature binds the account and the polkit service, not the action.",
+      "linux-login-debian/gsuite.py RUN polkit-pos|polkit-neg; evidence/part2/runs/run-g1, run-g5"
+    ],
+    [
+      "R104",
+      "Debian GNOME panel on small screens and larger text",
+      "Tested",
+      "Model",
+      "When the panel does not fit it shows a reason and Approve stays disabled. 800 by 600: the greeter, lock screen and polkit dialog each refused A, kept Cancel and password recovery working. 1.5 times text: the lock screen clipped and refused A, the polkit dialog fit and approved. GDM at 1.5 times text and 1024 by 768 were not run. The panel overlaps the Debian logo at 1280 by 800 (cosmetic). AT-SPI shows the panel text and two named buttons for the polkit panel.",
+      "linux-login-debian/evidence/part2/runs/run-g5"
+    ],
+    [
+      "R105",
+      "Debian GNOME Keyring after a key login",
+      "Tested",
+      "Model",
+      "After a key login the login keyring stays locked. A secret request shows a separate GNOME Keyring prompt. The port releases no keyring password and the keyring password was not changed. This differs from the KDE wallet result in R61.",
+      "linux-login-debian/evidence/part2/runs/run-g5/keyring-after-key-login-prompt.png"
+    ],
+    [
+      "R106",
+      "Debian port local checks: PAM, broker, panel, installer and GNOME resources",
+      "Repeatable",
+      "Model",
+      "bash run_checks.sh passes 192 of 192: 84 PAM, 16 broker, 25 PAM to broker, 19 state, 21 panel with mocked actors, 23 installer and policy, 4 real GJS resource imports. The VM found five defects the mocks missed (stage bounds in the fit check, symlinked polkit helper path, stripped final newline in polkit prompts, a non clipping dialog group, no Tab focus); each has a new local check. Mocks are not native layout evidence.",
+      "linux-login-debian/run_checks.sh"
+    ],
+    [
+      "R107",
+      "Debian install, rollback and restore to the clean baseline",
+      "Tested",
+      "Model",
+      "Unattended Debian 13.7 install from the signature verified ISO (the part one preseed needed fixes for GDM enabling and the pk-test password). Offline stock baselines before the port. rollback_guest.py restored the original PAM files, removed the module, services and Shell wrapper; after a reboot native console, sudo, GDM, lock and polkit sign in all worked and no Passkey prompt appeared. Disk restored from clean-login, offline boot, native GDM, console and sudo sign in checked, guest off, no qemu, own lock removed.",
+      "linux-login-debian/rollback_guest.py; evidence/part2/rollback, restore-check; HANDOVER.md"
+    ],
+    [
+      "R108",
+      "Windows setup: install, enroll and uninstall from the built ZIP",
+      "Tested",
+      "Model",
+      "Clean Windows 11 Home 26H2 (build 26300.9457) VM. The ZIP hash in the guest matched the build record. windows.ps1 Install verified the payload, took the dummy password at a protected prompt, started both services, registered the extra tile beside the native one and started the user mock task. PluginEnroll returned AddAuthenticator and AddCredentials 0x0, the fixture was enabled in Settings after a local Hello PIN, and export-public wrote only the 72 byte public key. Uninstall removed tile, services, task, plugin, stores and native host keys, and the guest matched its pre install inspection. Repeated with three ZIP builds, last bb328078.",
+      "installer/evidence/part2/windows (baseline-before.json, installed-state*.json, baseline-after-*.json); no one command rerun"
+    ],
+    [
+      "R109",
+      "Windows browser fills with the installed add-on: Chrome 156 and Firefox 160",
+      "Tested",
+      "Model",
+      "Chrome loaded the generated unpacked add-on and Firefox the temporary add-on in fresh profiles. Each filled the local dummy login 3 of 3 times after approval with the right username, the exact fake password and zero submits. Fields were empty before approval, Cancel released nothing, an expired prompt released nothing, a stopped user mock released nothing, and a fill after a cold reboot and add-on reload worked. Limit: Chrome refused every approval under the Windows default ClearType text setting (see R110).",
+      "installer/evidence/part2/windows (chrome-fill*, ff-fill*, montage-*.png)"
+    ],
+    [
+      "R110",
+      "Windows Chrome ClearType refusal reproduced and fixed by N26",
+      "Tested",
+      "Model",
+      "Original N23 defect reproduced with the old prompt under default ClearType. N26 forces grayscale compositor text and replaces opacity with alpha text colors without relaxing pixel checks. Final packaged Chrome and Firefox each fill 3/3 with no auto submit; Cancel empty. See R118/R119 for hashes, full regression, controlled decoy negatives and the explained mixed-run b8 artifact. No hardware evidence.",
+      "installer/evidence/part2/windows; windows-n26-d29/evidence; research_notes/Passkey project feasibility/n26-result.md"
+    ],
+    [
+      "R111",
+      "Windows approved sign in and refusals on the installed package",
+      "Tested",
+      "Model",
+      "10 of 10 approved sign ins in the first full run (5 lock screen unlocks and 5 cold sign ins) with one prepared request, one signature, one fill and one separate submit each; 4 more on the later ZIP builds. Cancel, deny, a 30 second timeout and a stopped signer released nothing and each was followed by a native password sign in. Four native password sign ins passed after uninstall and reboot, with no Passkey tile. An enrolled Hello PIN makes the native tile open on PIN, so password sign in goes through Sign-in options.",
+      "installer/evidence/part2/windows (signins*.jsonl, refusals.jsonl, nat*.png)"
+    ],
+    [
+      "R112",
+      "Windows setup faults and interrupted setup",
+      "Tested",
+      "Model",
+      "A changed payload byte was refused before any change. A pre existing C:\\PasskeyN8 was refused and kept. A wrong password rolled everything back; a strict mode error hid the message and was fixed. An installer killed after registration was recovered by Uninstall and the guest matched its baseline. One install failed with a 10 second user mock wait on a slow cold start and rolled back cleanly; the wait is now 60 seconds.",
+      "installer/evidence/part2/windows (fault-*.png, baseline-after-fault-recovery.json)"
+    ],
+    [
+      "R113",
+      "Debian setup from the .deb: install, enroll, both browsers",
+      "Tested",
+      "Model",
+      "Debian 13.7, GNOME Shell 48.7, offline guest from the T8 baseline. apt installed the built .deb (hash matched), setup built the PAM module in the guest (same hash as the host build), edited the four named PAM stacks, diverted the Shell binary and started the signer and broker. The user mock started at the first GDM sign in. Chromium 156 (default profile, add-on loaded by flag) and Firefox ESR 153.6 (temporary add-on) each filled the local login 3 of 3 times with the exact fake password and zero submits; Cancel released nothing. The first install failed and rolled back because systemctl --user needs a user bus before first sign in; fixed.",
+      "installer/evidence/part2/debian (installed-state.txt, setup-install2.txt, deb-*-console.png)"
+    ],
+    [
+      "R114",
+      "Debian installed package: GDM and unlock approvals and refusals",
+      "Tested",
+      "Model",
+      "6 of 6 cold GDM sign ins, 5 of 5 GNOME unlocks and 1 polkit approval with the N13 panel, each with one prepared request, one approval, one signature and one verified result. Cancel (GDM and unlock), a 30 second timeout (GDM) and a stopped signer (GDM and unlock) each ran 3 times with no signature or release and password recovery after. Counts are on the T8 harness with evidence redirected here.",
+      "installer/evidence/part2/runs/n23-* (results.jsonl)"
+    ],
+    [
+      "R115",
+      "Debian uninstall, .deb removal, native recovery and setup faults",
+      "Tested",
+      "Model",
+      "Uninstall restored all five PAM files byte for byte, removed module, diversion, services and user files; the stock Shell binary was back. Native GDM password sign in passed twice after cold reboots and native sudo worked. apt remove ran the uninstall hook and left the same clean state. A changed payload and a pre existing signer directory were refused with no change. A setup killed with SIGKILL after its first PAM edit left a durable journal, native sudo still worked, and Uninstall restored the baseline. A changed PAM file made uninstall refuse and keep its recovery state.",
+      "installer/evidence/part2/debian (setup-uninstall.txt, deb-removal-path.txt, faults-*.txt, deb-native*-result.json)"
+    ],
+    [
+      "R116",
+      "NixOS package in a VM",
+      "Not tested",
+      "Document",
+      "Packaged and evaluated only: 1,503 configuration assertions and the Nix build of the package and module pass locally. The linux guest has a reference configuration that imports files it does not have, and its store holds no nixpkgs source, compiler or PAM headers, so an offline rebuild needs a fresh fixture. Not VM validated.",
+      "installer/evidence/part2/nixos-feasibility.txt"
+    ],
+    [
+      "R117",
+      "N23 packages: reproducible build and local checks",
+      "Repeatable",
+      "Model",
+      "bash run_checks.sh passes after the VM fixes: 53 installer, 25 browser and 15 package checks and 1,503 NixOS assertions. Packaging now uses fixed times and no PE timestamp, so two builds give identical hashes (zip bb328078, tar 59e65056, deb a1f716e0). Not signed.",
+      "installer/run_checks.sh; evidence/part2/rebuild"
+    ],
+    [
+      "R118",
+      "Windows packaged Chrome approval with default ClearType",
+      "Tested",
+      "Model",
+      "Grayscale compositor prompt and alpha text colors preserve the exact random shade. Windows Home 26H2, Chrome 157 and Firefox 160: 3/3 exact fake fills each, no auto submit, Cancel empty. Final ZIP and both installed prompt hashes verified. Full regression and final LCD T15: 390 checks each, zero failures; patch grids 96/0 per browser.",
+      "windows-n26-d29/evidence/package-hashes-resume.json; chrome-final-run.json; ff-final-run.json; regression/"
+    ],
+    [
+      "R119",
+      "Windows decoy refusal and b8 artifact investigation",
+      "Tested",
+      "Model",
+      "Alleged b8 fill image identified as b7 by its unique VM381 console source and journal; overlapping jobs reused filenames, and b7 images show no patch over the prompt. Original mixed trials excluded. Isolated controlled2 run: positive control fills with approve/fill audit; four top-layer overlap negatives refuse 7000-7009 foreign pixels and release nothing via click/A/Enter/resize-A. Original b8 audit lost at prereq restore; not invented.",
+      "windows-n26-d29/evidence/b8-investigation.md; controlled2-results.json; controlled2-correlated-summary.json; controlled2-overlap-verification.json"
+    ],
+    [
+      "R120",
+      "Windows native approval at 175 and 200 percent on 1080p",
+      "Tested",
+      "Model",
+      "Actual secure-desktop approval window reports DPI 168 and 192. Full request text, footer and controls visible. Tab reaches Approve; Cancel reachable. 200 percent keyboard approval fills and waits for separate Enter. Initial session-0 probe failed and early requested-scale screenshots excluded. Outside-dialog status line shortened at 200 percent.",
+      "windows-n26-d29/evidence/dpi-actual175.txt; dpi-actual200.txt; d29-actual175-prompt.png; d29-actual200-prompt2.png; d29-actual200-approved-no-submit.png"
+    ],
+    [
+      "R121",
+      "Windows Narrator audio including fallback footer",
+      "Tested",
+      "Model",
+      "QEMU HDA/WAV recording captures action, account, scope, outcome, expiry and buttons. Focused Narrator+Right reads the complete fallback line about choosing the Windows password tile. Raw small.en transcript and timed audio retained, including recognition errors and unsuccessful speed-command attempt. Not a complete screen-reader usability study.",
+      "windows-n26-d29/evidence/narrator-original.flac; narrator-transcript.srt; narrator-footer-targeted-16k.wav; narrator-footer-targeted-transcript.srt; narrator-footer-targeted-markers.json; audio-storage.md"
+    ],
+    [
+      "R122",
+      "KDE N13 lock prompt geometry at stock and fixture 1080p",
+      "Tested",
+      "Model",
+      "Actual protected Plasma 6.8 screen at 1920x1080@60, scale1. Stock layout fits complete facts and entry but clips Sleep/Switch User; 1280x800 also clips entry. Fixture-only local KDE shell copy widens the message and collapses the spacer, showing full facts and controls. Current product does not ship this override. Larger scaling and patched 1280 not tested.",
+      "kde-d28/evidence/d28-1080-initial.png; d28-1080-final-layout.png; output-1080.txt; png-dimensions.json; geometry.json; layout.patch"
+    ],
+    [
+      "R123",
+      "KDE lock approval, no-release, recovery and native controls with D28 fixture layout",
+      "Tested",
+      "Model",
+      "Final fixture layout 13/13 bounded checks: 3 keyboard and 1 mixed mouse approval, each one signer call and verification; 2 cancellations, 1 held-prompt expiry, 4 password recoveries, 1 focus check and 1 connected Switch User transition release nothing. Original session stays locked during switch. Sleep focus only; no mouse-only approval or full accessibility claim. No product source changes or full N7 rerun.",
+      "kde-d28/evidence/accepted-results.json; final-keyboard-completed.json; fast-access-completed.json; d28-final-fast-tab-sleep.png; d28-final-fast-tab-switch-user.png; connected-switch-seat.json; audit-final.json"
+    ],
+    [
+      "R124",
+      "N29 browser shared approval card and accepted shade rule",
+      "Tested",
+      "Model",
+      "Shared tokens, contrast-filtered request shades and full/constrained card. Source matches the 12 November full regression byte for byte, exit 0; final N19 54/54. Candidate square key box reverted. Rare safe refusals on D02/D22 remain; no hardware or accessibility acceptance.",
+      "n29-prompt-consistency/ACCEPTANCE.md; evidence/adapter-hashes-at-full-start.txt; evidence/logs/n19-final-checks.log; prompt-design/tokens-proof.json"
+    ],
+    [
+      "R125",
+      "N29 SDDM shared approval card, approvals/refusals and password fallback",
+      "Tested",
+      "Model",
+      "15 scored real NixOS guest rows pass with mock signer. SDDM source unchanged after that run; shared facts, expiry, approval/cancel and password fallback preserved. Layout mocks are separate; dedicated accessibility deferred to N36. Guest evidence carries Hermes RAM-error qualification.",
+      "n29-prompt-consistency/evidence/linux/graphical-results.jsonl; evidence/linux/n29-sddm-greeter-card.png; n29-prompt-consistency/ACCEPTANCE.md"
+    ],
+    [
+      "R126",
+      "N29 Windows shared card on exact installer-produced native bytes",
+      "Tested",
+      "Model",
+      "Real Windows Home guest, packaged provider 54a9c9e6 and n18-derived plugin. Startup, switch, UAC approve/refusals, unlock 200%, plugin approve/cancel and lock cancel/Escape/expiry/opaque covered-Approve checks. Too-small card cannot approve; packaged C not captured and mouse-Cancel screenshot alone cannot prove click versus timeout. Development C proven. No universal click-through-overlay claim; RAM caveat; N36 deferred.",
+      "n29-prompt-consistency/evidence/windows-packaged-54a9c9e6/; evidence/20261113/source-hashes-at-end.txt; n29-prompt-consistency/ACCEPTANCE_REVIEW.md"
+    ],
+    [
+      "R127",
+      "N29 GNOME GDM, lock and polkit shared card native functional/refusal checks",
+      "Tested",
+      "Model",
+      "Debian 13.7 mock-signer guest, final overlay 2f9fcab6. Final-source approvals on three surfaces, mouse and Tab-Enter, reduced refusal/password recovery cases; earlier broader negatives apply to unchanged paths. Clean final g9/x5/x4 supersede stale-coordinate/contaminated harness attempts. Reduced matrix, not full T8 or final native small-screen sweep; RAM qualification, N36 deferred.",
+      "linux-login-debian/evidence/part2/runs/n29-gnome-g7/; n29-gnome-l10/; n29-gnome-p8/; n29-gnome-g9/; n29-gnome-x5/; n29-gnome-x4/; n29-prompt-consistency/ACCEPTANCE_REVIEW.md"
+    ],
+    [
+      "R128",
+      "N36 accessibility acceptance for the N29 card and future surfaces",
+      "Not tested",
+      "Model",
+      "Ian deferred dedicated accessibility work. Narrator/Orca, names/tree/read order, high contrast/forced-colours audits, zoom/scaling and dedicated keyboard-only audits are not accepted here. Existing historical captures remain version-specific evidence; new Narrator reading-order concern remains open. No accessibility pass inferred from core acceptance.",
+      "n36-accessibility/BRIEF.md; n29-prompt-consistency/HANDOVER.md; n29-prompt-consistency/ACCEPTANCE.md"
+    ]
   ]
- ]
 }

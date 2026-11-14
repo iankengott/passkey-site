@@ -2,7 +2,7 @@
   {
     "path": "analysis/test-register/register.json",
     "role": "Current result counts and verbatim register rows",
-    "sha256": "cdb18267bc4282be625555c58933345909982381aabf0e56a019b75053daa500"
+    "sha256": "d4e31f60054188993f3c2be4922a930bc7b43b8e96c55c91ae6bb19c04430a0c"
   },
   {
     "path": "reports/Passkey feasibility paper - Revision 8.md",
@@ -92,7 +92,7 @@
   {
     "path": "analysis/hardware-mockups/README.md",
     "role": "Hardware source assumptions and limits; the inline key drawing uses the tiny v2 dimensions from here",
-    "sha256": "225361c3326a9cf3740e7aef02ab64f330b26c07b0cecdf21f098f6a3ec2fde0"
+    "sha256": "cb0055fb311ec17e86523d0a2576a7a0ddb873322967143794912c2f51dd0106"
   },
   {
     "path": "analysis/hardware-mockups/circuit/README.md",
@@ -117,12 +117,12 @@
   {
     "path": "analysis/test-register/n19-prompt-build/results/screens/chromium-wording-fill-prompt.png",
     "role": "Real N19 local fixture screenshot, Chromium",
-    "sha256": "808575f59a967b0458630709c896c57c697aceeedabb6bcb1363b7eea00c890f"
+    "sha256": "92937fe551eb404dcfc852b7dc5b321d352334c385cab0e686fa1a7a31193813"
   },
   {
     "path": "analysis/test-register/n19-prompt-build/results/screens/firefox-wording-fill-prompt.png",
     "role": "Real N19 local fixture screenshot, Firefox",
-    "sha256": "4fd6728c77316f5447f8bcfc5829a1ade69974c84cf7b5d91af0aab3b8d1a7c5"
+    "sha256": "92a2b6649862c974cbad3e8d374b828dba260e71f373530c21a1a9da1661b0c4"
   },
   {
     "path": "analysis/linux-login-followup/evidence/reruns/20261023-005854/cold-key-01-context.png",
@@ -130,19 +130,14 @@
     "sha256": "b5d865ed26138fa1fc5fcfc4acfee5e41406f9f451d43f49e0c4ebbb54c76306"
   },
   {
-    "path": "analysis/linux-login-followup/evidence/reruns/20261023-005854/polkit-key-01-context.png",
-    "role": "Historical N7 KDE graphical administrator prompt in VM",
-    "sha256": "03bdddfb2f413b365fb8a3e059859589b20b93ab0312078828cc072cf36eaf38"
-  },
-  {
-    "path": "analysis/windows-login/evidence/n17-prepare-20261024-211115/new-provider-smoke-prompt.png",
-    "role": "Historical N17 Windows 11 Pro VM screenshot, before N21",
-    "sha256": "56c4a7c148ec819850a4c64b61445a45a3207422943eec5aa71b5641c90f76e8"
-  },
-  {
     "path": "analysis/windows-login/evidence/t7/assertion-mock-prompt.png",
     "role": "Historical T7 Windows passkey mock approval, before N18 and N21",
     "sha256": "6cf75ff921c3e18ca023dfa12526d698b64bd2f5a7c3027ef23ddd259bc61bbd"
+  },
+  {
+    "path": "analysis/demo-site/media/captures/manifest.json",
+    "role": "WebP conversion record for the heavy screenshots: source hashes, tool and sizes",
+    "sha256": "1ab22cbe76046c4c744d496760f9fd63ef11fadedb5fde0073984f44da47cf24"
   },
   {
     "path": "analysis/linux-login-followup/evidence/reruns/20261023-005854/g-lock-key-01-typed.png",
@@ -150,9 +145,19 @@
     "sha256": "a6fbd2c20290a678aa1bf03b95af4eba5a09f07ae3582ab27a52c6e8f698655b"
   },
   {
+    "path": "analysis/demo-site/media/captures/native-1.webp",
+    "role": "KDE lock screen, historical VM capture with the mock signer; WebP copy at the same pixel size",
+    "sha256": "062ccb0c6e1161a4b18a7a44d9125b053c3114f78323a952f98b2de152548731"
+  },
+  {
     "path": "analysis/windows-login/evidence/reruns/20261025-014836/lock-10-prompt.png",
     "role": "Windows unlock, historical VM capture with the mock signer",
     "sha256": "af5c9e1322de4d30dab052e0463ec4c8eba92eca304ae9f57a507f37f482f222"
+  },
+  {
+    "path": "analysis/demo-site/media/captures/native-2.webp",
+    "role": "Windows unlock, historical VM capture with the mock signer; WebP copy at the same pixel size",
+    "sha256": "88ca135d0dbd8e256d2f56543f1fb8498ede46c0ae95af6bd7b8f3cb74e6a00d"
   },
   {
     "path": "analysis/windows-login/evidence/reruns/20261025-014836/switch-3-prompt.png",
@@ -160,9 +165,39 @@
     "sha256": "82cbe3cd98ae521a5da5fa3e3371828d7382c14ef6dfa3dd528f87a1a370bc01"
   },
   {
+    "path": "analysis/demo-site/media/captures/native-3.webp",
+    "role": "Windows switch user, historical VM capture with the mock signer; WebP copy at the same pixel size",
+    "sha256": "ec1f975a65270beb6fa35d6acc84761d4b460744ea0edf082eb882c8ab37770d"
+  },
+  {
     "path": "analysis/windows-login/evidence/reruns/20261025-014836/uac-2-uac-prompt.png",
     "role": "Windows administrator prompt, historical VM capture with the mock signer",
     "sha256": "fbc547112d5499cd0a1b3febaebe9558aaf776aad445abd1854b7ab5442bf0ec"
+  },
+  {
+    "path": "analysis/demo-site/media/captures/native-4.webp",
+    "role": "Windows administrator prompt, historical VM capture with the mock signer; WebP copy at the same pixel size",
+    "sha256": "dca47cbf3c4c5cb57bf9228a66e9f4ff8a293b354df4e3b13e3bdbbf3aceca0b"
+  },
+  {
+    "path": "analysis/linux-login-followup/evidence/reruns/20261023-005854/polkit-key-01-context.png",
+    "role": "Historical N7 KDE graphical administrator prompt in VM",
+    "sha256": "03bdddfb2f413b365fb8a3e059859589b20b93ab0312078828cc072cf36eaf38"
+  },
+  {
+    "path": "analysis/demo-site/media/captures/linux-polkit.webp",
+    "role": "Historical N7 KDE graphical administrator prompt in VM; WebP copy at the same pixel size",
+    "sha256": "9e08e24ac96dde2fbf02711e1c193ddde766ab18884a0597cf872bd2b2c9ba3c"
+  },
+  {
+    "path": "analysis/windows-login/evidence/n17-prepare-20261024-211115/new-provider-smoke-prompt.png",
+    "role": "Historical N17 Windows 11 Pro VM screenshot, before N21",
+    "sha256": "56c4a7c148ec819850a4c64b61445a45a3207422943eec5aa71b5641c90f76e8"
+  },
+  {
+    "path": "analysis/demo-site/media/captures/windows-login.webp",
+    "role": "Historical N17 Windows 11 Pro VM screenshot, before N21; WebP copy at the same pixel size",
+    "sha256": "eac9aba5838af2318dda5faf4701757e6a4c5cee6d8ba2c432f028a48de91b53"
   },
   {
     "path": "analysis/prompt-design/index.html",
@@ -220,93 +255,108 @@
     "sha256": "c628fa3b4c2074eae58c33831e6cc4d3e7502cf11b91b0c2cbbea5c76c6a7b4c"
   },
   {
-    "path": "analysis/demo-site/video/out-draft/passkey-hero-draft-960.mp4",
-    "role": "V1 hero video, 960 px wide, H.264 and AAC",
-    "sha256": "2552a974ecc14c01d5fa40bcb6b7de41ac321fa9753a29c99be4c38cdbdc54bb"
+    "path": "analysis/demo-site/video/out-full-v1/passkey-v1-full-main-1920.mp4",
+    "role": "V1 hero video, full quality, 1920 px wide, H.264 and AAC",
+    "sha256": "e9f7d786e7bbbedd0c424ae90dffaf31c383aa0c5e8b4dfd4f28ce648bc67e69"
   },
   {
-    "path": "analysis/demo-site/video/out-draft/passkey-hero-draft.vtt",
-    "role": "V1 hero video, captions",
-    "sha256": "298df20ec051f4113c9ea16e15ffb2ed3b22531e7ec1ba3d2d55f9321e485d82"
+    "path": "analysis/demo-site/video/out-full-v1/passkey-v1-full-main-960.mp4",
+    "role": "V1 hero video, full quality, 960 px wide, H.264 and AAC",
+    "sha256": "7e79d1c390a218b2b1746dda69c58fd393df872d2f960221cae8a34209e6a391"
   },
   {
-    "path": "analysis/demo-site/video/out-draft/passkey-continue-draft-960.mp4",
-    "role": "V1 continuation after Take control, 960 px wide, H.264 and AAC",
-    "sha256": "298fdc3ced8d68b44c4c046202f3a7676d9501e6891e94ca66eae5c4f3bdbbf8"
+    "path": "analysis/demo-site/video/out-full-v1/passkey-v1-full-continue-1920.mp4",
+    "role": "V1 continuation after Take control, full quality, 1920 px wide, H.264 and AAC",
+    "sha256": "1fab9d66917fe54305e28bf50db21ff0b13c0ed07e9ff4b543ae7e4257713bc3"
   },
   {
-    "path": "analysis/demo-site/video/out-draft/passkey-continue-draft.vtt",
-    "role": "V1 continuation after Take control, captions",
-    "sha256": "40ac43be01654ca117f44fa88a3e4c01d7666058f76a99a3d6da35dd5b1567e0"
+    "path": "analysis/demo-site/video/out-full-v1/passkey-v1-full-continue-960.mp4",
+    "role": "V1 continuation after Take control, full quality, 960 px wide, H.264 and AAC",
+    "sha256": "a173e5bc112f0f7984e23d235c2a9e355a4275b996e5ae549e1ca03edd8863c3"
   },
   {
-    "path": "analysis/demo-site/video/out-draft/poster-draft-start.jpg",
+    "path": "analysis/demo-site/video/out-full-v1/poster-full-start.jpg",
     "role": "V1 poster frame: start",
-    "sha256": "bb531d5b6e4b9f8f5fc29bacd96a0164fe7e1c05a1ed0de61752703b1de30fc1"
+    "sha256": "0abb57a94ce65df0089c07149d65215d3dfa70b03ea062a6d67e930bfc315a2a"
   },
   {
-    "path": "analysis/demo-site/video/out-draft/poster-draft-poised.jpg",
+    "path": "analysis/demo-site/video/out-full-v1/poster-full-poised.jpg",
     "role": "V1 poster frame: poised",
-    "sha256": "a15a4a3a429e9105fc8324faf38c918096da671d6db7f40ca9b2b5ac46dc3d7f"
+    "sha256": "059eca64c7434b8ff52c9144b46d0818f68a036d301c67a4553b62bc96a95c22"
   },
   {
-    "path": "analysis/demo-site/video/out-draft/poster-draft-signed.jpg",
+    "path": "analysis/demo-site/video/out-full-v1/poster-full-signed.jpg",
     "role": "V1 poster frame: signed",
-    "sha256": "226406879f5c65733f4904b3b6e119d01f652b62a5c803be4f1a6df4b68b305e"
+    "sha256": "f125c36047a3740f84a3d5b05a43e34a65b8210ddca4c4f1e3c84501bec77b03"
   },
   {
-    "path": "analysis/demo-site/video/out-draft/video-meta.json",
-    "role": "V1 timings, page anchors, seam check and media hashes",
-    "sha256": "ea1c58094fdc4d14ae7bdfe2192b78779726d32917a8ac479f9c290ab4cc4abc"
+    "path": "analysis/demo-site/video/out-full-v1/video-meta.json",
+    "role": "V1 timings, page anchors, provenance and media hashes",
+    "sha256": "911e65dc770302eec426b9163d506bb8af53c09c1d3dbc90a4e8cad122e227bd"
   },
   {
-    "path": "analysis/demo-site/video/src/timeline.json",
-    "role": "V1 production source",
-    "sha256": "7df691a87da850b6902e21ba97a0cff278ac1d3629bb856de7d53ce7b6aa91ce"
+    "path": "analysis/demo-site/video/src/fullq/timeline.json",
+    "role": "V1 full-quality production source",
+    "sha256": "c8d77cc00ebd8ff227bdc306dcd8fbc427b64565dc5b5ef9ff9a6056305b4f0d"
   },
   {
-    "path": "analysis/demo-site/video/src/scene.py",
-    "role": "V1 production source",
-    "sha256": "9b51f961f4782d0871c484838bfd91f04b7116489fddb409f6073fbac725f9fd"
+    "path": "analysis/demo-site/video/src/fullq/scene.py",
+    "role": "V1 full-quality production source",
+    "sha256": "f78b692ad9b534e18698e4ea7223552b4bde8e45933fd4a37ef74d4333b0dbbd"
   },
   {
-    "path": "analysis/demo-site/video/src/export_parts.py",
-    "role": "V1 production source",
-    "sha256": "07a5a8d0c6d0b26e1f300b7a4b65143120862b5be90eefa334bc47b09d6da4e9"
+    "path": "analysis/demo-site/video/src/fullq/hq.py",
+    "role": "V1 full-quality production source",
+    "sha256": "ef272e2fbad77c3d10461266c185a620de5dd9372465db8fcef587e4bf4a7920"
   },
   {
-    "path": "analysis/demo-site/video/src/screen.html",
-    "role": "V1 production source",
-    "sha256": "4a4ab221377643b5fbcefa3c2073fc9d2291c66a16a1f74eb81fe126b1e73574"
+    "path": "analysis/demo-site/video/src/fullq/screen.html",
+    "role": "V1 full-quality production source",
+    "sha256": "60cb42b517c194cb6681617a6d25ba308c657357752059190f634e7c6712da2d"
   },
   {
-    "path": "analysis/demo-site/video/src/capture_screen.py",
-    "role": "V1 production source",
-    "sha256": "efe581d0d3d92d237edfd7578a30f19047fbfc83b82304d3d64c74943ac28d0d"
+    "path": "analysis/demo-site/video/src/fullq/props.html",
+    "role": "V1 full-quality production source",
+    "sha256": "6392b33d5edc9ad6273d9377f9b6b9d029326db583f0d463e2373f0fe8d45665"
   },
   {
-    "path": "analysis/demo-site/video/src/cdp.py",
-    "role": "V1 production source",
-    "sha256": "0185df9b5196497d62897e193146da2d9059e8ebfb10d7845b19a2cf17757251"
+    "path": "analysis/demo-site/video/src/fullq/capture.py",
+    "role": "V1 full-quality production source",
+    "sha256": "75f688a2eb7bcff647817fe71390a731d91430261b87137e17b2a10f960dd631"
   },
   {
-    "path": "analysis/demo-site/video/src/audio.py",
-    "role": "V1 production source",
-    "sha256": "b7031a714790e09255bd9d321e69f5406f9a1ab9cca46925576691b4d1290f78"
+    "path": "analysis/demo-site/video/src/fullq/audio.py",
+    "role": "V1 full-quality production source",
+    "sha256": "2c863fcd18759575ec920fb8cdea20d5efdb91292e08e84dd0f6662c90326b0e"
   },
   {
-    "path": "analysis/demo-site/video/src/encode.py",
-    "role": "V1 production source",
-    "sha256": "b3e826554510f442bf4e5c40942dfc405475ddf188e9dd017f522c78e0c7caf9"
+    "path": "analysis/demo-site/video/src/fullq/compose.py",
+    "role": "V1 full-quality production source",
+    "sha256": "576d52ff9371727d2c95c277858ac26bac82671a854ecbe5cc1db395e24cef1e"
   },
   {
-    "path": "analysis/demo-site/video/build/parts/parts.json",
-    "role": "V1 STL export record for both enclosures",
-    "sha256": "113e51aaffa854a5691c535c8faa6e9e1c8b1bed89eb0feea4d6998bfc17b7e8"
+    "path": "analysis/demo-site/video/src/fullq/encode.py",
+    "role": "V1 full-quality production source",
+    "sha256": "5ced85bc0d7e8a61fb24b4199f70f9e751d08558207fb411574012c995674d67"
+  },
+  {
+    "path": "analysis/demo-site/video/src/fullq/ASSETS.md",
+    "role": "V1 full-quality production source",
+    "sha256": "0273f5fed8eb7af539d7f2cf73ab8995b85fd7c85386453d71d83db6150730c1"
+  },
+  {
+    "path": "analysis/demo-site/video/review-full-v1/RESULT-NOTES.md",
+    "role": "V1 full-quality checks and known limits",
+    "sha256": "f1b03a680b831880cf2f3ab07e38aa005706dfba3d30d4a8d5020d3eb25facc7"
   },
   {
     "path": "analysis/hardware-mockups/enclosure/v2-no-touch/key.scad",
     "role": "Key-shaped enclosure geometry used by the V1 video",
     "sha256": "b1f38249c6d6c9bea245308120822041688d5995c8d713bfcc71d2218adf19b6"
+  },
+  {
+    "path": "analysis/n30-unit-economics/launch-pricing.json",
+    "role": "Planned launch pricing chosen by Ian, used by the Reserve section",
+    "sha256": "79643f401086c3e5d83654f12f7220a8b161c749c60d1b5e831532b2c18efff6"
   }
 ]

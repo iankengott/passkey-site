@@ -1012,6 +1012,10 @@ html.capture *,html.capture *::before,html.capture *::after{animation:none!impor
 #v-sound .i-sound,#v-sound[aria-pressed=true] .i-mute{display:none}
 #v-sound[aria-pressed=true] .i-sound{display:block}
 #v-sound[aria-pressed=true]{border-color:var(--gold);color:var(--gold-hi)}
+#v-sound[data-wait=true]{padding:0 14px 0 10px;border-color:var(--gold);color:var(--gold-hi);animation:sndcue 1.8s var(--ease) 2}
+#v-sound[data-wait=true] .snd-l{position:static;width:auto;height:auto;overflow:visible;clip:auto}
+@keyframes sndcue{50%{box-shadow:0 0 0 6px rgba(224,170,62,.28)}}
+.motion-off #v-sound[data-wait=true]{animation:none}
 @media (max-width:1199px){
  .stage{max-width:860px;margin:0 auto}
  .hcap{padding-inline:max(var(--gut),16px)}
@@ -1039,3 +1043,197 @@ html.capture *,html.capture *::before,html.capture *::after{animation:none!impor
 .draft-tag{position:absolute;z-index:4;left:10px;top:10px;margin:0;padding:3px 9px;border:1px solid var(--line2);border-radius:999px;background:rgba(8,8,10,.7);font:12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);pointer-events:none}
 @media (min-width:1200px){.draft-tag{left:auto;right:max(24px,calc(var(--gut) * .75));top:18px}}
 .take{scroll-margin-block:84px 24px}
+
+/* ---------------- 14 November: full-quality V1 shown whole, a Reserve action and the Reserve section ----------------
+   The finished V1 carries its story across the whole frame (notes on the left of the table, screens in the middle), so the hero
+   now shows the full 16:10 picture instead of a cropped background. The 960 px files are the normal delivery; site.js loads the
+   1920 px masters only for large or high-density screens. Reserve opens a prefilled email: no payment, checkout or counter. */
+a.cta{text-decoration:none;font-weight:600;border:1px solid transparent}
+a.cta.primary{background:var(--gold);border-color:var(--gold);color:#0a0700}
+a.cta.primary:hover{background:var(--gold-hi);border-color:var(--gold-hi);color:#0a0700;box-shadow:0 0 0 4px var(--hair2),0 16px 40px -16px rgba(224,170,62,.75)}
+a.cta.primary:focus-visible{outline:3px solid var(--gold-hi);outline-offset:3px}
+.cta.ghost-cta{background:transparent;border:1px solid var(--line2);color:var(--text);box-shadow:none;font-weight:550}
+.cta.ghost-cta .ico{color:var(--gold)}
+.cta.ghost-cta:hover{border-color:var(--gold);background:var(--s3)}
+.hero-act{display:flex;flex-wrap:wrap;gap:12px;margin:0}
+.enhanced .hero-act .cta.js-only{display:inline-flex!important}
+.hero-offer{margin:16px 0 0;font-size:15px;color:var(--muted)}
+.hero-offer b{color:var(--gold-hi);font-weight:650}
+.vnote{margin:10px 0 0;font-size:13.5px;line-height:1.4;color:var(--soft)}
+.stage .hv{object-fit:contain;object-position:50% 50%}
+
+/* header and footer Reserve link */
+.top nav a.nav-buy{color:var(--gold-hi);border:1px solid var(--hair);margin-left:10px;padding-inline:16px;border-radius:999px;font-weight:550}
+.top nav a.nav-buy::after{display:none}
+.top nav a.nav-buy:hover{border-color:var(--gold);background:rgba(224,170,62,.10);color:var(--gold-hi)}
+
+/* Reserve section */
+.buy-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:clamp(20px,4vw,56px);align-items:center;padding:clamp(22px,3.4vw,44px);border:1px solid var(--line);border-radius:22px;background:radial-gradient(120% 140% at 100% 0%,rgba(224,170,62,.10),transparent 55%),var(--s1)}
+.buy-copy h2{margin-bottom:8px}
+.buy-lead{color:var(--muted);font-size:18px;margin:0 0 18px}
+.buy-terms{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.buy-terms li{display:flex;gap:12px;align-items:flex-start;font-size:16px;color:var(--muted)}
+.buy-terms li .ico{margin-top:2px}
+.buy-terms strong{color:var(--text);font-weight:600}
+.price-card{padding:24px 24px 20px;border:1.5px solid var(--gold);border-radius:18px;background:linear-gradient(180deg,#15120a,#0b0a08);box-shadow:0 0 0 6px var(--hair2),0 30px 60px -30px #000}
+.offer-tag{margin:0 0 6px;font:600 14px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.price{display:flex;align-items:baseline;gap:10px;margin:0 0 6px}
+.price b{font-size:clamp(44px,4.4vw,60px);line-height:1;letter-spacing:-.03em;color:var(--text)}
+.price span{color:var(--muted);font-size:16px}
+.price-note{margin:0 0 18px;font-size:15px;color:var(--muted)}
+.price-card .buy-cta{width:100%;justify-content:center}
+.price-fine{margin:12px 0 0;font-size:14px;color:var(--soft);text-align:center}
+
+@media (min-width:1200px){
+ /* the stage is the whole picture: as wide as the column allows, never taller than the screen below the header */
+ .product{align-self:center;display:block;min-height:0;margin-right:0}
+ .render.stage{width:min(100%,calc((100vh - var(--hdr) - 110px) * 1.6));width:min(100%,calc((100svh - var(--hdr) - 110px) * 1.6));aspect-ratio:16/10;margin:0 0 0 auto;min-height:0}
+ .render.stage::before,.stage::after{display:none}
+ .stage .hv{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 50%;border-radius:16px;box-shadow:0 0 0 1px var(--line),0 40px 90px -40px rgba(0,0,0,.9)}
+ .vctl{right:16px;bottom:16px}
+ .vnote{text-align:right;margin-left:auto;font-size:14px}
+ .hero-act{gap:14px}
+ .hero-offer{font-size:clamp(15px,min(.95vw,1.9vh),20px)}
+}
+@media (max-width:1199px){
+ .vnote{max-width:860px;margin:10px auto 0;padding-inline:max(var(--gut),16px)}
+ .take{margin-top:14px}
+ /* stacked layouts: the controls sit in a row under the picture, so they never cover the screens in the video */
+ .vctl{position:relative;top:auto;right:auto;justify-content:flex-end;margin:10px max(var(--gut),16px) 0}
+ .vbtn{background:var(--s3);border-color:var(--line2)}
+}
+@media (min-width:600px) and (max-width:1199px){.vnote{padding-inline:0}.vctl{margin-inline:0}}
+@media (max-width:860px){
+ .buy-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:700px){
+ .hero-act{gap:10px;flex-wrap:nowrap}
+ .hero-act .cta{flex:1 1 0;width:auto;min-width:0;min-height:50px;padding:10px 12px;font-size:16px;justify-content:center}
+ .hero-offer{margin-top:12px;font-size:14px}
+ .vnote{font-size:13px}
+ .top nav{gap:2px}
+ .top nav a{white-space:nowrap;padding:6px 7px}
+ .top nav a.nav-buy{margin-left:0;padding:6px 10px}
+ .product{margin-top:18px}
+ .buy-grid{padding:18px;border-radius:18px;gap:18px}
+ .buy-lead{font-size:16px;margin-bottom:14px}
+ .buy-terms li{font-size:15px}
+ .price-card{padding:18px 18px 16px}
+}
+@media (max-width:380px){
+ .top nav a{padding:6px 5px;font-size:14px}
+ .top nav a.nav-buy{padding:6px 8px}
+}
+/* Below 360 px the Reserve pill stays: tighter spacing, and the row may wrap rather than hide anything */
+@media (max-width:359px){
+ .top nav{flex-wrap:wrap;justify-content:space-between;gap:2px 0;margin:0 -8px}
+ .top nav a{padding:6px 3px;font-size:13px}
+ .top nav a.nav-buy{padding:5px 7px}
+}
+/* short desktop windows: a compact popup so it fits above the key without covering the key or the port */
+@media (min-width:1200px) and (max-height:700px){.take{padding:10px 14px 12px;width:clamp(240px,17vw,320px)}.take-tag{display:none}.take-q{font-size:16px;margin-bottom:8px}#take-control{min-height:44px;font-size:17px}}
+
+/* ---------------- 14 November, round 1 fixes: Reserve address, error state, hints, footer ---------------- */
+.take-hint{margin:10px 0 0;font-size:14px;line-height:1.35;color:var(--muted);text-align:center}
+@media (min-width:1200px) and (max-height:700px){.take-hint{margin-top:6px;font-size:13px}}
+.verr{position:absolute;z-index:5;left:0;right:0;top:0;aspect-ratio:16/10;place-content:center;justify-items:center;gap:12px;padding:16px;background:rgba(0,0,0,.62);text-align:center;border-radius:12px}
+.enhanced .verr.js-only{display:grid!important}
+.enhanced .verr.js-only[hidden]{display:none!important}
+.verr p{margin:0;font-size:18px;font-weight:600;color:var(--text)}
+.verr button{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 20px;border-radius:999px}
+@media (min-width:1200px){.verr{inset:0;aspect-ratio:auto;border-radius:16px}}
+.vsteps{display:none}
+@media (max-width:700px){.vsteps{display:block;margin:10px max(var(--gut),16px) 0;font-size:15px;line-height:1.4;font-weight:550;color:var(--text)}}
+.addr-box{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.addr-line{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 12px;margin:0 0 10px}
+.addr{font:600 16px var(--mono);color:var(--text);-webkit-user-select:all;user-select:all;overflow-wrap:anywhere}
+.copy-addr{min-height:44px;padding:0 16px}
+.addr-help{margin:0;font-size:14px;line-height:1.45;color:var(--muted)}
+.addr-done{margin:6px 0 0;font-size:14px;color:var(--gold-hi)}
+.addr-done:empty{display:none}
+.foot-made,.foot-legal{margin:0 0 6px;font-size:14px;color:var(--soft)}
+.foot-made a{color:var(--muted)}
+.reg-gloss{margin:4px 0 12px;font-size:14px;line-height:1.45;color:var(--muted);max-width:980px}
+/* compact Reserve card and footer, so the home page stays within its length budget */
+.foot-made .fine{display:inline;margin:0;font-size:inherit}
+.price-card{padding:20px 22px 18px}
+.price b{font-size:clamp(42px,3.6vw,52px)}
+.price-note{margin-bottom:14px}
+.price-fine{margin-top:8px}
+.addr-box{margin-top:12px;padding-top:10px}
+.addr-line{margin-bottom:6px}
+.buy-terms{gap:10px}
+@media (min-width:861px){.buy-grid{padding:30px 36px;grid-template-columns:minmax(0,1fr) minmax(360px,440px)}}
+@media (max-width:700px){.foot-made .fine{display:none}.buy-terms{gap:8px}.buy-terms li{font-size:14.5px;gap:10px}.buy-copy h2{font-size:24px}}
+@media (min-width:861px){.buy-grid{padding:26px 32px;grid-template-columns:minmax(0,1fr) minmax(380px,520px)}#buy.band{padding-top:40px}.price-note{font-size:14.5px}}
+@media (max-width:700px){#buy .buy-copy .eyebrow{display:none}}
+.offer-tag{margin-bottom:4px}.price{margin-bottom:4px}
+@media (min-width:701px){.foot-in{padding-top:22px;padding-bottom:24px}}
+@media (max-width:700px){.addr-box{margin-top:10px;padding-top:8px}.price-note{margin-bottom:12px}.vsteps{margin-top:8px}}
+/* 701 to 900 px: one header row without breaking words; the Reserve pill stays */
+@media (min-width:701px) and (max-width:900px){
+ .top-in{gap:12px}
+ .brand-word small{display:none}
+ .top nav{gap:0}
+ .top nav a{white-space:nowrap;padding:8px 6px;font-size:14.5px}
+ .top nav a::after{left:6px;right:6px}
+ .top nav a.nav-buy{margin-left:4px;padding:6px 10px}
+ #motion{white-space:nowrap}
+}
+@media (min-width:701px) and (max-width:900px){.brand{white-space:nowrap}}
+.verr button .ico{color:currentColor}
+@media (max-width:400px){.price{flex-wrap:wrap;gap:0 10px}.price span{white-space:nowrap}}
+
+/* ---------------- 14 November, round 2 fixes ---------------- */
+/* Compatibility matrix: the full table needs about 945 px. Up to 1039 px the single-system picker shows instead,
+   so the page never scrolls sideways; without scripts the table scrolls inside its own wrapper. */
+@media (min-width:861px) and (max-width:1039px){
+ .enhanced #matrix .col-pick.js-only{display:flex!important}
+ .enhanced .matrix[data-active] [data-col]{display:none}
+ html.enhanced .matrix[data-active=win] [data-col=win],html.enhanced .matrix[data-active=deb] [data-col=deb],html.enhanced .matrix[data-active=nix] [data-col=nix],html.enhanced .matrix[data-active=mac] [data-col=mac]{display:table-cell}
+ .enhanced .matrix tbody th{min-width:0;width:52%}
+ html:not(.enhanced) .matrix-wrap{overflow-x:auto}
+}
+/* Phones: the tab panels rise into place. A sideways slide pushed them past the 16 px gutter for a moment,
+   and Chrome then widened the page by 2 to 8 px. */
+@media (max-width:700px){[data-panel]{animation-name:rise}}
+/* The steps line shows on every layout */
+.vsteps{display:block;margin:10px 0 0;font-size:15px;line-height:1.4;font-weight:550;color:var(--text)}
+@media (min-width:1200px){.vsteps{text-align:right;margin-left:auto;font-size:clamp(15px,min(.95vw,1.9vh),18px)}}
+@media (min-width:701px) and (max-width:1199px){.vsteps{max-width:860px;margin:10px auto 0}}
+@media (max-width:700px){.vsteps{margin:8px max(var(--gut),16px) 0}}
+.buy-terms a{color:var(--gold-hi)}
+/* Phone Reserve: heading, then the price card with its button, then the terms. The header is not sticky here,
+   so a #buy link lands with the section near the top. */
+@media (max-width:700px){
+ html{scroll-padding-top:16px}
+ .band{scroll-margin-top:0}
+ #buy .buy-copy{display:contents}
+ #buy .buy-copy h2{order:1;margin:0}
+ #buy .price-card{order:2}
+ #buy .buy-terms{order:3}
+}
+@media (max-width:700px){#buy .buy-copy h2{margin-bottom:-8px}}
+/* Below 360 px the two hero buttons stack at full width, so neither label wraps */
+@media (max-width:359px){.hero-act{flex-direction:column;gap:8px}.hero-act .cta{flex:none;width:100%;min-height:48px}}
+.hero-offer a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.hero-offer a:hover{color:var(--gold-hi)}
+
+/* ---------------- 14 November, round 3 fixes ---------------- */
+/* Signed end state: the steps line gives way to a small Reserve link in the same place, under the picture,
+   so nothing covers the final frame or the controls and the layout does not move. */
+.vnext{display:none;margin:10px 0 0;font-size:15px;line-height:1.4;font-weight:550}
+.product[data-state=signed] .vnext{display:block}
+.product[data-state=signed] .vsteps{display:none}
+@media (min-width:1200px){.vnext{text-align:right;margin-left:auto;font-size:clamp(15px,min(.95vw,1.9vh),18px)}}
+@media (min-width:701px) and (max-width:1199px){.vnext{max-width:860px;margin:10px auto 0}}
+@media (max-width:700px){.vnext{margin:8px max(var(--gut),16px) 0}}
+.vnext a{color:var(--gold-hi);text-decoration:underline;text-underline-offset:3px}
+.vnote a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.vnote a:hover{color:var(--gold-hi)}
+/* Reserve card: the status line next to the button, and the help line emphasised after a press on Reserve yours */
+.price-only{margin:10px 0 0;font-size:14px;line-height:1.4;color:var(--text);text-align:center;font-weight:550}
+.addr-nudge{display:block;color:var(--gold-hi);font-size:15px}
+.addr-nudge[hidden]{display:none}
+.addr-help.nudged{color:var(--text);padding:8px 10px;border-radius:10px;background:var(--hair2);box-shadow:inset 0 0 0 1px var(--hair)}
+.stat-row .mini .nw{white-space:nowrap}
