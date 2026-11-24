@@ -55,6 +55,13 @@
   }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }) : null;
   all('.reveal').forEach(s => io ? io.observe(s) : show(s));
   addEventListener('beforeprint', revealAll);
+  // N38: the home page now loads a large script for the pixel hero, and on a slow load the browser's own jump to a link
+  // such as #buy can be lost. Once the page has loaded, finish the jump if the target is still far off screen.
+  addEventListener('load', () => {
+    let t = null;
+    try { t = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (err) { t = null; }
+    if (t && !t.closest('dialog') && Math.abs(t.getBoundingClientRect().top) > innerHeight) t.scrollIntoView({ block: 'start', behavior: 'instant' });
+  }, { once: true });
 
   // ------------------------------------------------------------ tabs, with arrows, Home, End, deep links and Back
   all('[data-tabs]').forEach(group => {
@@ -588,6 +595,9 @@
     let target = null;
     try { target = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (err) { target = null; }   // malformed fragment: play as normal
     waiting = !!target && !target.contains(product) && !hero.contains(target);
+    // N38: the video now sits below the pixel hero. If it starts off screen it waits the same way, so the page does not
+    // fetch it until the visitor scrolls to it or presses play.
+    if (stage.getBoundingClientRect().top > innerHeight) waiting = true;
     function startWhenSeen() {
       if (!('IntersectionObserver' in window)) return;   // without it, the viewer presses play
       let dwell = 0;

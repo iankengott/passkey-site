@@ -1,5 +1,5 @@
 {
-  "date": "13 November 2026",
+  "date": "24 November 2026",
   "statuses": {
     "Repeatable": "Tested already, and a one command rerun exists, so it can be repeated cheaply and also counts as a sub requirement of larger tests.",
     "Tested": "Run and recorded once. No cheap automated rerun yet.",
@@ -1006,6 +1006,334 @@
       "Model",
       "Ian deferred dedicated accessibility work. Narrator/Orca, names/tree/read order, high contrast/forced-colours audits, zoom/scaling and dedicated keyboard-only audits are not accepted here. Existing historical captures remain version-specific evidence; new Narrator reading-order concern remains open. No accessibility pass inferred from core acceptance.",
       "n36-accessibility/BRIEF.md; n29-prompt-consistency/HANDOVER.md; n29-prompt-consistency/ACCEPTANCE.md"
+    ],
+    [
+      "R129",
+      "N41 installed board backend, pinning, reconnect and rollback",
+      "Tested",
+      "Model",
+      "106/106 CLI, socket and native-helper checks with the C board simulator and disposable installs; no real USB or installed-profile validation.",
+      "n41-demo-firmware/integration/RESULT.md; evidence/host.log; bash n41-demo-firmware/integration/rerun.sh host"
+    ],
+    [
+      "R130",
+      "N41 browser fill with the board backend",
+      "Tested",
+      "Model",
+      "30/30 throwaway Chromium checks against the C simulator; unplug, wrong board, refusal and replug covered. No real Chrome or real site/hardware claim.",
+      "n41-demo-firmware/integration/RESULT.md; evidence/e2e-board.log; bash n41-demo-firmware/integration/rerun.sh e2e-board"
+    ],
+    [
+      "R131",
+      "N41 sudo, polkit and KDE board approval backend",
+      "Tested",
+      "Model",
+      "107/107 checks through the real PAM module in a user-level harness, including sanitizers. Fresh signature and press required; password fallback tested. No real sudo, polkit, lock session or SDDM validation.",
+      "n41-demo-firmware/integration/RESULT.md; evidence/pam-board.log; bash n41-demo-firmware/integration/rerun.sh pam-board"
+    ],
+    [
+      "R132",
+      "N41 NixOS board setup and rollback packaging",
+      "Tested",
+      "Model",
+      "18/18 apply/rollback and nix-eval checks on scratch configuration copies. No live activation or real systemd hidraw sandbox validation.",
+      "n41-demo-firmware/integration/RESULT.md; evidence/etc.log; bash n41-demo-firmware/integration/rerun.sh etc"
+    ],
+    [
+      "R133",
+      "N41 physical-board approval at the SDDM PC login screen",
+      "Not tested",
+      "Model",
+      "Real greeter with simulated board is now Tested (R140). Physical USB/press/LED/timing and greeter ACL plus press-free key deletion remain open; no Hardware evidence.",
+      "n41-demo-firmware/integration/RESULT.md"
+    ],
+    [
+      "R134",
+      "N41 command engine and press wait laws",
+      "Repeatable",
+      "Model",
+      "22 laws proven with Bend 2.0.39 for every state of a model of pkb_core.c and pkb_press.c: BUSY while a request is held, refusal and timeout change nothing, no password, key signature or new key without an approved press, a failed save never changes stored data, put then get returns the value, a button held from before the wait never decides, bounce never approves. Rechecked by the Lean proven kernel built with Lean 4.35.0 rather than the 4.34.0 Bend names. A model check ran the real C and the model on 1.19 million random events over 9 seeds with no difference; 11 broken models and 8 broken C copies were all caught. Replaced 42 of 118 C example checks. Bytes, framing, flash format, clock wrap and cryptography stay with ordinary tests. Host software only, no hardware.",
+      "n41-demo-firmware/laws/README.md; rerun: bash n41-demo-firmware/laws/check.sh"
+    ],
+    [
+      "R135",
+      "PAM module decisions for sudo, polkit and the lock screen",
+      "Repeatable",
+      "Model",
+      "11 laws proven with Bend 2.0.39 about a model of pam_passkey.c for every service, option, broker reply, typed answer and timing: success needs an approving answer and the exact OK line in time, the board is asked only after approval, a typed A on SDDM never approves, a typed password only falls through and never asks the board, cancel and empty answers release nothing, no prompt without a broker on the lock screen, unchecked broker text never shown. A model check ran the real module with a fake PAM, clock and broker on 43,000 random scenarios with no difference; 8 broken C copies and 5 broken models were caught. Adds assurance; no PAM test retired. No real login surface, root or device. A separate opt-in press-only model and 12 laws are recorded in R137; typed approval laws are unchanged.",
+      "main-pc-trial/phase-b/laws/README.md; rerun: bash main-pc-trial/phase-b/laws/check.sh"
+    ],
+    [
+      "R136",
+      "Approval prompt button and reason line consistency",
+      "Repeatable",
+      "Model",
+      "4 laws proven with Bend 2.0.39 about a model of content.js ready/reasonCode and prompt.js canApprove/reasonNow: the page side says ready exactly when it sends no reason, so Approve works exactly when no reason line shows (except after the request ended), the line only shows table codes, and Approve needs a ready page, a fresh message and the dwell time. A model check ran the real functions cut from the adapter files on 5.2 million random states with no difference; 6 broken JS copies and 4 broken models were caught. Adds assurance; no browser test retired. Node only, no browser.",
+      "t17-login-designs/laws/README.md; rerun: bash t17-login-designs/laws/check.sh"
+    ],
+    [
+      "R137",
+      "SDDM board press-only model and laws",
+      "Repeatable",
+      "Model",
+      "12 new Bend laws; old 11 typed-approval laws unchanged. Real C against the model at 3000 scenarios and seeds 2 to 6 at 5000 each; no difference. 11 broken C copies and 7 broken models caught. Bend verdict kernel check unavailable without Lean; not a C proof.",
+      "main-pc-trial/phase-b/laws/check.sh; n41-demo-firmware/sddm/rerun.sh laws; n41-demo-firmware/sddm/RESULT.md"
+    ],
+    [
+      "R138",
+      "SDDM press-only real PAM and broker with board simulator",
+      "Repeatable",
+      "Model",
+      "134/134 final user-level PAM checks including sanitizers, per-listener saturation/idle expiry and a second enrollment record. Independent review found no authentication bypass; small coordinator fixes have separate source manifest. No real greeter or board. Earlier mutation result remains historical.",
+      "main-pc-trial/phase-b/tests/run-sddm.sh; n41-demo-firmware/sddm/evidence/sddm.log; n41-demo-firmware/sddm/RESULT.md; n41-demo-firmware/sddm/coordinator-followup/RESULT.md; review/REVIEW.md"
+    ],
+    [
+      "R139",
+      "SDDM opt-in NixOS packaging and rollback",
+      "Tested",
+      "Model",
+      "32/32 scratch apply/rollback and Nix-evaluation checks. Default off; requires board.enable; only login stack gains the press rule. No live activation or systemd validation.",
+      "main-pc-trial/phase-b/tests/test_sddm_etc_scripts.sh; n41-demo-firmware/sddm/evidence/etc-sddm.log"
+    ],
+    [
+      "R140",
+      "SDDM board press-only authentication in a real greeter",
+      "Tested",
+      "Model",
+      "Real SDDM 0.21.0 Wayland/pixel-rainyroom guest, real PAM/broker/signer units, C board simulator with timing proxy. Empty submit and press signs in correct account; no press/hold/wrong/absent/unplugged board and other account refuse; password recovery and helper-crash recovery work. No physical board or actual firmware timing. Hermes older RAM-fault history and newer scorer-pass/full-offline-test-pending qualification apply.",
+      "n41-demo-firmware/sddm/guest/RESULT.md; guest/evidence/summary.json; guest/evidence/cases/; guest/HANDOVER.md"
+    ],
+    [
+      "R141",
+      "Native SDDM typed-text isolation from board operations",
+      "Tested",
+      "Model",
+      "Guest cases c05-c08: A, C, old marker and other text cause no board requests or signatures with a simulated press ready. Real greeter and PAM, simulated board.",
+      "n41-demo-firmware/sddm/guest/RESULT.md; guest/evidence/cases/c05-typed-A/; guest/evidence/summary.json"
+    ],
+    [
+      "R142",
+      "Native SDDM session reuse, KWallet and recovery",
+      "Tested",
+      "Model",
+      "Press at a second greeter unlocks the same user's locked session. Press login provides no KWallet key. Rollback PAM text equals board-only baseline; absent-board unenroll disables route, password works. Four failed empty attempts do not lock out this guest, which has no lockout policy. Historical/newer Hermes RAM qualifications apply.",
+      "n41-demo-firmware/sddm/guest/RESULT.md; guest/evidence/rollback.json; guest/evidence/unenroll.json; guest/evidence/lockout-series.json"
+    ],
+    [
+      "R143",
+      "Greeter hidraw ACL and press-free login-key deletion gate",
+      "Not tested",
+      "Model",
+      "Actual QEMU USB HID node is tagged uaccess by configured rule, but no ACL appeared for anyone, including controls. Greeter/user ACL policy therefore unproven. KEY_DEL without press deletes disposable simulator key; not evidence of greeter access to real board. Live-use gate remains. Firmware 0.2 now requires a fresh press to delete a stored key. R145 covers simulator evidence; greeter access still needs verification.",
+      "n41-demo-firmware/sddm/guest/RESULT.md; guest/evidence/acl-all.json; guest/evidence/keydel-as-sddm.txt"
+    ],
+    [
+      "R144",
+      "Real SDDM board timing, LED cue and visible instruction",
+      "Not tested",
+      "Model",
+      "Theme receives but displays no press instruction. Board was simulated behind timing proxy. Real button/LED/firmware timing and human usability remain untested.",
+      "n41-demo-firmware/sddm/guest/RESULT.md; n41-demo-firmware/sddm/GUEST-PLAN.md"
+    ],
+    [
+      "R145",
+      "N41 fresh board press for credential-key deletion",
+      "Tested",
+      "Model",
+      "Firmware 0.2 holds deletion of a stored key for a fresh press. Refusal, timeout and failed save preserve the key. Missing keys remain a no-op. Six added Bend laws and simulator tests pass. Both board images build. No physical board or greeter permissions verified.",
+      "n41-demo-firmware/key-delete-approval/RESULT.md; bash n41-demo-firmware/tests/run.sh"
+    ],
+    [
+      "R146",
+      "N40 CTAP2 registration and assertion with simulated board",
+      "Repeatable",
+      "Model",
+      "107 C checks in plain and sanitizer builds, 100 Python checks against both simulators and 22 mutation cases caught. Synthetic relying party verifies signatures. Vendor and FIDO share a button with separate approval waits. Counts are for firmware 0.3; firmware 0.4 and later counts are in R165.",
+      "n40-native-fido2/RESULT.md; bash n40-native-fido2/tests/run.sh"
+    ],
+    [
+      "R147",
+      "N40 python-fido2 registration and assertion interoperability",
+      "Repeatable",
+      "Model",
+      "Yubico client and server register and sign in against the C simulator. The up:false probe signs with user presence unset and the test relying party rejects it for sign-in. Review product implications before the enrollment offer. Firmware 0.4 implements the review recommendation. The pinned client parses the response and signs in after a fresh press with multiple credentials in simulator tests. The probe response has counter zero and cannot verify as a credential signature. Actual browser tests remain open.",
+      "n40-native-fido2/RESULT.md; bash n40-native-fido2/tests/run.sh; n40-native-fido2/probe-response/RESULT.md"
+    ],
+    [
+      "R148",
+      "N40 composite USB descriptors and board firmware builds",
+      "Repeatable",
+      "Model",
+      "Both RP2350 UF2s build. Parsed descriptors show a second FIDO interface and unchanged vendor interface descriptor. Existing host and board model suites passed. Actual enumeration and browser transport remain open.",
+      "n40-native-fido2/RESULT.md; bash n40-native-fido2/tests/run.sh"
+    ],
+    [
+      "R149",
+      "N40 physical FIDO2 browser registration and sign-in",
+      "Not tested",
+      "Model",
+      "Physical USB enumeration, TinyUSB second interface, actual browser compatibility, timing and stack headroom remain unverified. No real site run.",
+      "n40-native-fido2/RESULT.md; bash n40-native-fido2/tests/run.sh"
+    ],
+    [
+      "R150",
+      "N40 opt-in browser offer after cooperating site sign-in",
+      "Tested",
+      "Model",
+      "105 Chromium fixture checks with mock board, 112 decision checks, 12 host device checks and 14 CLI checks. Exact-origin opt-in and site-supplied signal, manual toolbar fallback, click required for settings navigation, decline stored locally by origin.",
+      "n40-native-fido2/enrollment-offer/RESULT.md; n40-native-fido2/enrollment-offer/evidence/"
+    ],
+    [
+      "R151",
+      "N40 enrollment offer with actual board and real browser account",
+      "Not tested",
+      "Model",
+      "Real FIDO USB access, branded Chrome, live site cooperation and a real registration remain unverified. Extension worker suspension and clickjacking coverage are also open.",
+      "n40-native-fido2/enrollment-offer/RESULT.md"
+    ],
+    [
+      "R152",
+      "N37 firmware update verification, recovery and credential preservation",
+      "Repeatable",
+      "Model",
+      "47 tests, including 1,452 simulated power cuts per board. C runs against simulated flash and modeled ROM selection. Verified release checks, separate press, incomplete update recovery, prior image fallback and unchanged credential stores. Both firmware builds pass. Firmware 0.6 extends coverage to 61 tests. Open transfers remain intact on a new BEGIN, the update wait has a distinct LED cue and the platform write guard was exercised in the simulator. The updated ROM model checks the end marker. The 0.6 sweep passed at 1,452 cuts per board. The 0.5 sweep predates that model correction.",
+      "n37-signed-updates/RESULT.md; bash n37-signed-updates/tests/run.sh; n37-signed-updates/approval-cue/RESULT.md"
+    ],
+    [
+      "R153",
+      "N37 physical signed firmware update and recovery",
+      "Not tested",
+      "Model",
+      "On-chip ROM trial boots, flash translation, E10 UF2 block, USB behavior under writes, stack margin and real recovery still need verification. Default images do not pin a key. The independent review traced the E10 sector risk to A2 using primary sources. A3 and A4 ROM sources skip the tagged block. Actual board and recovery results remain unverified. Physical cue appearance, USB suspend and the write guard adapter are also unverified. The release images built on 23 November pin Ian's release key (R160), so a board flashed with them accepts updates signed with it. Signed firmware update files exist (R161). No update has been applied to a board.",
+      "n37-signed-updates/RESULT.md; n37-signed-updates/HANDOVER.md; n37-signed-updates/review/REVIEW.md; n37-signed-updates/approval-cue/RESULT.md"
+    ],
+    [
+      "R154",
+      "N37 Linux browser update notice, confirmation and F shortcut",
+      "Tested",
+      "Model",
+      "Chromium and simulated board: 125 checks, plus 44 host tests and eight Node groups. F cancels the sign-in and opens details. Start needs a real click and fresh device press. Running and confirmed firmware required for success. Earlier failures were from the pre-N12 variant. T15 scratch source integrity check failed on missing files and passed separately in the full checkout.",
+      "n37-signed-updates/notification/RESULT.md; n37-signed-updates/notification/tests/run-e2e.sh"
+    ],
+    [
+      "R155",
+      "N37 update notification and browser flow with physical board and HTTPS source",
+      "Not tested",
+      "Model",
+      "The implementation was tested with loopback and mock board. Real board, desktop popup, branded Chrome, Firefox, HTTPS feed and idle-browser insertion detection remain unverified. Native PAM prompts do not handle F. The signed GitHub release index and its Go client now exist (R159, R161), but no board or real network path has used them.",
+      "n37-signed-updates/notification/RESULT.md"
+    ],
+    [
+      "R156",
+      "N32 compiled passkey program matches the Python board signer and helper",
+      "Repeatable",
+      "Model",
+      "One Go program replaces the Python PC side for the demo board on Linux and Windows x86_64. Against the C board simulator: Go unit tests 79 pass and 0 fail, signer parity 181/181, helper parity 112/112, board host suite 78/78, serve port 15 tests, Chromium 30/30 on the compiled helper and 30/30 on the Go installer's result. Windows build under Wine: Go tests 72 pass, parity 354 (4 skipped), board host 77/77. The size check puts the setup set at 2.39 MB as a zip and 1.32 MB as tar.xz, under the 3 MB target. No real board, real Windows or real Chrome.",
+      "n32-first-use-onboarding/build/RESULT.md; n32-first-use-onboarding/build/RESULT-PHASE3.md; n32-first-use-onboarding/build/evidence-runner-fix/n32-all/; rerun: RUN_WINE=1 bash n32-first-use-onboarding/build/tests/run-all.sh"
+    ],
+    [
+      "R157",
+      "N32 hello, setup drive and quiet mode in firmware 0.8",
+      "Repeatable",
+      "Model",
+      "Both boards build as firmware 0.8 (picotool: version 0.8, hash verified). The key sends and accepts a hello; a read only FAT12 PASSKEY drive shows when no software says hello within 10 seconds; a 5 second hold after plug in turns quiet mode on or off and quiet mode also drops mass storage. C setup tests 151/151 plain and with sanitizers, setup drive suite 53/53, hello end to end 15/15. The drive region is 2,056,192 bytes and 32,768 are free. Whether the boot ROM accepts the mixed family drive UF2, how a real PC treats the drive, flash time and LED colours on the board are untested.",
+      "n32-first-use-onboarding/build/RESULT-PHASE2.md; n32-first-use-onboarding/build/RESULT-PHASE3.md (phase 3b); n32-first-use-onboarding/build/RESULT-RELEASE-BUILD.md; n32-first-use-onboarding/build/evidence-runner-fix/final-sweep/; rerun: bash n32-first-use-onboarding/build/tests/run-setup-drive.sh and bash n32-first-use-onboarding/build/tests/run-setup-drive.sh e2e"
+    ],
+    [
+      "R158",
+      "N32 per user installer, uninstall and the no download tool prompt",
+      "Repeatable",
+      "Model",
+      "36/36 Linux installer tests with the board simulator as the key: fresh install, re install, upgrade, key setup with one press, hello, declined and failing pkexec, NixOS, no systemd, foreign files, other browsers, uninstall and repeat, and the curl prompt (five package managers, answer 0, invalid answers, no terminal, NixOS, curl present). pkexec, systemctl, udevadm and the package managers are fakes. The Windows installer under Wine passes 9/9 (registry, files, uninstall, WinHTTP check). No real pkexec, real Windows, real Chrome load of the extension or macOS installer.",
+      "n32-first-use-onboarding/build/RESULT-PHASE3.md; n32-first-use-onboarding/build/evidence-runner-fix/n32-all/installer.log; rerun: bash n32-first-use-onboarding/build/tests/run-installer.sh and bash n32-first-use-onboarding/build/tests/run-installer-wine.sh"
+    ],
+    [
+      "R159",
+      "N32 signed release index and the Go firmware update client",
+      "Repeatable",
+      "Model",
+      "The program checks an Ed25519 signed index (serial, expiry, size and SHA-256 per file) with hard deadlines, falls back to the drive copy and says so. Fake release server 22/22: newer used, same and older skipped, bad signature, changed index, wrong hash, wrong size, oversized file, stalled and trickling server, offline, 404, expired, replayed index. The Go update client against the board's own update engine passes 8/8 (press, transfer, trial boot, confirmed, refused press, busy). Updates are off by default. Fake servers only; no real GitHub HTTPS, no real board.",
+      "n32-first-use-onboarding/build/RESULT-PHASE3.md; n32-first-use-onboarding/build/evidence-runner-fix/n32-all/release-server.log and update-go.log; rerun: bash n32-first-use-onboarding/build/tests/run-installer.sh release and bash n32-first-use-onboarding/build/tests/run-installer.sh update"
+    ],
+    [
+      "R160",
+      "N32 release build with Ian's release public key",
+      "Repeatable",
+      "Model",
+      "release-build.sh builds the Go programs, firmware 0.8 for both boards and the drive images with key id 55265bdb0f5f7e17 and writes build/release-0.8. It refuses a key that is not 64 hex digits, is all zeros or matches a test key or the placeholder. 15/15 release checks: the key is in both programs and both firmware images and not in any test output, the release program refuses an index signed with a test key, the drive fits with 32,768 bytes free, SHA256SUMS match. A second run reproduced every hash. The full sweep of existing suites passed on 23 November after the test runners stopped pinning a garbage collected nixpkgs and Wine path; each step's log ends in a pass. Nothing was flashed. Acceptance of an index signed with the real key was not part of this build; see R161.",
+      "n32-first-use-onboarding/build/RESULT-RELEASE-BUILD.md; n32-first-use-onboarding/build/evidence-runner-fix/final-sweep/; rerun: bash n32-first-use-onboarding/build/release-build.sh then bash n32-first-use-onboarding/build/tests/run-release-build.sh"
+    ],
+    [
+      "R161",
+      "N32 signed release v0.3 files and index",
+      "Tested",
+      "Model",
+      "Docs audit check on 23 November of build/publish-v0.3: index.json (seq 1, issued 23 November 2026, expires 23 November 2027) verifies against RELEASE-PUBLIC-KEY.hex with the PKU-INDEX-V1 prefix; the key id 55265bdb0f5f7e17 is the first 8 bytes of the key's SHA-256; SHA256SUMS match every file; the installer entries equal the release-0.8 programs; the two drive UF2s equal the release-0.8 ones; firmware 0.8 .pkur files exist for both boards. The coordinator reports that the repository iankengott/passkey-releases is public with release v0.3 and that the release Linux program, in a throwaway HOME, fetched the live index and accepted it. No log of that live fetch is saved in the repository, so it is not counted here. No update file has been applied to a board.",
+      "n32-first-use-onboarding/build/publish-v0.3/; docs-audit-2026-11-23/RESULT.md"
+    ],
+    [
+      "R162",
+      "N32 and N41 firmware 0.9 on a real board: first flash, setup drive, hello and quiet mode",
+      "Not tested",
+      "Model",
+      "No board is owned, so nothing was flashed. Open: that the boot ROM accepts the partition table then the drive UF2, the chip is A3 or A4, the BOOTSEL drive and setup drive appear on a real PC, the 10 second hello wait and 5 second quiet hold behave, LED colours are readable, and a real press and USB timing match the simulator. Also open from earlier phases: credentials, FIDO2 in a browser and a signed update on the chip.",
+      "n32-first-use-onboarding/build/RESULT-RELEASE-BUILD.md; n41-demo-firmware/FLASHING.md"
+    ],
+    [
+      "R163",
+      "N32 installer on real systems: real Windows, real Chrome, pkexec, udev and GitHub HTTPS",
+      "Not tested",
+      "Model",
+      "Only fakes, simulators and Wine ran. Open: the installer and uninstall on a real Windows install (including SmartScreen, since no Windows code signing certificate is planned), a real Chrome loading the extension, real pkexec and udev, real package managers for the curl prompt, and the download over real HTTPS from GitHub. The old trial uses the same folder, ~/.local/share/passkey-trial, so it must be removed before the installer runs on the main PC. No macOS installer exists.",
+      "n32-first-use-onboarding/build/RESULT-PHASE3.md; main-pc-trial/cutover-rehearsal/RESULT.md"
+    ],
+    [
+      "R164",
+      "N37 F shortcut lock, Stop transfer and wrong board update hint",
+      "Tested",
+      "Model",
+      "Follow up to R154. F disables approval, cancel and Review update while the update screen opens; Stop transfer is offered while the host sends or verifies the image and refused once activation starts; the update hint is hidden for the wrong board, the held release is kept and the hint returns with the pinned board. Chromium with the board simulator passes 129/129 (an earlier run passed 127 of 128, the wrong board hint, since fixed); 46 host tests, 8 Node checks, 12 sign in regressions across Chromium and Firefox, and the approval prompt law check over 200,000 states. No real board, HTTPS feed or native prompt support.",
+      "n37-signed-updates/notification/follow-up/RESULT.md; n37-signed-updates/notification/follow-up/evidence/"
+    ],
+    [
+      "R165",
+      "N40 silent probe returns a placeholder signature (firmware 0.4)",
+      "Repeatable",
+      "Model",
+      "An up:false getAssertion probe for a credential this key made returns success, flags 0x00, counter 0 and a placeholder DER signature whose two numbers equal the group order, so no verifier accepts it. The probe does not sign, read the real counter, write flash or arm a press. Unknown relying party, damaged credential and the ordinary press assertion behave as in 0.3. C 114 plain and 114 sanitizer, Python 117, 28 broken copies caught, N41 suite and law gate unchanged, pinned python-fido2 2.2.1 compatible. Chromium behavior comes from source reading only.",
+      "n40-native-fido2/probe-response/RESULT.md; bash n40-native-fido2/tests/run.sh"
+    ],
+    [
+      "R166",
+      "N31 provisional shell revision 3, CAD checks",
+      "Tested",
+      "Calculation",
+      "Revision 3 of the RP2350-One 4 MB case for the 1.6 mm and 2.0 mm PCB variants has four short catch tabs, a rear thumb zone with V grooves, pad face relief and combined offset checks. After the review follow up each build has 54 passes, 6 gates, 8 reports and zero failures. The gates cover forward pull out, BOOT gap and strain, shifted regulator clearance, 5V pad access and catch tolerance. These are checks on assumed dimensions, not measurements. The case is provisional and not accepted.",
+      "n31-enclosure-model/REVISION-3-RESULT.md; n31-enclosure-model/cad/build_r3.sh; out/r3-review-checks/"
+    ],
+    [
+      "R167",
+      "N31 printed shell: fit, closure, BOOT grip, LED view and USB engagement",
+      "Not tested",
+      "Calculation",
+      "Nothing was sliced, printed or fitted to a board. Open: PCB thickness, switch height and castellation size, catch fit and forces, BOOT rest gap and strain, forward pull out in Ian's ports, LED visibility, access to powered parts and the required council acceptance.",
+      "n31-enclosure-model/REVISION-3-RESULT.md"
+    ],
+    [
+      "R168",
+      "N41 firmware 0.9: deleting a saved password needs a press",
+      "Repeatable",
+      "Model",
+      "Firmware 0.9 holds SECRET_DEL for a fresh press when the board holds the password, the same way KEY_DEL works: the length is checked first, an absent entry needs no press, BUSY is sent while it waits, and a refusal, a timeout or a failed save keeps the entry. INFO flag 0x08 advertises it. The Python, Go and CLI host flows show a press prompt. press_free_audit.py leaves only non-destructive commands without a press. Suites pass on the simulator (C setup 151, N41 core 68, Python 150, N40 114 and 117, N37 61, Board PAM 134, N32 run-all under Wine, login-gaps 39). Not on a chip. An old host's 5 second wait during the new press is reasoned from the code only.",
+      "n41-demo-firmware/login-gaps/RESULT-LOOSE-ENDS.md"
+    ],
+    [
+      "R169",
+      "N32 signed release v0.4 files and live index",
+      "Tested",
+      "Model",
+      "On 24 November the coordinator signed build/publish-v0.4 (installer 0.4, firmware 0.9 .pkur for both boards, index seq 2, expires 24 November 2027) and published it as the latest release of iankengott/passkey-releases. The live index, its signature, both installers and both .pkur files were downloaded: the signature verifies against RELEASE-PUBLIC-KEY.hex and every hash matches the index, with the log saved. No update file has been applied to a board.",
+      "n32-first-use-onboarding/build/RELEASE-V0.4-LIVE-CHECK.md"
     ]
   ]
 }

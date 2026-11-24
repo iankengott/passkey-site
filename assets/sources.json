@@ -2,7 +2,7 @@
   {
     "path": "analysis/test-register/register.json",
     "role": "Current result counts and verbatim register rows",
-    "sha256": "d4e31f60054188993f3c2be4922a930bc7b43b8e96c55c91ae6bb19c04430a0c"
+    "sha256": "ef272b4c127a67eef9436b9e4edd1a16b80c3051a26b42316d8540604ed9fa39"
   },
   {
     "path": "reports/Passkey feasibility paper - Revision 8.md",
@@ -228,6 +228,76 @@
     "path": "analysis/hardware-mockups/circuit/v2-no-touch/passkey_power_usb_mockup.asc",
     "role": "Original LTspice schematic",
     "sha256": "bebf523fe498a93141c850bde5f27ddbcdeb2c97fd51d4c36df6f657ff3ceeac"
+  },
+  {
+    "path": "analysis/demo-site/media/fonts/departure-mono.woff2",
+    "role": "Site font, Departure Mono 1.500, SIL Open Font License 1.1",
+    "sha256": "5b4fed1daa90708aa9c6ee1190abca9dc22164a1c1def0020386e46b61038cfb"
+  },
+  {
+    "path": "analysis/demo-site/media/fonts/DepartureMono-OFL.txt",
+    "role": "Licence of the site font",
+    "sha256": "d35f0ae9e5943a1eb324aac5322af130adfb44e0d0a5147c7e2235cb9fd6c348"
+  },
+  {
+    "path": "analysis/demo-site/media/fonts/README.md",
+    "role": "Site font provenance and subset command",
+    "sha256": "a258567d11c4a2353ad2825d02c7fff3f1018a8b23ebd2cf2485e2974f742226"
+  },
+  {
+    "path": "analysis/demo-site/media/pixel/pixel.js",
+    "role": "Pixel hero script: three.js r180 subset, the key, the PC scene and the story, bundled by pixel/build.sh",
+    "sha256": "4c53cc25e9211038a9877199d8eed47a208fa5a9a9f7413731257a7d004d0a38"
+  },
+  {
+    "path": "analysis/demo-site/media/pixel/key-still.png",
+    "role": "Still pixel render of the key, shown without WebGL",
+    "sha256": "04c87938e04a054bd55cc8f3a92407801430b3096364e1a0c1443c664dc8c124"
+  },
+  {
+    "path": "analysis/demo-site/media/pixel/pc-still.png",
+    "role": "Still pixel render of the PC scene, shown without WebGL",
+    "sha256": "39d8084cb73d933199bcdd0748de43321ff17180acf4ce36d24dd8a39a83cd2f"
+  },
+  {
+    "path": "analysis/demo-site/media/pixel/three-LICENSE.txt",
+    "role": "three.js MIT licence",
+    "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
+  },
+  {
+    "path": "analysis/demo-site/pixel/src/main.js",
+    "role": "Pixel hero source",
+    "sha256": "df1a83261a7c1023ba018cc4fbffd44a70109c73825efc9236e01427a7636a89"
+  },
+  {
+    "path": "analysis/demo-site/pixel/src/gfx.js",
+    "role": "Pixel hero source",
+    "sha256": "91bd633f7a8ee2dadbad52b1a6e25df97be29d92173eb3a59feec29088e91b2f"
+  },
+  {
+    "path": "analysis/demo-site/pixel/src/key.bin",
+    "role": "Pixel hero source",
+    "sha256": "a3d61578dd72075f23f34cbcf58200dcce9fc35f2037ae158c840a41e999b5c9"
+  },
+  {
+    "path": "analysis/demo-site/pixel/src/vendor/README.md",
+    "role": "Pixel hero source",
+    "sha256": "d85114a223303833b38d154cee99afdba5ec71189db367e1bf4bb7452f62c50c"
+  },
+  {
+    "path": "analysis/n31-enclosure-model/out/r3/pcb1.60/stl/n31-tray.stl",
+    "role": "N31 revision 3 part used by the pixel hero model",
+    "sha256": "9925bc152be0ec08d3e405d93d98b597fa71f9567e41fba3f6b0fb2bb9cde1a3"
+  },
+  {
+    "path": "analysis/n31-enclosure-model/out/r3/pcb1.60/stl/n31-lid.stl",
+    "role": "N31 revision 3 part used by the pixel hero model",
+    "sha256": "0fec9dcf231c457ea4ef3dec437189afa668c140daf159fc2c048b5e14e987d3"
+  },
+  {
+    "path": "analysis/n31-enclosure-model/out/r3/pcb1.60/stl/rp2350-one-pcb.stl",
+    "role": "N31 revision 3 part used by the pixel hero model",
+    "sha256": "156e7a743f9929329c5fe71a7097c9ecfd35ee5729b931ff8b35c826ae29772e"
   },
   {
     "path": "analysis/demo-site/render/out/passkey-still.jpg",
