@@ -1045,13 +1045,7 @@ a.cta.primary:focus-visible{outline:3px solid var(--gold-hi);outline-offset:3px}
 @media (min-width:1200px){.verr{inset:0;aspect-ratio:auto;border-radius:16px}}
 .vsteps{display:none}
 @media (max-width:700px){.vsteps{display:block;margin:10px max(var(--gut),16px) 0;font-size:15px;line-height:1.4;font-weight:550;color:var(--text)}}
-.addr-box{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
-.addr-line{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 12px;margin:0 0 10px}
-.addr{font:600 16px var(--mono);color:var(--text);-webkit-user-select:all;user-select:all;overflow-wrap:anywhere}
-.copy-addr{min-height:44px;padding:0 16px}
 .addr-help{margin:0;font-size:14px;line-height:1.45;color:var(--muted)}
-.addr-done{margin:6px 0 0;font-size:14px;color:var(--gold-hi)}
-.addr-done:empty{display:none}
 .foot-made,.foot-legal{margin:0 0 6px;font-size:14px;color:var(--soft)}
 .foot-made a{color:var(--muted)}
 .reg-gloss{margin:4px 0 12px;font-size:14px;line-height:1.45;color:var(--muted);max-width:980px}
@@ -1061,8 +1055,6 @@ a.cta.primary:focus-visible{outline:3px solid var(--gold-hi);outline-offset:3px}
 .price b{font-size:clamp(42px,3.6vw,52px)}
 .price-note{margin-bottom:14px}
 
-.addr-box{margin-top:12px;padding-top:10px}
-.addr-line{margin-bottom:6px}
 .buy-terms{gap:10px}
 @media (min-width:861px){.buy-grid{padding:30px 36px;grid-template-columns:minmax(0,1fr) minmax(360px,440px)}}
 @media (max-width:700px){.foot-made .fine{display:none}.buy-terms{gap:8px}.buy-terms li{font-size:14.5px;gap:10px}.buy-copy h2{font-size:24px}}
@@ -1070,7 +1062,7 @@ a.cta.primary:focus-visible{outline:3px solid var(--gold-hi);outline-offset:3px}
 @media (max-width:700px){#buy .buy-copy .eyebrow{display:none}}
 .offer-tag{margin-bottom:4px}.price{margin-bottom:4px}
 @media (min-width:701px){.foot-in{padding-top:22px;padding-bottom:24px}}
-@media (max-width:700px){.addr-box{margin-top:10px;padding-top:8px}.price-note{margin-bottom:12px}.vsteps{margin-top:8px}}
+@media (max-width:700px){.price-note{margin-bottom:12px}.vsteps{margin-top:8px}}
 /* 701 to 900 px: one header row without breaking words; the Reserve pill stays */
 @media (min-width:701px) and (max-width:900px){
  .top-in{gap:12px}
@@ -1134,9 +1126,6 @@ a.cta.primary:focus-visible{outline:3px solid var(--gold-hi);outline-offset:3px}
 .vnote a:hover{color:var(--gold-hi)}
 /* Reserve card: the status line next to the button, and the help line emphasised after a press on Reserve yours */
 .price-only{margin:10px 0 0;font-size:14px;line-height:1.4;color:var(--text);text-align:center;font-weight:550}
-.addr-nudge{display:block;color:var(--gold-hi);font-size:15px}
-.addr-nudge[hidden]{display:none}
-.addr-help.nudged{color:var(--text);padding:8px 10px;border-radius:10px;background:var(--hair2);box-shadow:inset 0 0 0 1px var(--hair)}
 .stat-row .mini .nw{white-space:nowrap}
 
 @font-face{font-family:"Departure Mono";src:url(fonts/departure-mono.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
@@ -1291,7 +1280,6 @@ a.cta:active,.cta:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--sha
 .price-card .buy-cta:hover{background:#000;border-color:#000;color:var(--fill);box-shadow:4px 4px 0 rgba(30,27,22,.3)}
 .price-card .buy-cta .ico{color:var(--fill)}
 .price-only{color:var(--ink)}
-.addr{color:var(--ink)}
 .addr-help{color:var(--ink2)}
 @media (min-width:861px){
  .price-card{transform:rotate(-1deg)}
@@ -1606,12 +1594,19 @@ dialog::backdrop{background:rgba(0,0,0,.75)}
 .price-card a.cta.primary{background:var(--fill);border-color:var(--fill);color:var(--on-fill)}
 .price-card a.cta.primary:hover{background:var(--fill-hi);border-color:var(--fill-hi);color:var(--on-fill)}
 .price-card a.cta.primary .ico{color:var(--on-fill)}
-.price-only,.addr{color:var(--ink)}
-.addr-box{border-top:1px dashed var(--line2)}
-.addr-nudge{color:var(--pen)}
-.addr-help.nudged{color:var(--ink);background:var(--paper3);box-shadow:inset 0 0 0 1.5px var(--ink)}
-.addr-done{color:var(--pen)}
-.copy-addr{background:transparent}
+.price-only{color:var(--ink)}
+#reserve-status{margin-top:10px;text-align:center}
+#reserve-status:empty,#reserve-error[hidden]{display:none}
+#reserve:disabled{opacity:.6;cursor:default}
+#reserve-dialog{width:min(520px,calc(100% - 24px))}
+.reserve-deadline{margin:12px 0 16px;padding:10px 12px;border-left:3px solid var(--ink);background:var(--sheet)}
+#reserve-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px}
+#reserve-form label{display:grid;align-content:start;gap:4px;min-width:0;font-size:.9rem}
+#reserve-form label:has([name=contact]),#reserve-phone-field,#reserve-form .dialog-note,#reserve-form button{grid-column:1/-1}
+#reserve-phone-field[hidden]{display:none}
+#reserve-form input,#reserve-form select{width:100%;min-height:42px;padding:6px 8px;border:1px solid var(--ink);border-radius:0;background:var(--paper);color:var(--ink);font:inherit;font-size:16px}
+#reserve-form .dialog-note{margin:2px 0;font-size:.88rem}
+#reserve-form button{justify-self:start}
 .skip{background:var(--fill);color:var(--on-fill);border:2px solid var(--fill)}
 
 /* ================= the pixel hero ================= */

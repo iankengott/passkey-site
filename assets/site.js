@@ -1,5 +1,5 @@
 /* Passkey concept site, N38 interactive demo. Offline progressive enhancement.
-   No credentials, network, device or USB APIs. One stored preference: the Reduce motion choice. */
+   The Store sends reservation details to its configured endpoint. One stored preference: the Reduce motion choice. */
 (() => {
   'use strict';
   const root = document.documentElement;
@@ -290,7 +290,14 @@
     d.classList.add('closing');
     setTimeout(() => { d.classList.remove('closing'); d.close(); }, 200);
   }
-  all('[data-open]').forEach(b => b.addEventListener('click', () => { opener = b; $(b.dataset.open).showModal(); dispatchEvent(new Event('resize')); }));
+  all('[data-open]').forEach(b => b.addEventListener('click', ev => {
+    const dialog = $(b.dataset.open);
+    if (typeof dialog.showModal !== 'function') return;
+    ev.preventDefault();
+    opener = b;
+    dialog.showModal();
+    dispatchEvent(new Event('resize'));
+  }));
   all('dialog').forEach(d => {
     d.querySelector('[data-close]').addEventListener('click', () => closeDialog(d));
     d.addEventListener('cancel', ev => { ev.preventDefault(); closeDialog(d); });
@@ -298,7 +305,7 @@
     d.addEventListener('close', () => { if (opener) opener.focus(); });
     d.addEventListener('keydown', ev => {
       if (ev.key !== 'Tab') return;
-      const items = all('button,a[href],summary', d).filter(x => x.getClientRects().length);
+      const items = all('button:enabled,input:enabled,select:enabled,a[href],summary', d).filter(x => x.getClientRects().length);
       const first = items[0], last = items[items.length - 1];
       if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus(); }
       else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
@@ -424,25 +431,55 @@
   }
   all('[data-route]').forEach(b => b.addEventListener('click', () => setFlow(b.dataset.route)));
 
-  // ------------------------------------------------------------ Reserve: copy the address for people without an email app
-  // A press on Reserve yours still opens the email link; the help line is emphasised in case no email app opened.
-  const reserveBtn = $('reserve'), nudge = $('addr-nudge');
-  if (reserveBtn && nudge) reserveBtn.addEventListener('click', () => { nudge.hidden = false; $('addr-help').classList.add('nudged'); });
-  const copyBtn = $('copy-address');
-  if (copyBtn) copyBtn.addEventListener('click', async () => {
-    const out = $('copy-status');
-    let ok = false;
-    try { await navigator.clipboard.writeText(copyBtn.dataset.copy); ok = true; } catch (err) { /* fall back to selecting the address */ }
-    if (!ok) {
-      const range = document.createRange();
-      range.selectNodeContents($('reserve-address'));
-      const sel = getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-      try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+  // ------------------------------------------------------------ Reserve
+  const reserveForm = $('reserve-form');
+  if (reserveForm) {
+    const contact = $('reserve-contact'), phoneField = $('reserve-phone-field');
+    const phone = reserveForm.elements.namedItem('phone');
+    const submit = reserveForm.querySelector('[type=submit]');
+    const error = $('reserve-error');
+    const dialog = $('reserve-dialog');
+    function updateContact() {
+      const texting = contact.value === 'text';
+      phoneField.hidden = !texting;
+      phone.disabled = !texting;
+      phone.required = texting;
     }
-    out.textContent = ok ? 'Address copied.' : 'The address is selected. Copy it with your keyboard or menu.';
-  });
+    contact.addEventListener('change', updateContact);
+    updateContact();
+    reserveForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (submit.disabled || !reserveForm.dataset.endpoint) return;
+      error.hidden = true;
+      submit.disabled = true;
+      submit.textContent = 'Submitting…';
+      try {
+        const response = await fetch(reserveForm.dataset.endpoint, {
+          method: 'POST',
+          credentials: 'omit',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(reserveForm))),
+          signal: AbortSignal.timeout(12000),
+        });
+        const result = await response.json();
+        if (!response.ok || !result.accepted) {
+          error.textContent = typeof result.error === 'string' ? result.error : 'The reservation could not be submitted. Try again.';
+          error.hidden = false;
+          return;
+        }
+        $('reserve-status').textContent = 'Request received. Check your email for confirmation.';
+        reserveForm.reset();
+        updateContact();
+        closeDialog(dialog);
+      } catch {
+        error.textContent = 'Couldn’t reach the reservation service. You can try again.';
+        error.hidden = false;
+      } finally {
+        submit.disabled = false;
+        submit.textContent = 'Confirm reservation';
+      }
+    });
+  }
 
   applyMotion();
   root.classList.add('enhanced');
