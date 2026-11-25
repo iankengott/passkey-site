@@ -781,7 +781,12 @@ html.capture *,html.capture *::before,html.capture *::after{animation:none!impor
 
 .pos-claim{color:var(--muted);font-size:18px;max-width:68ch;margin:-6px 0 20px}
 .pos-more{margin:6px 0 0}
-.curves .track{padding-bottom:6px}
+.curve-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:900px){.curve-grid{grid-template-columns:minmax(0,1fr)}}
+.curve-grid .curve{--la:150px;--rowh:76px}
+.curve-grid .cm-gpm .cm-label{white-space:normal;width:max-content;max-width:clamp(86px,20vw,120px)}
+.curve-grid .cm-label{font-size:13px}
+.curve-grid .cm-label .ico{display:none}
 .curve{height:100%;margin:0;padding:22px 26px 18px;border:1px solid var(--line);border-radius:20px;background:radial-gradient(90% 80% at 50% 100%,rgba(255,196,30,.08),transparent 70%),linear-gradient(180deg,var(--s2),var(--s1));--la:112px;--ph:210px;--rowh:56px}
 .curve figcaption{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 14px;margin-bottom:4px}
 .curve figcaption strong{font-size:22px;letter-spacing:-.01em}
@@ -1674,40 +1679,14 @@ dialog::backdrop{background:rgba(0,0,0,.75)}
 .px-winbar .px-start{background:conic-gradient(var(--ink) 0 25%,var(--a2) 0 50%,var(--ink) 0 75%,var(--a2) 0)}
 .px-search{padding:0 30px 0 8px;border:1px solid var(--a2);font-size:11px;color:var(--ink2)}
 .px-winbar .px-clock{position:absolute;right:10px;font-size:11px}
-.px-desk{display:grid;grid-template-columns:repeat(3,1fr);gap:5%;padding:7% 6%;align-content:center}
+.px-desk{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;padding:5%;align-content:center}
+.px-tile{min-height:44px;padding:6px 10px;text-align:left;font-size:clamp(12px,1.1vw,16px)}
+.px-tile small{display:block;font-size:.8em;line-height:1.25}
 .px-hero[data-os=linux] .px-desk,.px-hero[data-os=linux] .px-win{grid-row:2}
-.px-tile{display:grid;grid-template-rows:1fr auto;gap:6px;min-height:0;padding:8px;aspect-ratio:4/3.4;text-align:center;font-size:clamp(12px,1.1vw,16px)}
-.px-art{display:grid;border:2px solid var(--ink);background:var(--paper);overflow:hidden;font-style:normal}
-.px-tile:hover .px-art{border-color:var(--paper)}
-.px-art b{display:block}
-.px-t-chat .px-art{grid-template-columns:20% 30% 1fr}
-.px-t-chat .px-rail{background:var(--a0);display:grid;gap:5px;align-content:start;justify-items:center;padding-top:6px}
-.px-t-chat .px-rail u{width:60%;aspect-ratio:1;border-radius:50%;background:var(--a2)}
-.px-t-chat .px-chan{background:var(--a0);opacity:.6}
-.px-t-chat .px-msg{display:grid;gap:5px;align-content:end;padding:6px}
-.px-t-chat .px-msg s{height:5px;background:var(--a2)}
-.px-t-web .px-art{grid-template-rows:auto auto 1fr}
-.px-t-web .px-tabs{display:flex;gap:3px;padding:4px 4px 0;background:var(--a0)}
-.px-t-web .px-tabs u{width:38%;height:9px;border:1.5px solid var(--a2);border-bottom:0;border-radius:4px 4px 0 0}
-.px-t-web .px-omni{margin:4px 6px;height:9px;border:1.5px solid var(--a2);border-radius:9px}
-.px-t-web .px-pg{margin:8% 25%;border:1.5px solid var(--a1)}
-.px-t-mail .px-art{grid-template-columns:22% 1fr;grid-template-rows:12px 1fr}
-.px-t-mail .px-mbar{grid-column:1/-1;background:var(--a2)}
-.px-t-mail .px-fold{background:var(--a0)}
-.px-t-mail .px-list{display:grid;gap:6px;align-content:start;padding:6px}
-.px-t-mail .px-list s{height:5px;background:var(--a1)}
-.px-win{display:grid;grid-template-rows:auto auto auto 1fr;min-height:0;margin:3%;border:2px solid var(--ink);background:var(--paper)}
+.px-win{display:grid;grid-template-rows:auto 1fr;min-height:0;margin:3%;border:2px solid var(--ink);background:var(--paper)}
 .px-titlebar{display:flex;justify-content:space-between;align-items:center;padding:0 0 0 10px;border-bottom:2px solid var(--ink)}
 .px-x{min-height:30px;padding:2px 12px;border:0;border-left:2px solid var(--ink)}
-.px-tabsbar{display:flex;gap:4px;padding:5px 8px 0;background:var(--a0)}
-.px-tab{padding:2px 10px;border:1px solid var(--a2);border-bottom:0;border-radius:6px 6px 0 0;font-size:11px;color:var(--ink2)}
-.px-tab.px-on{background:var(--paper);color:var(--ink)}
-.px-omnibar{margin:5px 8px;padding:2px 10px;border:1px solid var(--a2);border-radius:12px;font-size:11px;color:var(--ink2)}
 .px-appbody{display:flex;min-height:0}
-.px-siderail{width:44px;background:var(--a0);display:grid;gap:8px;align-content:start;justify-items:center;padding-top:8px}
-.px-siderail u{width:26px;height:26px;border-radius:50%;background:var(--a1)}
-.px-folders{width:22%;padding:8px;background:var(--a0);color:var(--ink2)}
-.px-folders p{margin:0 0 6px}
 .px-card{flex:1;align-self:center;max-width:340px;margin:auto;padding:14px 16px}
 .px-card h3{margin:0;font-size:1.4em}
 .px-host{margin:2px 0 10px;color:var(--ink2)}
@@ -1724,7 +1703,7 @@ dialog::backdrop{background:rgba(0,0,0,.75)}
 .px-pk-q b{font-weight:400;text-decoration:underline}
 .px-pk-act{display:flex;gap:8px}
 .px-pk-act button{min-height:34px;padding:4px 12px}
-.px-pk-ok,.px-pk-press{background:var(--fill);color:var(--on-fill)}
+.px-pk-ok,.px-pk-press,.px-pk-fallback{background:var(--fill);color:var(--on-fill)}
 .px-pk.px-ok{box-shadow:none;border-style:dashed}
 .px-keyglyph{margin:0 0 8px;height:22px}
 .px-keyglyph i{display:inline-block;width:46px;height:18px;margin-left:14px;border:2px solid var(--ink);position:relative}
@@ -1751,7 +1730,7 @@ dialog::backdrop{background:rgba(0,0,0,.75)}
  .px-ctl{margin-top:12px;padding-top:0}
  .px-lbl{font-size:12px;line-height:17px}
  .px-inset{width:min(52%,260px);right:10px;top:10px}
- .px-nogl .px-screen{left:3%;right:3%;top:40%;bottom:6%}
+ .px-nogl .px-screen{left:3%;right:3%;top:36%;bottom:4%}
  .px-nogl .px-plug{left:62%;top:70%;width:24%;height:14%}
 }
 /* N38 header widths: Departure Mono is wider than the old text face, so the nav tightens at tablet and phone widths */
@@ -1761,8 +1740,6 @@ dialog::backdrop{background:rgba(0,0,0,.75)}
 @media (min-width:1200px) and (max-height:700px){.take{padding:8px 12px 10px}.take-q{font-size:14px;line-height:1.25;margin-bottom:6px}#take-control{min-height:44px;font-size:15px}.take-hint{font-size:12px;line-height:1.25;margin-top:4px}}
 @media (max-width:1000px){.glance{grid-template-columns:minmax(0,1fr)}}
 .stat-row>div{min-width:0}
-/* the video section changes its own layout as the video starts; it must not drag the page scroll with it */
-#demo,#demo *{overflow-anchor:none}
 @media (max-width:860px){.px-inspecting #px-model{height:min(118vw,500px)}.px-note{font-size:11px;bottom:6px}}
 .demo-tag{display:table}
 /* without scripts the hero shows the still render and no inspect hint */

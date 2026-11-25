@@ -247,7 +247,7 @@
   {
     "path": "analysis/demo-site/media/pixel/pixel.js",
     "role": "Pixel hero script: three.js r180 subset, the key, the PC scene and the story, bundled by pixel/build.sh",
-    "sha256": "4c53cc25e9211038a9877199d8eed47a208fa5a9a9f7413731257a7d004d0a38"
+    "sha256": "6952fe140f79bc79e529b2ea070fa6a8fd45294fde6d2f04d60a8df9f4411d56"
   },
   {
     "path": "analysis/demo-site/media/pixel/key-still.png",
@@ -267,7 +267,7 @@
   {
     "path": "analysis/demo-site/pixel/src/main.js",
     "role": "Pixel hero source",
-    "sha256": "df1a83261a7c1023ba018cc4fbffd44a70109c73825efc9236e01427a7636a89"
+    "sha256": "bf183b92d43796fed621aaf8e236254422ccaa3cebfdcc743764f133ee15175b"
   },
   {
     "path": "analysis/demo-site/pixel/src/gfx.js",
@@ -323,106 +323,6 @@
     "path": "analysis/hardware-mockups/enclosure/v2-no-touch/tiny.scad",
     "role": "Enclosure geometry used by the render",
     "sha256": "c628fa3b4c2074eae58c33831e6cc4d3e7502cf11b91b0c2cbbea5c76c6a7b4c"
-  },
-  {
-    "path": "analysis/demo-site/video/out-full-v1/passkey-v1-full-main-1920.mp4",
-    "role": "V1 hero video, full quality, 1920 px wide, H.264 and AAC",
-    "sha256": "e9f7d786e7bbbedd0c424ae90dffaf31c383aa0c5e8b4dfd4f28ce648bc67e69"
-  },
-  {
-    "path": "analysis/demo-site/video/out-full-v1/passkey-v1-full-main-960.mp4",
-    "role": "V1 hero video, full quality, 960 px wide, H.264 and AAC",
-    "sha256": "7e79d1c390a218b2b1746dda69c58fd393df872d2f960221cae8a34209e6a391"
-  },
-  {
-    "path": "analysis/demo-site/video/out-full-v1/passkey-v1-full-continue-1920.mp4",
-    "role": "V1 continuation after Take control, full quality, 1920 px wide, H.264 and AAC",
-    "sha256": "1fab9d66917fe54305e28bf50db21ff0b13c0ed07e9ff4b543ae7e4257713bc3"
-  },
-  {
-    "path": "analysis/demo-site/video/out-full-v1/passkey-v1-full-continue-960.mp4",
-    "role": "V1 continuation after Take control, full quality, 960 px wide, H.264 and AAC",
-    "sha256": "a173e5bc112f0f7984e23d235c2a9e355a4275b996e5ae549e1ca03edd8863c3"
-  },
-  {
-    "path": "analysis/demo-site/video/out-full-v1/poster-full-start.jpg",
-    "role": "V1 poster frame: start",
-    "sha256": "0abb57a94ce65df0089c07149d65215d3dfa70b03ea062a6d67e930bfc315a2a"
-  },
-  {
-    "path": "analysis/demo-site/video/out-full-v1/poster-full-poised.jpg",
-    "role": "V1 poster frame: poised",
-    "sha256": "059eca64c7434b8ff52c9144b46d0818f68a036d301c67a4553b62bc96a95c22"
-  },
-  {
-    "path": "analysis/demo-site/video/out-full-v1/poster-full-signed.jpg",
-    "role": "V1 poster frame: signed",
-    "sha256": "f125c36047a3740f84a3d5b05a43e34a65b8210ddca4c4f1e3c84501bec77b03"
-  },
-  {
-    "path": "analysis/demo-site/video/out-full-v1/video-meta.json",
-    "role": "V1 timings, page anchors, provenance and media hashes",
-    "sha256": "911e65dc770302eec426b9163d506bb8af53c09c1d3dbc90a4e8cad122e227bd"
-  },
-  {
-    "path": "analysis/demo-site/video/src/fullq/timeline.json",
-    "role": "V1 full-quality production source",
-    "sha256": "c8d77cc00ebd8ff227bdc306dcd8fbc427b64565dc5b5ef9ff9a6056305b4f0d"
-  },
-  {
-    "path": "analysis/demo-site/video/src/fullq/scene.py",
-    "role": "V1 full-quality production source",
-    "sha256": "f78b692ad9b534e18698e4ea7223552b4bde8e45933fd4a37ef74d4333b0dbbd"
-  },
-  {
-    "path": "analysis/demo-site/video/src/fullq/hq.py",
-    "role": "V1 full-quality production source",
-    "sha256": "ef272e2fbad77c3d10461266c185a620de5dd9372465db8fcef587e4bf4a7920"
-  },
-  {
-    "path": "analysis/demo-site/video/src/fullq/screen.html",
-    "role": "V1 full-quality production source",
-    "sha256": "60cb42b517c194cb6681617a6d25ba308c657357752059190f634e7c6712da2d"
-  },
-  {
-    "path": "analysis/demo-site/video/src/fullq/props.html",
-    "role": "V1 full-quality production source",
-    "sha256": "6392b33d5edc9ad6273d9377f9b6b9d029326db583f0d463e2373f0fe8d45665"
-  },
-  {
-    "path": "analysis/demo-site/video/src/fullq/capture.py",
-    "role": "V1 full-quality production source",
-    "sha256": "75f688a2eb7bcff647817fe71390a731d91430261b87137e17b2a10f960dd631"
-  },
-  {
-    "path": "analysis/demo-site/video/src/fullq/audio.py",
-    "role": "V1 full-quality production source",
-    "sha256": "2c863fcd18759575ec920fb8cdea20d5efdb91292e08e84dd0f6662c90326b0e"
-  },
-  {
-    "path": "analysis/demo-site/video/src/fullq/compose.py",
-    "role": "V1 full-quality production source",
-    "sha256": "576d52ff9371727d2c95c277858ac26bac82671a854ecbe5cc1db395e24cef1e"
-  },
-  {
-    "path": "analysis/demo-site/video/src/fullq/encode.py",
-    "role": "V1 full-quality production source",
-    "sha256": "5ced85bc0d7e8a61fb24b4199f70f9e751d08558207fb411574012c995674d67"
-  },
-  {
-    "path": "analysis/demo-site/video/src/fullq/ASSETS.md",
-    "role": "V1 full-quality production source",
-    "sha256": "0273f5fed8eb7af539d7f2cf73ab8995b85fd7c85386453d71d83db6150730c1"
-  },
-  {
-    "path": "analysis/demo-site/video/review-full-v1/RESULT-NOTES.md",
-    "role": "V1 full-quality checks and known limits",
-    "sha256": "f1b03a680b831880cf2f3ab07e38aa005706dfba3d30d4a8d5020d3eb25facc7"
-  },
-  {
-    "path": "analysis/hardware-mockups/enclosure/v2-no-touch/key.scad",
-    "role": "Key-shaped enclosure geometry used by the V1 video",
-    "sha256": "b1f38249c6d6c9bea245308120822041688d5995c8d713bfcc71d2218adf19b6"
   },
   {
     "path": "analysis/n30-unit-economics/launch-pricing.json",
