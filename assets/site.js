@@ -467,7 +467,7 @@
           error.hidden = false;
           return;
         }
-        $('reserve-status').textContent = 'Request received. Check your email for confirmation.';
+        $('reserve-status').textContent = 'Reservation saved. Look for a confirmation from passkey186@gmail.com. If it hasn’t arrived, check Spam.';
         reserveForm.reset();
         updateContact();
         closeDialog(dialog);
