@@ -1,0 +1,63 @@
+/* Key editor page (N39) inside the Passkey site (N38 amber pixel look). Loaded after editor.css, which is copied unchanged from the editor folder.
+   It styles only what build.py adds around the editor: the site header and navigation, the introduction, the site footer, and phone width rules.
+   Tokens come from editor.css :root, which matches assets/site.css. */
+.top{background:var(--paper)}
+.top-in{max-width:1500px;gap:8px 18px;padding-top:6px;padding-bottom:6px}
+.brand{font-size:19px;min-height:44px}
+.brand small{margin-top:3px}
+.top nav{display:flex;flex-wrap:wrap;gap:2px;margin-left:auto;align-items:center}
+.top nav a{position:relative;display:flex;align-items:center;min-height:44px;padding:8px 12px;color:var(--ink2);text-decoration:none;font-size:15px}
+.top nav a::after{content:"";position:absolute;left:12px;right:12px;bottom:8px;height:2px;background:var(--ink);transform:scaleX(0);transition:transform .2s}
+.top nav a:hover{color:var(--ink)}
+.top nav a:hover::after{transform:scaleX(.5)}
+.top nav a[aria-current]{color:var(--ink)}
+.top nav a[aria-current]::after{transform:scaleX(1)}
+.top nav a.nav-buy{background:var(--fill);color:var(--on-fill);border:2px solid var(--fill);box-shadow:3px 3px 0 var(--shadow);margin-left:8px;min-height:40px}
+.top nav a.nav-buy::after{display:none}
+.top nav a.nav-buy:hover{background:var(--fill-hi);border-color:var(--fill-hi)}
+
+.intro{max-width:1500px;margin:0 auto;padding:22px var(--gut) 4px}
+.intro h1{font-size:clamp(22px,4vw,34px);line-height:1.15;color:var(--ink);margin-bottom:10px}
+.intro .lead{max-width:62ch;color:var(--ink2);font-size:15px;margin-bottom:10px}
+.mode-note{max-width:78ch;border-left:3px solid var(--ink);padding:2px 0 2px 12px;color:var(--ink);font-size:14px;margin-bottom:14px}
+.intro .chips{margin-left:0}
+.chip{white-space:normal}
+
+footer{margin-top:24px;border-top:2px solid var(--ink);background:var(--paper2)}
+.foot-in{max-width:1500px;margin:auto;padding:20px var(--gut) 24px;font-size:14px;color:var(--ink2)}
+.foot-in nav{display:flex;flex-wrap:wrap;gap:0 20px;margin:2px 0 8px}
+.foot-in nav a{display:inline-flex;align-items:center;min-height:44px;color:var(--pen)}
+.foot-made,.foot-legal{margin:0 0 6px;font-size:12.5px;line-height:1.45;color:var(--ink3)}
+.foot-made a{color:var(--ink2)}
+.foot-made .fine{display:inline}
+.foot{padding-bottom:12px}
+
+@media (max-width:980px){
+  .top nav a{padding:8px 9px;font-size:14px}
+}
+@media (max-width:700px){
+  .top{position:static}
+  .top-in{gap:0 10px;padding-top:4px;padding-bottom:2px}
+  .brand{font-size:17px}
+  .top nav{order:3;flex-basis:100%;margin:0 -6px;justify-content:space-between;gap:0}
+  .top nav a{padding:6px 6px;font-size:13px;white-space:nowrap;min-width:40px;justify-content:center}
+  .top nav a::after{left:6px;right:6px;bottom:4px}
+  .top nav a.nav-buy{margin-left:2px;padding:5px 9px;min-height:40px}
+  .intro{padding-top:14px}
+  .mode-note{font-size:13px}
+  .foot-made .fine{display:none}
+  .toolbar .grp{width:100%}
+  .toolbar .grp select,.w-auto{min-width:0;max-width:100%}
+  .toolbar .grp select{flex:1 1 0}
+}
+/* touch targets on the editor itself: at least 38 px high on phones and tablets */
+@media (max-width:900px){
+  button,button.small,.seg button,input[type=text],input[type=number],select{min-height:40px}
+  input[type=color]{height:40px;width:44px}
+  .tog{min-height:40px}
+  .foot a{display:inline-flex;align-items:center;min-height:40px}
+}
+@media (max-width:400px){
+  .top nav a{font-size:11.5px;padding:6px 3px}
+  .top nav a.nav-buy{padding:5px 6px}
+}

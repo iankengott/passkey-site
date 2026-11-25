@@ -1,5 +1,5 @@
 {
-  "date": "24 November 2026",
+  "date": "25 November 2026",
   "statuses": {
     "Repeatable": "Tested already, and a one command rerun exists, so it can be repeated cheaply and also counts as a sub requirement of larger tests.",
     "Tested": "Run and recorded once. No cheap automated rerun yet.",
@@ -1169,6 +1169,27 @@
       "Tested",
       "Model",
       "On 24 November the coordinator signed the v0.4 release folder (installer 0.4, firmware 0.9 .pkur for both boards, index seq 2, expires 24 November 2027) and published it as the latest release of iankengott/passkey-releases. The live index, its signature, both installers and both .pkur files were downloaded: the signature verifies against the release public key and every hash matches the index, with the log saved. No update file has been applied to a board."
+    ],
+    [
+      "R170",
+      "N39 firmware 0.10 key settings and layout 2",
+      "Tested",
+      "Model",
+      "On the test host after the 512 KB slot decision, 113 C settings checks passed in both plain and ASan builds. Setup ran 153 checks in each build. Both RP2350 images built, the Go helper suite passed with layout-2 signed fixtures, and the key editor wrote settings to the simulator after a simulated press in headless Chrome. A separate main-PC JavaScript run passed 70 rules checks and 25 prompt reader checks. No board, live extension bridge or SDDM greeter was used for these settings checks."
+    ],
+    [
+      "R171",
+      "N32 signed v0.5 release files and live index",
+      "Tested",
+      "Model",
+      "Firmware 0.10 and installer 0.5 were built on the test host, signed on the project’s main computer and published as v0.5, the latest release of iankengott/passkey-releases. The live check downloaded all 11 release assets, matched the SHA-256 entries in SHA256SUMS and read index sequence 3, expiring 25 November 2027. Applying an update to a board and the installer fetching the live index remain untested for v0.5."
+    ],
+    [
+      "R172",
+      "Firmware 0.10 and installer 0.5 follow-up suites",
+      "Not tested",
+      "Model",
+      "Wine, PAM, SDDM, login-gaps, Chromium end-to-end and installer suites were skipped. The N14/N19 adapter regression is owed after changes to the approval card and its background script. The Bend law gate last ran before D43 and has not been rerun since. Six setup-drive checks need mtools, fsck.fat or 7-Zip, which were absent on the test host. A version build step must run before the installer suites on the main computer. Physical settings writes, safe mode and first flash also remain open."
     ]
   ]
 }

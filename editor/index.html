@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-BYjmiUTu+QVp36IatxMbWZsaUz25D1uxXjT5rfJj4/Y='; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Passkey key editor | Change how your key looks and sounds</title><meta name="description" content="Edit your Passkey key: the approval card, its wording, and the key light. Try it on sample data first; it connects to a real key only through the Passkey program and extension."><link rel="canonical" href="https://iankengott.github.io/passkey-site/editor/"><meta name="robots" content="index,follow,max-image-preview:large"><meta property="og:type" content="website"><meta property="og:site_name" content="Passkey"><meta property="og:title" content="Passkey key editor | Change how your key looks and sounds"><meta property="og:description" content="Edit your Passkey key: the approval card, its wording, and the key light. Try it on sample data first; it connects to a real key only through the Passkey program and extension."><meta property="og:url" content="https://iankengott.github.io/passkey-site/editor/"><meta property="og:image" content="https://iankengott.github.io/passkey-site/assets/passkey-render.jpg"><meta property="og:image:width" content="1600"><meta property="og:image:height" content="1000"><meta property="og:image:alt" content="Concept render of a small USB key with gold contacts and a status light"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Passkey key editor | Change how your key looks and sounds"><meta name="twitter:description" content="Edit your Passkey key: the approval card, its wording, and the key light. Try it on sample data first; it connects to a real key only through the Passkey program and extension."><meta name="twitter:image" content="https://iankengott.github.io/passkey-site/assets/passkey-render.jpg"><meta name="twitter:image:alt" content="Concept render of a small USB key with gold contacts and a status light"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Passkey key editor | Change how your key looks and sounds","url":"https://iankengott.github.io/passkey-site/editor/","description":"Edit your Passkey key: the approval card, its wording, and the key light. Try it on sample data first; it connects to a real key only through the Passkey program and extension."}</script><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg?v=1"><link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png?v=1"><link rel="shortcut icon" href="../favicon.ico?v=1"><link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png"><meta name="theme-color" content="#0d0a05">
+<link rel="stylesheet" href="editor.css">
+<link rel="stylesheet" href="site-frame.css">
+</head>
+<body>
+<header class="top"><div class="top-in"><a class="brand" href="../index.html" aria-label="Passkey home"><span class="brand-mark" aria-hidden="true">P</span><span>Passkey<small>a one-person project</small></span></a><nav aria-label="Main"><a href="../index.html">Home</a><a href="../compatibility.html">Compatibility</a><a href="../security.html">Security</a><a href="../editor/index.html" aria-current="page">Edit key</a><a class="nav-buy" href="../store.html">Store</a></nav></div></header>
+
+<section class="intro" aria-labelledby="h-intro">
+  <h1 id="h-intro">Edit your key</h1>
+  <p class="lead">Change how the approval card looks, what it says, and how the key’s light blinks. Every change has to pass the safety checks, so a card can never hide which site you are approving.</p>
+  <p class="mode-note" id="mode-note">This page starts in demo mode, on made-up sample data, and sends nothing anywhere. Key mode, which reads and changes your own key, needs the Passkey program and browser extension installed on this computer. <a href="../compatibility.html">What works where</a>.</p>
+  <div class="chips" aria-label="Status">
+      <span class="chip fill">Editor</span>
+      <span class="chip warn">Demo mode, not connected to a key</span>
+      <span class="chip" id="chip-key">Demo key 0000-DEMO</span>
+      <span class="chip" id="chip-state">Checks: starting</span>
+    </div>
+</section>
+
+<main class="ed" id="main">
+  <div class="col-left">
+    <section class="pane" aria-labelledby="h-edit">
+      <h2 id="h-edit">Edit <small>fake data, saved only in this page</small></h2>
+      <div class="seg tabs" role="tablist" id="tabs" aria-label="Settings groups"></div>
+      <div class="panel" id="panel" role="tabpanel" tabindex="-1"></div>
+    </section>
+  </div>
+
+  <div class="col-right">
+    <section class="pane stage-sticky" aria-labelledby="h-prev">
+      <h2 id="h-prev">Live preview <small id="prev-sub"></small></h2>
+      <div class="toolbar">
+        <div class="seg" id="seg-state" role="group" aria-label="Prompt state"></div>
+        <select id="sel-variant" aria-label="Refusal kind" class="w-auto" hidden></select>
+        <div class="seg" id="seg-surface" role="group" aria-label="Where the prompt appears"></div>
+        <div class="seg" id="seg-width" role="group" aria-label="Card width"></div>
+      </div>
+      <details class="sample">
+        <summary>Sample request</summary>
+        <div class="toolbar">
+          <label class="grp">Site <select id="sel-site" class="w-auto"></select></label>
+          <label class="tog"><input type="checkbox" id="ck-frame"> Inside another site's frame</label>
+          <label class="tog"><input type="checkbox" id="ck-get"> Form uses GET</label>
+          <label class="tog"><input type="checkbox" id="ck-update" checked> Key update waiting</label>
+          <label class="grp">Approve is disabled because <select id="sel-reason" class="w-auto"></select></label>
+          <label class="tog"><input type="checkbox" id="ck-locks"> Mark what is locked</label>
+          <button type="button" class="small" id="btn-shade">Draw another shade</button>
+        </div>
+      </details>
+      <div class="stage" id="stage" aria-live="polite"></div>
+      <div class="shade-cap" id="shade-cap"></div>
+      <div class="notes" id="notes"></div>
+    </section>
+
+    <section class="pane" aria-labelledby="h-check">
+      <h2 id="h-check">Checks <small id="check-sub"></small></h2>
+      <div id="checks"></div>
+      <div class="actions">
+        <button type="button" class="primary" id="btn-update">Update</button>
+        <button type="button" id="btn-reset">Reset to defaults</button>
+        <button type="button" id="btn-revert">Undo my changes</button>
+        <button type="button" id="btn-rollback" hidden>Go back to last good</button>
+        <button type="button" id="btn-import">Import file</button>
+        <input type="file" id="file-import" accept="application/json,.json" class="sr" tabindex="-1" aria-label="Import a settings file">
+      </div>
+      <p class="hint mt8">In demo mode Update exports the settings as a file and sends nothing. With the Passkey software installed it writes to your key.</p>
+    </section>
+  </div>
+</main>
+
+<section class="foot" aria-label="About this page">
+  <p>Key editor (N39). In demo mode the sites and accounts are made up. The page makes no network requests, and it never talks to a key itself: only the Passkey extension does, after you confirm in its own window and press the key. Departure Mono is by Helena Zhang, SIL Open Font License.</p>
+  <div class="scenes" id="scenes" aria-label="Quick scenes"></div>
+</section>
+<footer><div class="foot-in"><nav aria-label="Footer"><a href="../store.html">Reserve a key</a><a href="../editor/index.html">Edit your key</a><a href="../compatibility.html#works">What does not work?</a><a href="../security.html#evidence">Test evidence</a><a href="../assets/sources.json">Source record</a></nav><p class="foot-made">Made by Ian Kengott. Contact: <a href="mailto:iankengott@usf.edu">iankengott@usf.edu</a>. <span class="fine">Passkey, formerly Skeleton Key. No analytics, accounts or credential collection.</span></p><p class="foot-legal">Google, Google Chrome, ChatGPT, OpenAI, Spotify, Discord and Microsoft Outlook are trademarks of their owners. No affiliation or endorsement. Product screens are recreations.</p></div></footer>
+
+<dialog id="dlg-update" aria-labelledby="dlg-h"></dialog>
+<dialog id="dlg-reset" aria-labelledby="dlg-reset-h">
+  <h2 id="dlg-reset-h">Reset everything to defaults?</h2>
+  <p>This replaces every setting on this page with the factory settings: the default amber look, the shipped wording, the shipped LED colours. Site nicknames are cleared. Nothing on a key changes until you press Update.</p>
+  <div class="btnrow"><button type="button" class="primary" id="reset-yes">Reset</button><button type="button" id="reset-no">Keep my settings</button></div>
+</dialog>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="schema-data.js"></script>
+<script src="validate.js"></script>
+<script src="editor.js"></script>
+</body>
+</html>

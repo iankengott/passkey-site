@@ -2,7 +2,7 @@
   {
     "path": "analysis/test-register/register.json",
     "role": "Current result counts and verbatim register rows",
-    "sha256": "c0c1d1951a88aea857082f49107bf10431e23e4e0108f66866e6d63d8354cd4d"
+    "sha256": "4de1c6f9139462c50b31f1771f75e235e0df343828c043efcb40e26a5133bcd8"
   },
   {
     "path": "reports/Passkey feasibility paper - Revision 8.md",
@@ -333,5 +333,45 @@
     "path": "analysis/demo-site/media/about/ian-portrait.jpg",
     "role": "Ian Kengott portrait from https://ink-ten.vercel.app/images/ian.jpg",
     "sha256": "00d849ead3c286934fccecfe51d46df5c9b625dc916b9e8700b74d7dd554def7"
+  },
+  {
+    "path": "analysis/n39-key-editor/site-page/editor/editor.css",
+    "role": "Key editor page file (N39), staged from passkey-key-editor/editor",
+    "sha256": "744bcec87c04d5fe0cbfd6ba8f312bd785a9e0936c219dfb993698c5830a5ec5"
+  },
+  {
+    "path": "analysis/n39-key-editor/site-page/editor/editor.js",
+    "role": "Key editor page file (N39), staged from passkey-key-editor/editor",
+    "sha256": "38ab7fd03d7db1abd04ed92728421a9fe52d5c8fce9fbf0ab7e0fb73d1aa0c2a"
+  },
+  {
+    "path": "analysis/n39-key-editor/site-page/editor/schema-data.js",
+    "role": "Key editor page file (N39), staged from passkey-key-editor/editor",
+    "sha256": "b57ecca1fa8d68d13dd1e0b9b4ed2c28331b38242c9bb0e662d0ab1424594404"
+  },
+  {
+    "path": "analysis/n39-key-editor/site-page/editor/validate.js",
+    "role": "Key editor page file (N39), staged from passkey-key-editor/editor",
+    "sha256": "b16621ce46e6d77393852746d5cfe8bc624a83d3bd057197ff9755e340c58c06"
+  },
+  {
+    "path": "analysis/n39-key-editor/site-page/editor/fonts/departure-mono.woff2",
+    "role": "Key editor page file (N39), staged from passkey-key-editor/editor",
+    "sha256": "5b4fed1daa90708aa9c6ee1190abca9dc22164a1c1def0020386e46b61038cfb"
+  },
+  {
+    "path": "analysis/n39-key-editor/site-page/editor/fonts/DepartureMono-OFL.txt",
+    "role": "Key editor page file (N39), staged from passkey-key-editor/editor",
+    "sha256": "d35f0ae9e5943a1eb324aac5322af130adfb44e0d0a5147c7e2235cb9fd6c348"
+  },
+  {
+    "path": "analysis/n39-key-editor/site-page/editor/index.html",
+    "role": "Key editor page (N39), wrapped in the site header, navigation, introduction and footer by build.py",
+    "sha256": "be81ceefd9cacee477b346cc18300fc8142f28cedf0d0204908651b7d1c8bbc6"
+  },
+  {
+    "path": "analysis/demo-site/media/editor/site-frame.css",
+    "role": "Site frame styles for the key editor page (N38 look, phone width)",
+    "sha256": "2fc5447b9571867dc2f6ed1e1cb21759c71588821e3c82c8a901a0fa90e98b7e"
   }
 ]
