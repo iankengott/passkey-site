@@ -1190,6 +1190,13 @@
       "Not tested",
       "Model",
       "Wine, PAM, SDDM, login-gaps, Chromium end-to-end and installer suites were skipped. The N14/N19 adapter regression is owed after changes to the approval card and its background script. The Bend law gate last ran before D43 and has not been rerun since. Six setup-drive checks need mtools, fsck.fat or 7-Zip, which were absent on the test host. A version build step must run before the installer suites on the main computer. Physical settings writes, safe mode and first flash also remain open."
+    ],
+    [
+      "R173",
+      "Passkey create and sign in on Debian 13 GNOME, Chromium, simulated key",
+      "Tested",
+      "Synthetic page",
+      "Untested-01, 25 November 2026. Debian 13.7 GNOME on Wayland in a test VM, real Chromium 156, the signed v0.5 release (installer 0.5, firmware 0.10) installed through a real polkit prompt. The key was the firmware 0.10 simulator, not hardware. The site was a local lab page whose relying party checked challenge, origin, RP ID hash, flags and the ES256 signature. Passed: passkey create, then sign in after a page reload. One sign in was verified again with the cryptography package and a flipped signature byte failed. Press required: with nobody pressing, or the button held, the key answered APPROVAL_REQUIRED and no signature was released. Account choice: with four passkeys on two accounts, Approve stayed locked until one was chosen and each choice signed with that credential. Exact origin: the site saw the true page origin, and an enrolled second port with the same RP ID got no prompt and no signature. User verification required was refused for create and sign in with NotSupportedError and no prompt. Preferred was accepted with the verification flag clear. Not passed: webauthn.io, the one public demo tried, could not complete a create. The approval box landed past the end of the long page, so the extension reported it was not fully visible and kept Approve locked. Found: the approval box stayed on screen after a create or sign in finished. A site added with add-site after the browser started was not served for minutes, although add-site says no reload is needed. Limits: Firefox was not run because the v0.5 installer registers only the Chromium family. No real key, no real account, no usernameless sign in, and the key's own FIDO2 interface was not used by the browser. The extension was loaded with a command line switch and a throwaway profile so the browser could be driven."
     ]
   ]
 }
