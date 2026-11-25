@@ -56,6 +56,120 @@
   });
   media.addEventListener('change', applyMotion);
 
+  // Match the hero shader's four amber tones and ordered dithering.
+  const photo = $('about-photo');
+  if (photo) {
+    const pixels = $('about-pixels');
+    const context = pixels.getContext('2d');
+    if (context) {
+      function renderPortrait() {
+        if (!photo.naturalWidth) return;
+        const { width, height } = pixels;
+        const css = getComputedStyle(root);
+        const palette = ['--a0', '--a1', '--a2', '--a3'].map(name => {
+          const hex = css.getPropertyValue(name).trim();
+          return [1, 3, 5].map(offset => parseInt(hex.slice(offset, offset + 2), 16));
+        });
+        const bayer = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+        context.imageSmoothingQuality = 'high';
+        context.drawImage(photo, 0, 0, width, height);
+        const image = context.getImageData(0, 0, width, height);
+        const data = image.data;
+        const backdrop = data.slice(0, 3);
+        const background = new Uint8Array(width * height);
+        for (let i = 0; i < background.length; i++) {
+          const offset = i * 4;
+          background[i] = backdrop.every((v, channel) => Math.abs(data[offset + channel] - v) <= 18);
+        }
+        for (let i = 0; i < background.length; i++) {
+          const offset = i * 4;
+          if (background[i]) { data[offset + 3] = 0; continue; }
+          const x = i % width, y = Math.floor(i / width);
+          const light = (.299 * data[offset] + .587 * data[offset + 1] + .114 * data[offset + 2]) / 255;
+          const dither = (bayer[(y % 4) * 4 + (x % 4)] + .5) / 16 - .5;
+          const tone = Math.round(Math.min(3, Math.max(0, (light - .15) * 4.2 + dither)));
+          const rim = (x > 0 && background[i - 1]) || (y > 0 && background[i - width]);
+          data.set(palette[rim ? Math.max(2, tone) : tone], offset);
+        }
+        context.putImageData(image, 0, 0);
+        pixels.hidden = false;
+        photo.hidden = true;
+        floatPortraitPixels($('about-particles'));
+      }
+      if (photo.complete) renderPortrait();
+      else photo.addEventListener('load', renderPortrait, { once: true });
+    }
+  }
+
+  function floatPortraitPixels(canvas) {
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    const css = getComputedStyle(root);
+    const amber = css.getPropertyValue('--a3').trim();
+    const light = css.getPropertyValue('--pen').trim();
+    const shade = css.getPropertyValue('--a0').trim();
+    const points = [
+      [8, 16], [23, 7], [41, 4], [70, 8], [90, 14], [96, 37],
+      [91, 68], [96, 85], [76, 94], [47, 94], [23, 92], [6, 76],
+      [7, 54], [13, 32], [31, 25], [53, 19], [63, 33], [39, 40],
+      [70, 49], [48, 55], [34, 66], [60, 69], [71, 77], [52, 82],
+    ];
+    let elapsed = 0;
+    let previous = 0;
+    let request = null;
+    let visible = !('IntersectionObserver' in window);
+
+    function draw() {
+      const size = canvas.width;
+      context.clearRect(0, 0, size, size);
+      points.forEach(([x, y], i) => {
+        // Treat each square as a point at a different depth and project it onto the portrait.
+        const phase = i * 2.39996 + elapsed * (.38 + i % 5 * .065);
+        const depth = Math.sin(phase * .73);
+        const scale = 1 / (1 - depth * .16);
+        const px = size * (.5 + ((x - 50) / 100 + Math.cos(phase) * .016) * scale);
+        const py = size * (.5 + ((y - 50) / 100 + Math.sin(phase) * .019) * scale);
+        const crossesPortrait = x > 25 && x < 80 && y > 18 && y < 85;
+        const side = (crossesPortrait || i % 4 === 0 ? 3 : 2) * scale;
+        const opacity = (crossesPortrait ? .48 : .34) + (depth + 1) * .23;
+        context.globalAlpha = opacity * .85;
+        context.fillStyle = shade;
+        context.fillRect(px - .6, py - .6, side + 1.2, side + 1.2);
+        context.globalAlpha = opacity;
+        context.fillStyle = crossesPortrait ? light : amber;
+        context.fillRect(px, py, side, side);
+      });
+      context.globalAlpha = 1;
+    }
+
+    function tick(now) {
+      if (previous) elapsed += Math.min(now - previous, 40) / 1000;
+      previous = now;
+      draw();
+      request = requestAnimationFrame(tick);
+    }
+
+    function sync() {
+      if (visible && !document.hidden && !reduced()) {
+        if (request === null) request = requestAnimationFrame(tick);
+      } else if (request !== null) {
+        cancelAnimationFrame(request);
+        request = null;
+        previous = 0;
+      }
+    }
+    draw();
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        sync();
+      }).observe(canvas);
+    }
+    addEventListener('passkey-motion', sync);
+    document.addEventListener('visibilitychange', sync);
+    sync();
+  }
+
   // ------------------------------------------------------------ scroll reveal and counters
   // Counters show their final number at once; only the charts around them animate.
   function count(el) { el.textContent = el.dataset.count; }

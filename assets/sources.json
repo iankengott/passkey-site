@@ -328,5 +328,10 @@
     "path": "analysis/n30-unit-economics/launch-pricing.json",
     "role": "Planned launch pricing chosen by Ian, used by the Reserve section",
     "sha256": "79643f401086c3e5d83654f12f7220a8b161c749c60d1b5e831532b2c18efff6"
+  },
+  {
+    "path": "analysis/demo-site/media/about/ian-portrait.jpg",
+    "role": "Ian Kengott portrait from https://ink-ten.vercel.app/images/ian.jpg",
+    "sha256": "00d849ead3c286934fccecfe51d46df5c9b625dc916b9e8700b74d7dd554def7"
   }
 ]

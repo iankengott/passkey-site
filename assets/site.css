@@ -1764,3 +1764,12 @@ footer{margin-top:44px}
 @media (max-width:340px){.top nav a{font-size:11.5px;padding:6px 3px}}
 @media (max-width:420px){.enhanced .matrix{table-layout:fixed}.enhanced .matrix .st{white-space:normal}.enhanced .matrix tbody th{width:50%}}
 @media (min-width:1040px) and (max-width:1199px){.matrix tbody th{min-width:150px;font-size:14px}.matrix thead th{font-size:13px;white-space:normal}}
+
+#about{display:grid;grid-template-columns:clamp(112px,31vw,192px) minmax(0,1fr);align-items:center;gap:clamp(12px,3vw,32px)}
+.about-portrait{position:relative;isolation:isolate;aspect-ratio:1}
+.about-portrait img,.about-portrait canvas{position:relative;z-index:1;display:block;width:100%;height:100%}
+.about-portrait img{filter:grayscale(1) sepia(1) saturate(2.1)}
+#about-pixels{image-rendering:pixelated}
+#about-particles{position:absolute;z-index:2;inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);pointer-events:none}
+.about-portrait [hidden]{display:none}
+.about-copy p:last-child{margin-bottom:0}
