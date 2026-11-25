@@ -1655,6 +1655,7 @@ dialog::backdrop{background:rgba(0,0,0,.75)}
 .px-story .px-text{display:flex;flex-direction:column;padding:clamp(24px,3vw,48px) var(--gut);border-right:2px solid var(--ink)}
 .px-story{grid-template-columns:minmax(260px,30%) 1fr}
 .px-story-on .px-grid{display:none}
+.px-clouding :is(.px-grid,.px-story,#px-screen,#px-plug,#px-gesture){opacity:var(--px-ui-opacity,1)}
 .px-say{margin:0 0 12px;font-size:clamp(30px,3vw,50px);line-height:1.08;max-width:12ch;outline:none}
 .px-say-sub{margin:0;color:var(--ink2);max-width:32ch}
 .px-ctl{display:flex;gap:10px;margin-top:auto;padding-top:24px}
@@ -1701,9 +1702,19 @@ dialog::backdrop{background:rgba(0,0,0,.75)}
 .px-pk-tag{margin:0 0 4px;font-size:.85em;color:var(--ink2);letter-spacing:.08em}
 .px-pk-q{margin:0 0 8px}
 .px-pk-q b{font-weight:400;text-decoration:underline}
+.px-w-password .px-appbody{overflow:auto}
+.px-w-password .px-card{align-self:flex-start;min-width:0}
+.px-card input{min-width:0}
+.px-pk-accounts{min-width:0;margin:0 0 8px;padding:0;border:0}
+.px-pk-accounts legend{padding:0;margin-bottom:4px}
+.px-pk-accounts label{display:flex;align-items:center;gap:8px;min-height:32px;margin:0;padding:2px 6px;border:1px solid var(--a2);color:var(--ink);cursor:pointer;overflow-wrap:anywhere}
+.px-pk-accounts label+label{margin-top:4px}
+.px-pk-accounts label:has(:checked){border-color:var(--ink);background:var(--a0)}
+.px-pk-accounts input{flex:none;margin:0;accent-color:var(--fill)}
 .px-pk-act{display:flex;gap:8px}
 .px-pk-act button{min-height:34px;padding:4px 12px}
 .px-pk-ok,.px-pk-press,.px-pk-fallback{background:var(--fill);color:var(--on-fill)}
+.px-pk-ok:disabled{background:transparent;color:var(--ink2);cursor:default}
 .px-pk.px-ok{box-shadow:none;border-style:dashed}
 .px-keyglyph{margin:0 0 8px;height:22px}
 .px-keyglyph i{display:inline-block;width:46px;height:18px;margin-left:14px;border:2px solid var(--ink);position:relative}

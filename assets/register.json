@@ -156,7 +156,7 @@
       "Field finding and fill on real login pages",
       "Not tested",
       "Document",
-      "Design only for real login pages. Local fixtures are covered by R37 and R38. No real site was attempted. T13 on 22 October 2026 filled three live demo login forms, see R40 and R41",
+      "Field finding and filling on everyday account sites remain untested. R37 and R38 cover local fixtures. T13 on 22 October 2026 filled three live demo login forms with dummy data, as recorded in R40 and R41",
       "t13-real-sites/run.sh"
     ],
     [
