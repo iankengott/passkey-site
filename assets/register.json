@@ -1,5 +1,5 @@
 {
-  "date": "25 November 2026",
+  "date": "26 November 2026",
   "statuses": {
     "Repeatable": "Tested already, and a one command rerun exists, so it can be repeated cheaply and also counts as a sub requirement of larger tests.",
     "Tested": "Run and recorded once. No cheap automated rerun yet.",
@@ -1232,6 +1232,62 @@
       "Tested",
       "Model",
       "Untested-03, 25 November 2026. NixOS 26.11pre with Plasma 6 and SDDM in a test VM, running on a throwaway overlay over snapshot sddm-pre-guest-20261117-2112 (the old Linux disk as found on 12 November), with the N7 lane D variant pam_locker applied by the N7 apply_pam code minus its 10 GB safety snapshot (module sha256 3343be22). Package under test: the lane D PAM module, N7 SDDM card and KDE lock screen prompt with the software mock signer, the same package as R86 and R123. NOT release v0.5. No real key and no physical press. 1920x1080 fixture layout for pk-test, which shows Sleep and Switch User on the lock screen; the stock layout clips them (R122, D35). Passed: pk-test signed in at SDDM by key (A); Launcher, Session, Switch User locked pk-test and opened the SDDM greeter on VT1; Choose next account selected pk-other and A signed it in (one signed and verified request for pk-other). The first session's lock screen on VT2 still needed authentication: C then Enter, an empty Enter and the typed word APPROVE all stayed locked with 0 signatures. Switching back through the greeter (pk-test, A) made SDDM jump to VT 2 and reactivate and unlock the existing session after one signed and verified request. Refusals at the greeter against a locked existing session, each with no login by key and password sign in working afterwards: C cancel, Enter alone, 36 s timeout then A, wrong credential (Request refused, response binding), signer stopped (connection refused). Account binding: with pk-other removed from the broker enrollment file, the broker rejected it as unknown account, no key login happened and the password worked, twice; pk-test still signed in by key. The enrollment file was restored. Limits: the fresh login of an unenrolled account was not run on KDE because loginctl terminate-user did not end the Plasma session and a restart of SDDM was not attempted; the press only SDDM path (R140) was not tested with Switch User; the mock signer holds one key for all accounts. The VM overlay was removed and the original disk and UEFI variables match their hashes from before. The VM host memory error qualification applies."
+    ],
+    [
+      "R179",
+      "Passkey create and sign in on webauthn.io, Debian 13 GNOME, real Chromium, v0.6 build, simulated key",
+      "Tested",
+      "Synthetic page",
+      "v0.6 VM recheck, 26 November 2026. Debian 13.7 GNOME on Wayland in a test VM, restored from a kept snapshot, real Chromium 156.0.8078.108, the v0.6 source build with the test key (not the release key), the firmware 0.10 hub simulator as the key (not hardware). The one public site, webauthn.io, with a made up user name and no CAPTCHA. Passed: after passkey add-site and Register, the approval box showed Create passkey for https://webauthn.io, docked at the bottom left inside the window (box at y 494 to 677 in a 681 pixel window, page 3,381 pixels tall), Approve was enabled, and the page said Success. Authenticate on a fresh load showed Use passkey, Approve was enabled, and the page said You're logged in. The box was gone within 2.5 seconds after Approve each time. The v0.5 run of R173 could not click Approve here. Found: typing the user name in the field first shows a Fill username approval box, even for a passkey only entry. Cancel it before Register. Limits: simulated key, throwaway profile, one run. No other public site was touched."
+    ],
+    [
+      "R180",
+      "passkey add-site with Chromium already running, Debian 13 GNOME, v0.6 build",
+      "Tested",
+      "Synthetic page",
+      "v0.6 VM recheck, 26 November 2026. Debian 13.7 GNOME on Wayland in a test VM, restored from a kept snapshot, real Chromium 156.0.8078.108, the v0.6 source build with the test key (not the release key), the firmware 0.10 hub simulator as the key (not hardware). Chromium was running with the extension loaded and a tab open. Seven new sites were added with passkey add-site while it ran (four in the main run, three more in a timing run). The command took under 1 second, the extension version stayed 0.2.1 (v0.5 raised it on every add), and a page load of each new site got its approval box 0.27 seconds after the click, with no restart. Create finished on all of them. Found, not explained: once, the first create inside a frame of two sites added a few seconds earlier got no box and the page waited. Nothing was logged for that request and a later sign in found no credential. Eight further tries, including a copy of that order and 150 seconds of idle, all worked. Limits: lab pages, simulated key."
+    ],
+    [
+      "R181",
+      "Linux install registers a Chromium that was never started, real Debian package",
+      "Tested",
+      "Synthetic page",
+      "v0.6 VM recheck, 26 November 2026. Debian 13.7 GNOME on Wayland in a test VM, restored from a kept snapshot, real Chromium 156.0.8078.108, the v0.6 source build with the test key (not the release key), the firmware 0.10 hub simulator as the key (not hardware). The distribution package of Chromium was installed and had never been started: no settings folder. A real install (no test rig) printed registered the native messaging host for Google Chrome and for Chromium, and the real GNOME polkit dialog asked for the administrator password once. The test rig install registered Chrome only, which is by design: a test install searches only PASSKEY_TEST_BROWSER_PATH. Uninstall after the test rig install removed the settings folder the install had made. The uninstall of the real install was not run. The extension is named Passkey. Limits: Chromium only. Edge and Brave were not installed."
+    ],
+    [
+      "R182",
+      "Passkey inside a frame chain top A, middle B, frame A signs the right topOrigin, Debian 13 GNOME, real Chromium, v0.6 build",
+      "Tested",
+      "Synthetic page",
+      "v0.6 VM recheck, 26 November 2026. Debian 13.7 GNOME on Wayland in a test VM, restored from a kept snapshot, real Chromium 156.0.8078.108, the v0.6 source build with the test key (not the release key), the firmware 0.10 hub simulator as the key (not hardware). Lab relying party that checks the client data against what the browser reports. Top http://top.localhost, middle http://mid.localhost, frame http://top.localhost again, allow attribute at both levels. The v0.5 run of R174 was rejected here because the signed topOrigin was the middle site. With v0.6 the server accepted the sign in: topOrigin was the top site, crossOrigin was true, the signature and flags were right. The box read Frame inside TOP via MID. Cross origin create and sign in, and a top site that Passkey had never seen, were also accepted. The extra line Allow this login inside the top site was shown on every request, including the second and third under the same top (v0.5 showed it once). Limits: Debian and Chromium only, simulated key. Windows was not rerun."
+    ],
+    [
+      "R183",
+      "First request after a replug of the key, Debian 13 GNOME, v0.6 build",
+      "Tested",
+      "Synthetic page",
+      "v0.6 VM recheck, 26 November 2026. Debian 13.7 GNOME on Wayland in a test VM, restored from a kept snapshot, real Chromium 156.0.8078.108, the v0.6 source build with the test key (not the release key), the firmware 0.10 hub simulator as the key (not hardware). Same protocol as R173 case C6: remove the simulated key, replug it, ask. Four rounds: key out 5, 25 and 60 seconds with the request 3 seconds after the replug, and 20 seconds out with the request 0.8 seconds after. The approval box was shown 222 to 244 milliseconds after the click each time, read from the extension's own audit log and the guest clock. v0.5 showed no box for the first request and a box about 18 seconds later. A request made while the key was out got NotAllowedError at once and no box, as designed. Limits: the simulator, not a real plug. A real board may take longer to enumerate."
+    ],
+    [
+      "R184",
+      "Windows install and uninstall with the v0.6 build, never started Edge, Windows 11 Home",
+      "Tested",
+      "Model",
+      "v0.6 VM recheck, 26 November 2026. Windows 11 Home build 26300 in a test VM, run on a throwaway layer over the untouched disk, Chrome 158.0.8127.37, the v0.6 source build with the test key, the older core only simulator as the key (firmware 0.2, not hardware). Edge was made to look never started by removing its HKCU key and User Data folder. The v0.5 release program registered Chrome only. The v0.6 build registered Chrome and Edge. Install, the Apps and Run entries, status and uninstall all worked. Found and fixed: uninstall left the empty HKCU\\Software\\Microsoft\\Edge key behind, so Edge no longer looked never started. The install now records the browser keys it made and uninstall removes exactly those, and only if they hold nothing else. A Windows only Go test (v06_windows_test.go) fails on the old code and passes on the new code, run on the VM; the end to end install and uninstall then left no Edge key. Found, not fixed (also in v0.5): the removal helper that an uninstall starts keeps deleting the program path for about 40 seconds, so an install made within that time loses its program. Pro was not available: no Pro guest exists. Limits: Home only, Chrome and Edge."
+    ],
+    [
+      "R185",
+      "What Windows shows for the unsigned setup program, compared with the setup drive text, online and offline",
+      "Tested",
+      "Model",
+      "v0.6 VM recheck, 26 November 2026. Windows 11 Home build 26300 in a test VM, run on a throwaway layer over the untouched disk, Chrome 158.0.8127.37, the v0.6 source build with the test key, the older core only simulator as the key (firmware 0.2, not hardware). The setup drive image was attached to the VM as a USB drive, its zip copied to the Desktop, extracted and the program opened from Explorer. No SmartScreen box appeared, online or offline, because a file copied from a drive carries no Mark of the Web. With the Mark of the Web added (what a browser download gets), online Windows showed Windows protected your PC, Microsoft Defender SmartScreen prevented an unrecognized app from starting, More info, then App passkey.exe, Publisher Unknown publisher, Run anyway and Don't run. Offline it showed SmartScreen can't be reached right now with Run and Don't Run. The drive text matches both boxes. Found: Windows Defender (cloud protection on, signatures 1.463.476.0) quarantined one v0.6 test build, c0e29d2a, as a machine-learning trojan guess and removed its Run and Apps entries. Two later builds and the v0.5 release were not flagged. It is a verdict on one file hash. Limits: Home only, one machine, Defender exclusions were added to continue after the detection."
+    ],
+    [
+      "R186",
+      "First create of a full run on Windows: cause of the failure found",
+      "Tested",
+      "Model",
+      "v0.6 VM recheck, 26 November 2026. Windows 11 Home build 26300 in a test VM, run on a throwaway layer over the untouched disk, Chrome 158.0.8127.37, the v0.6 source build with the test key, the older core only simulator as the key (firmware 0.2, not hardware). Cause found. The simulator is started with a fixed seed, so after every signer restart it draws the same credential ids. The firmware core tries four ids and answers CRYPTO_FAIL if all four are keys it already holds, which the helper turns into INTERNAL. After four creates with one seed, the fifth create after a restart fails (seen with seeds 7 and 13). A new seed passes. A temporary debug build, kept out of the tree, logged board error CRYPTO_FAIL on key create. The firmware with a real random source is not affected, so this is a harness fault, not a product fault. It matches the earlier note: box shown, Approve clicked, no answer. The v0.5 extension did not answer the page after a device refusal, so the page waited for its own timeout. v0.6 answers NotAllowedError within about 1 second of Approve, seen in real Chrome. Not rerun with the v0.5 extension, so the old wait is from the code and the earlier note. Fix: the test harness now takes a new seed for each simulator start. That patch was made after the VM run and was not rerun on the VM."
     ]
   ]
 }
