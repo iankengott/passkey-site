@@ -2,7 +2,7 @@
   {
     "path": "analysis/test-register/register.json",
     "role": "Current result counts and verbatim register rows",
-    "sha256": "922a20e321d515093b97e811529fc1844c5eebf63ff92fff8261c41535013058"
+    "sha256": "65a1a8fd0aa302324bf2a866a273cab7e29a6e24ac21c762f6ff3897fef21db8"
   },
   {
     "path": "reports/Passkey feasibility paper - Revision 8.md",
@@ -247,7 +247,7 @@
   {
     "path": "analysis/demo-site/media/pixel/pixel.js",
     "role": "Pixel hero script: three.js r180 subset, the key, the PC scene and the story, bundled by pixel/build.sh",
-    "sha256": "ff513c4ccf581af55698b67beb439fc5f6d093b08d41d2a9da97025ecc32424d"
+    "sha256": "8cf9eb9f27540df0165d9b89c38c583470bd947ad87b6e540a0ad14031d071b0"
   },
   {
     "path": "analysis/demo-site/media/pixel/key-still.png",
@@ -267,12 +267,12 @@
   {
     "path": "analysis/demo-site/pixel/src/main.js",
     "role": "Pixel hero source",
-    "sha256": "95bb76f5d75232bdb4471685df8277a216a984ab957afc8f766bf052acc79193"
+    "sha256": "412d7111781c17cf6eefcbd4497e217f04018434fe2c1bc92e2230cb59951927"
   },
   {
     "path": "analysis/demo-site/pixel/src/gfx.js",
     "role": "Pixel hero source",
-    "sha256": "1975e2fdeedf85e2dac2508a52c45805ce415808ab864d679177310709231016"
+    "sha256": "51c5d53d05e377633c8b3037bca65a967d2c7123bd5dfb93f3a47a232caf939d"
   },
   {
     "path": "analysis/demo-site/pixel/src/key.bin",
